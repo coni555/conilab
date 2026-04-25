@@ -1,4 +1,5 @@
 ---
+import CoinGlyph from "./CoinGlyph.astro";
 const year = new Date().getFullYear();
 ---
 
@@ -6,15 +7,18 @@ const year = new Date().getFullYear();
   <div class="wrap">
     <div class="footer-grid">
       <div>
-        <div class="footer-mark">conilab<em>·</em></div>
+        <div class="footer-mark">
+          <CoinGlyph variant="dot" size="0.9em" />
+          <span>conilab</span>
+          <em>·</em>
+        </div>
         <p class="footer-blurb">
-          Maintained by <strong>@coni</strong>. Long-form notes from a Chinese student
-          re-learning the world with AI. Set in <em>Source Serif 4</em> and
-          <em>Inter</em>. Built in the open.
+          Long-form notes <em>read twice</em> — once in 中文, once in English.
+          Each piece earns its place by being ≥ 3000 字. Built quietly.
         </p>
       </div>
       <div>
-        <h4>Read</h4>
+        <h4><CoinGlyph variant="ring" />Read</h4>
         <ul>
           <li><a href="/articles">Articles</a></li>
           <li><a href="/notes">Notes</a></li>
@@ -22,16 +26,16 @@ const year = new Date().getFullYear();
         </ul>
       </div>
       <div>
-        <h4>Elsewhere</h4>
+        <h4><CoinGlyph variant="ring" />Elsewhere</h4>
         <ul>
-          <li><a href="https://github.com/coni555" rel="me">GitHub</a></li>
           <li><a href="/about">About</a></li>
+          <li><a href="https://github.com/coni555" rel="me">GitHub</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© {year} @coni</span>
-      <span>Shaoxing · written between Obsidian and the open web</span>
+      <span>© {year} conilab</span>
+      <span>conilab.cn — a notebook with two faces</span>
       <span><a href="https://beian.miit.gov.cn/" rel="noopener noreferrer" target="_blank">备案号待添加</a></span>
     </div>
   </div>
@@ -60,11 +64,18 @@ const year = new Date().getFullYear();
     font-weight: var(--fw-medium);
     letter-spacing: -0.01em;
     margin-bottom: var(--sp-12);
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--sp-8);
+  }
+  .footer-mark :global(.coin-glyph) {
+    color: var(--accent-front);
+    align-self: center;
   }
   .footer-mark em {
     font-style: italic;
     font-weight: var(--fw-light);
-    color: var(--accent-deep);
+    color: var(--accent-back);
   }
   .footer-blurb {
     font-family: var(--serif);
@@ -76,7 +87,7 @@ const year = new Date().getFullYear();
   }
   .footer-blurb em {
     font-style: italic;
-    color: var(--accent-deep-ink);
+    color: var(--accent-front-ink);
     font-weight: var(--fw-light);
   }
   .footer h4 {
@@ -84,9 +95,12 @@ const year = new Date().getFullYear();
     font-size: var(--fs-2xs);
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--accent-deep);
+    color: var(--accent-front);
     margin: 0 0 var(--sp-12);
     font-weight: var(--fw-medium);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-6);
   }
   .footer ul {
     list-style: none;
@@ -103,8 +117,8 @@ const year = new Date().getFullYear();
     transition: all var(--dur-quick);
   }
   .footer a:hover {
-    color: var(--accent-deep-ink);
-    border-bottom-color: var(--accent-deep);
+    color: var(--accent-front-ink);
+    border-bottom-color: var(--accent-front);
   }
   .footer-bottom {
     display: flex;

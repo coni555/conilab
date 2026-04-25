@@ -3,47 +3,72 @@ import Base from "../layouts/Base.astro";
 import ChapterHead from "../components/ChapterHead.astro";
 import ColophonCard from "../components/ColophonCard.astro";
 import Kicker from "../components/Kicker.astro";
+import CoinGlyph from "../components/CoinGlyph.astro";
 
 const colophonEntries = [
-  { label: "Reading",  value: "Why We Sleep — Matthew Walker" },
-  { label: "Writing",  value: "On the limits of attention", accent: true, href: "#" },
-  { label: "Shipping", value: "0 articles · the journal begins" },
-  { label: "Watching", value: "AI alignment notes by @anthropic" },
+  { label: "Reading",  value: "TBD — 待登记" },
+  { label: "Writing",  value: "First long-form, brewing", accent: true, href: "#" },
+  { label: "Shipping", value: "0 entries · 试验簿初开" },
+  { label: "Watching", value: "AI alignment notes" },
 ];
 ---
 
 <Base>
   <!-- ============================================================
-       HERO
+       HERO — 对联式中英并置（conilab signature：硬币双面）
        ============================================================ -->
   <section class="hero">
     <div class="wrap">
       <div class="hero-rubric">
-        <span>Shaoxing · Hangzhou · Online</span>
+        <CoinGlyph variant="ring" />
+        <span>conilab.cn — a notebook with two faces</span>
+        <CoinGlyph variant="ring" />
       </div>
-      <div class="hero-grid">
-        <div>
+
+      <div class="hero-couplet">
+        <div class="hero-side hero-side--front" data-side="front">
+          <div class="hero-side-tag">正面 · ZH</div>
+          <h1 class="hero-title cjk" lang="zh">
+            两面读<br />
+            一遍世界
+          </h1>
+          <p class="hero-sub cjk" lang="zh">
+            一份只发<em>三千字</em>以上长文的笔记本。<br />
+            每一篇都被读两次：一次中文，一次英文。
+          </p>
+        </div>
+
+        <div class="hero-divider" aria-hidden="true">
+          <CoinGlyph variant="dot" size="1.4em" />
+        </div>
+
+        <div class="hero-side hero-side--back" data-side="back">
+          <div class="hero-side-tag">REVERSE · EN</div>
           <h1 class="hero-title">
-            A student,<br />
-            <em>re-reading</em><br />
-            the world<br />
-            with <em>AI</em>.
+            Read <em>twice</em>,<br />
+            once <em>each side</em>.
           </h1>
           <p class="hero-sub">
-            Long-form bilingual notes by Coni. Each piece ≥ 3000 字, paired with
-            its English translation — written between Obsidian and the open web.
+            A notebook that publishes only when a piece reaches <em>3000 字</em> —
+            and only after it has been written in both languages.
           </p>
-          <dl class="hero-meta">
-            <dt>Born</dt>           <dd>2006 · Shaoxing, Zhejiang</dd>
-            <dt>Languages</dt>      <dd>中文 · English</dd>
-            <dt>Cadence</dt>        <dd>~1 long-form / fortnight</dd>
-            <dt>Min length</dt>     <dd>3000 字</dd>
-            <dt>Since</dt>          <dd>2026 (this lab)</dd>
-          </dl>
         </div>
+      </div>
+
+      <!-- 水印叠底（借自 design-ref-editorial 招式：装饰性大字叠在内容后面）-->
+      <div class="hero-watermark" aria-hidden="true">⊙</div>
+
+      <div class="hero-foot">
+        <dl class="hero-meta">
+          <dt>Min length</dt>   <dd>3000 字</dd>
+          <dt>Languages</dt>    <dd>中文 · English</dd>
+          <dt>Cadence</dt>      <dd>~1 long-form / fortnight</dd>
+          <dt>Faces</dt>        <dd>two — by design</dd>
+        </dl>
+
         <ColophonCard
-          bureau="Shaoxing"
-          bureauList={["Shaoxing", "Hangzhou", "Online"]}
+          bureau="conilab.cn"
+          bureauList={["conilab.cn", "github/coni555"]}
           entries={colophonEntries}
         />
       </div>
@@ -51,97 +76,211 @@ const colophonEntries = [
   </section>
 
   <!-- ============================================================
-       CHAPTER 01 · ARTICLES (placeholder, no real entries yet)
+       CHAPTER Ⅰ · ARTICLES
        ============================================================ -->
   <section class="chapter" id="articles">
     <div class="wrap">
-      <ChapterHead num="01" label="ARTICLES" allHref="/articles">
-        The journal — <em>a commonplace book, kept bilingually</em>
+      <ChapterHead num="Ⅰ" label="ARTICLES" allHref="/articles">
+        The journal — <em>read twice, kept once</em>
       </ChapterHead>
 
       <div class="placeholder">
-        <Kicker text="§ no entries yet · 暂无文章" accent />
-        <p class="cjk" lang="zh">
-          这里很快会出现第一篇<em>三千字以上</em>的长文。每一篇都会有对照的英文版本，
-          作为我"用 AI 重新认识世界"的一种实践记录。
-        </p>
-        <p lang="en">
-          The first ≥3000-word piece is brewing. Every entry will ship with a
-          paired English version — a record of <em>re-reading</em> the world
-          with AI as company.
-        </p>
+        <Kicker text="no entries yet · 暂无文章" accent />
+        <div class="bilingual">
+          <p data-lang="zh" class="cjk">
+            这里很快会出现第一篇<em>三千字以上</em>的长文。每篇登记两次：
+            一面是<em>中文</em>，一面是<em>English</em>。
+          </p>
+          <p data-lang="en">
+            The first <em>≥3000-字</em> piece is brewing. Each entry is registered
+            twice — once on the <em>front</em> face, once on the <em>reverse</em>.
+          </p>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ============================================================
-       CHAPTER 02 · ABOUT
+       CHAPTER Ⅱ · PRINCIPLES
+       (替代 lixiaolai-style ABOUT；不出现真实身份)
        ============================================================ -->
-  <section class="chapter" id="about">
+  <section class="chapter" id="principles">
     <div class="wrap">
-      <ChapterHead num="02" label="ABOUT" allHref="/about">
-        Who is <em>@coni</em>
+      <ChapterHead num="Ⅱ" label="PRINCIPLES" side="back">
+        What this notebook <em>refuses</em>
       </ChapterHead>
 
-      <div class="bilingual lede">
-        <p data-lang="zh" class="cjk">
-          张干，网名"硬币"。浙江绍兴人，2006 年生。Obsidian 重度用户，370+ 篇日记无间断。
-          这里不是公众号的复刻，是为<em>长文</em>准备的另一个房间。
-        </p>
-        <p data-lang="en">
-          Zhang Gan, online <em>@coni</em> ("coin"). Born in 2006 in Shaoxing,
-          Zhejiang. Heavy Obsidian user with 370+ unbroken daily entries. This is
-          not a mirror of any social feed — it is a separate room reserved for
-          <em>long-form</em>.
-        </p>
-      </div>
+      <ol class="principles">
+        <li>
+          <span class="p-num">i</span>
+          <div class="bilingual">
+            <p data-lang="zh" class="cjk">
+              不发任何<em>低于三千字</em>的内容。短想法去别处。
+            </p>
+            <p data-lang="en">
+              Nothing under <em>3000 字</em> ships here. Shorter thoughts live elsewhere.
+            </p>
+          </div>
+        </li>
+        <li>
+          <span class="p-num">ii</span>
+          <div class="bilingual">
+            <p data-lang="zh" class="cjk">
+              每篇都要被<em>读两次</em>：一次写、一次译。译稿不是附加，是同一篇的另一面。
+            </p>
+            <p data-lang="en">
+              Each piece is <em>read twice</em>: once written, once translated.
+              The translation isn't a supplement — it's the other face of the same coin.
+            </p>
+          </div>
+        </li>
+        <li>
+          <span class="p-num">iii</span>
+          <div class="bilingual">
+            <p data-lang="zh" class="cjk">
+              不暴露任何<em>真实身份信息</em>。这里只有一个网名 @coni 和一组想法。
+            </p>
+            <p data-lang="en">
+              No <em>real-world identity</em> appears here. Only a handle (@coni)
+              and a set of ideas.
+            </p>
+          </div>
+        </li>
+      </ol>
     </div>
   </section>
 </Base>
 
 <style>
   /* ─── HERO ─── */
-  .hero { padding: var(--sp-72) 0 var(--sp-80); }
+  .hero { padding: var(--sp-72) 0 var(--sp-80); position: relative; overflow: hidden; }
+
   .hero-rubric {
     font-family: var(--mono);
     font-size: var(--fs-xs);
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--ink-3);
-    margin-bottom: var(--sp-28);
+    margin-bottom: var(--sp-44);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-14);
   }
-  .hero-grid {
+
+  /* —— 对联式中英并置（conilab 招牌版式） —— */
+  .hero-couplet {
     display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    gap: var(--sp-72);
+    grid-template-columns: 1fr auto 1fr;
+    gap: var(--sp-44);
     align-items: stretch;
+    position: relative;
+    z-index: 1;
   }
   @media (max-width: 900px) {
-    .hero-grid { grid-template-columns: 1fr; gap: var(--sp-40); }
+    .hero-couplet {
+      grid-template-columns: 1fr;
+      gap: var(--sp-32);
+    }
+    .hero-divider { display: none; }
   }
+  .hero-side { padding: var(--sp-12) 0; }
+  .hero-side--back { text-align: right; }
+  @media (max-width: 900px) {
+    .hero-side--back { text-align: left; }
+  }
+  .hero-side-tag {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: var(--sp-18);
+    padding-bottom: var(--sp-6);
+    border-bottom: var(--sp-hairline) solid currentColor;
+    display: inline-block;
+  }
+  .hero-side--front .hero-side-tag { color: var(--accent-front); }
+  .hero-side--back  .hero-side-tag { color: var(--accent-back); }
+
   .hero-title {
     font-family: var(--serif);
     font-weight: var(--fw-normal);
-    font-size: clamp(var(--fs-10xl), 7vw, 96px);
-    line-height: 0.95;
-    letter-spacing: -0.025em;
-    margin: 0 0 var(--sp-28);
+    font-size: clamp(var(--fs-9xl), 5.6vw, 72px);
+    line-height: 0.98;
+    letter-spacing: -0.02em;
+    margin: 0 0 var(--sp-22);
     color: var(--ink);
     font-variation-settings: "opsz" 72;
   }
+  .hero-side--front .hero-title { font-family: var(--cjk-serif); }
   .hero-title :global(em) {
     font-style: italic;
     font-weight: var(--fw-light);
-    color: var(--accent-deep-ink);
   }
+  .hero-side--front .hero-title :global(em) { color: var(--accent-front-ink); }
+  .hero-side--back  .hero-title :global(em) { color: var(--accent-back-ink); }
+
   .hero-sub {
     font-family: var(--serif);
-    font-size: var(--fs-3xl);
-    line-height: 1.45;
+    font-size: var(--fs-xl);
+    line-height: var(--lh-relaxed);
     color: var(--ink-2);
     max-width: 30ch;
-    margin: 0 0 var(--sp-32);
+    margin: 0;
     font-weight: var(--fw-light);
+  }
+  .hero-side--front .hero-sub { font-family: var(--cjk-serif); }
+  .hero-side--back  .hero-sub { margin-left: auto; }
+  .hero-sub :global(em) { font-style: italic; }
+  .hero-side--front .hero-sub :global(em) { color: var(--accent-front-ink); }
+  .hero-side--back  .hero-sub :global(em) { color: var(--accent-back-ink); }
+
+  /* 中央分隔：垂直 hairline + 中点 ⊙ —— "硬币剖面" */
+  .hero-divider {
+    width: var(--sp-hairline);
+    background: var(--rule);
+    position: relative;
+    align-self: stretch;
+    margin: 0 var(--sp-12);
+  }
+  .hero-divider :global(.coin-glyph) {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--paper);
+    padding: var(--sp-12) var(--sp-4);
+    color: var(--ink-3);
+  }
+
+  /* 水印叠底（design-ref-editorial 招式：装饰大字垫底）*/
+  .hero-watermark {
+    position: absolute;
+    right: -2vw;
+    bottom: -8vw;
+    font-size: clamp(280px, 38vw, 540px);
+    line-height: 0.85;
+    color: color-mix(in oklch, var(--accent-front) 5%, var(--paper));
+    user-select: none;
+    pointer-events: none;
+    z-index: 0;
+    font-weight: 200;
+  }
+
+  /* —— hero foot：meta + colophon 卡 —— */
+  .hero-foot {
+    margin-top: var(--sp-72);
+    padding-top: var(--sp-32);
+    border-top: var(--sp-hairline) solid var(--rule);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-44);
+    align-items: start;
+    position: relative;
+    z-index: 1;
+  }
+  @media (max-width: 900px) {
+    .hero-foot { grid-template-columns: 1fr; gap: var(--sp-32); }
   }
   .hero-meta {
     font-family: var(--mono);
@@ -150,7 +289,7 @@ const colophonEntries = [
     display: grid;
     grid-template-columns: auto 1fr;
     gap: var(--sp-6) var(--sp-18);
-    max-width: 420px;
+    max-width: 380px;
     margin: 0;
   }
   .hero-meta dt {
@@ -165,7 +304,7 @@ const colophonEntries = [
   }
 
   /* ─── CHAPTER ─── */
-  .chapter { padding: var(--sp-32) 0; }
+  .chapter { padding: var(--sp-32) 0; position: relative; z-index: 1; }
 
   .placeholder {
     padding: var(--sp-48) 0;
@@ -173,43 +312,59 @@ const colophonEntries = [
     gap: var(--sp-18);
     max-width: 64ch;
   }
-  .placeholder p {
+  .bilingual {
+    display: grid;
+    gap: var(--sp-10);
     font-family: var(--serif);
     font-size: var(--fs-xl);
     line-height: var(--lh-prose);
     color: var(--ink-2);
-    margin: 0;
   }
-  .placeholder p[lang="en"] {
-    font-style: italic;
-    color: var(--ink-3);
-    font-size: var(--fs-lg);
-  }
-  .placeholder p[lang="en"] :global(em) {
-    color: var(--accent-deep-ink);
-  }
-
-  /* ─── BILINGUAL LEDE ─── */
-  .lede {
-    display: grid;
-    gap: var(--sp-12);
-    max-width: 62ch;
-    font-family: var(--serif);
-    font-size: var(--fs-2xl);
-    line-height: var(--lh-prose);
-    color: var(--ink-2);
-    font-weight: var(--fw-light);
-    margin: 0;
-    padding: var(--sp-22) 0;
-  }
-  .lede p { margin: 0; }
-  .lede [data-lang="en"] {
+  .bilingual p { margin: 0; }
+  .bilingual [data-lang="zh"] { font-family: var(--cjk-serif); }
+  .bilingual [data-lang="en"] {
     font-style: italic;
     color: var(--ink-3);
     font-size: var(--fs-lg);
     line-height: var(--lh-relaxed);
   }
-  .lede [data-lang="en"] :global(em) {
-    color: var(--accent-deep-ink);
+  .bilingual [data-lang="zh"] :global(em) {
+    font-style: normal;
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-style: var(--cjk-em-line);
+    text-decoration-color: var(--accent-front);
+    text-decoration-thickness: var(--cjk-em-thickness);
+    text-underline-offset: var(--cjk-em-offset);
+  }
+  .bilingual [data-lang="en"] :global(em) {
+    color: var(--accent-front-ink);
+  }
+
+  /* ─── PRINCIPLES list ─── */
+  .principles {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--sp-30);
+    max-width: 70ch;
+  }
+  .principles li {
+    display: grid;
+    grid-template-columns: var(--sp-44) 1fr;
+    gap: var(--sp-18);
+    padding-bottom: var(--sp-22);
+    border-bottom: var(--sp-hairline) dashed var(--rule);
+  }
+  .principles li:last-child { border-bottom: none; }
+  .p-num {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: var(--fw-light);
+    font-size: var(--fs-3xl);
+    color: var(--accent-back);
+    line-height: 1;
+    padding-top: var(--sp-2);
   }
 </style>

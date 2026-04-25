@@ -23,8 +23,18 @@
   --ink-2:        oklch(0.380 0.003 250);   /* 次字色（lede / dt 等）*/
   --ink-3:        oklch(0.580 0.003 250);   /* 灰字（kicker / breadcrumb 等）*/
 
-  --accent-deep:      oklch(0.42 0.14 240); /* conilab 强调色：深蓝 */
-  --accent-deep-ink:  oklch(0.32 0.12 240); /* 加深态：h1 em / 链接 hover */
+  /* 双色制（硬币双面 / 中英 / 阅读·写作）
+   * front: 蓝 — 正面，主用（lede / em / chapter-bar / kicker accent）
+   * back:  暖铜 — 反面，备用（Ⅱ 类章节 / 引文 / 印章）
+   */
+  --accent-front:     oklch(0.42 0.14 240); /* 正面：深蓝 */
+  --accent-front-ink: oklch(0.32 0.12 240);
+  --accent-back:      oklch(0.55 0.11  60); /* 反面：暖铜 */
+  --accent-back-ink:  oklch(0.42 0.10  60);
+
+  /* 兼容旧名（迁移期，避免一次改太多组件）*/
+  --accent-deep:      var(--accent-front);
+  --accent-deep-ink:  var(--accent-front-ink);
 
   --moss:         oklch(0.480 0.06  140);   /* 备用 olive 绿（书脊/状态）*/
   --indigo:       oklch(0.420 0.09  260);   /* 备用 indigo（书脊/状态）*/

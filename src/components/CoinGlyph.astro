@@ -1,0 +1,54 @@
+---
+/*
+ * ⊙ CoinGlyph — conilab 的核心 motif
+ * 同心双圆，可加内点/斜线变体。替代 lixiaolai 的 § 段落符。
+ *
+ * 用在：kicker 前缀 / chapter-num / colophon-card 印章 / footer h4 等
+ */
+interface Props {
+  size?: number | string;     // em 单位最佳，默认 1em
+  variant?: "ring" | "dot" | "slash" | "stamp";
+  color?: string;             // 默认 currentColor
+  strokeWidth?: number;
+}
+const {
+  size = "1em",
+  variant = "ring",
+  color = "currentColor",
+  strokeWidth = 0.9,
+} = Astro.props;
+
+const sz = typeof size === "number" ? `${size}px` : size;
+---
+
+<svg
+  class={`coin-glyph coin-glyph--${variant}`}
+  viewBox="0 0 24 24"
+  width={sz}
+  height={sz}
+  fill="none"
+  stroke={color}
+  stroke-width={strokeWidth}
+  stroke-linecap="round"
+  aria-hidden="true"
+  focusable="false"
+>
+  <circle cx="12" cy="12" r="10" />
+  <circle cx="12" cy="12" r="6.5" stroke-width={strokeWidth * 0.7} />
+  {variant === "dot"   && <circle cx="12" cy="12" r="1.6" fill={color} stroke="none" />}
+  {variant === "slash" && <line x1="7.5" y1="16.5" x2="16.5" y2="7.5" />}
+  {variant === "stamp" && (
+    <>
+      <circle cx="12" cy="12" r="1.6" fill={color} stroke="none" />
+      <line x1="7.5" y1="16.5" x2="16.5" y2="7.5" />
+    </>
+  )}
+</svg>
+
+<style>
+  .coin-glyph {
+    display: inline-block;
+    vertical-align: -0.12em;
+    flex: none;
+  }
+</style>

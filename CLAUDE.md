@@ -53,13 +53,39 @@ content.config.ts  # Astro content collections schema
 
 | 项 | 值 | 备注 |
 |---|---|---|
-| 强调色 | `oklch(0.42 0.14 240)` (`--accent-deep`) | 深蓝，hue 240 避开 lixiaolai 的 255 |
-| 强调色（深态） | `oklch(0.32 0.12 240)` (`--accent-deep-ink`) | h1 em / 链接 hover |
+| 主 motif | **⊙ 同心双圆** | conilab signature。`CoinGlyph` 组件 4 变体（ring / dot / slash / stamp），全站替代 lixiaolai 的 § |
+| 章节编号 | **罗马数字** Ⅰ / Ⅱ / Ⅲ + 小写 i/ii/iii | 实验簿味道，"lab" 字面联动 |
+| 正面强调色 | `oklch(0.42 0.14 240)` `--accent-front` | 深蓝，硬币正面 / 阅读 / 中文 / 主链接 |
+| 反面强调色 | `oklch(0.55 0.11 60)` `--accent-back` | 暖铜，硬币反面 / 写作 / 英文 / 印章 / Ⅱ 类章节 |
 | serif | Source Serif 4 → ui-serif fallback | 主标题、品牌、quote |
 | cjk-serif | Source Han Serif SC → PingFang SC | 中文长文/pullquote |
 | sans | Inter | body / 表单 |
 | mono | JetBrains Mono | kicker / handle / dl-key |
-| ampersand | 自绘 SVG（圆 + 斜线，硬币 + 中英分隔 motif） | `src/components/Mark.astro` 中嵌入 |
+| 品牌 ampersand | Mark.astro 内嵌硬币 SVG（圆 + 斜线，4.8s tilt 动画）| 仅 logo 处用，章节标记统一用 `CoinGlyph` |
+| Hero 版式 | **对联式中英并置** | front/back 双侧 + 中央 hairline + ⊙ 剖面，conilab 招牌版式 |
+| 装饰 | Hero 水印 ⊙（5% 透明度大字背景）| 借自 design-ref-editorial 的水印叠底招式 |
+
+## 不抄袭红线
+
+下面这些是 lixiaolai 标志性的元素，**不要重新引入**：
+- `§` 段落符（已被 ⊙ 替代）
+- `01 / 02 / 03` 阿拉伯章节编号（已被罗马数字替代）
+- "Set in 字体名 and 字体名. Built in the open. Licensed permissively..." 风格的 footer colophon 文案
+- 单色 vermillion 朱砂强调（已切双色制）
+- 城市地图 SVG 在 colophon-card（已替换为左右双枚同心圆 中/en motif）
+- 章节大标题旁的整段 italic 副标 `<em>a commonplace book...</em>` 这种 lixiaolai 文学化口吻——保留 italic 强调，但句式要换成 conilab voice
+
+## 不暴露身份
+
+文案中**绝对不出现**：
+- 真实姓名（张干）
+- 出生年份 / 出生地
+- 在校状态 / 学校
+- 公众号品牌（夜识AI）
+- 微信号
+- 城市具体名（绍兴 / 杭州 / 浙江）
+
+允许出现：网名 `@coni` / `coni` / `硬币`、域名 `conilab.cn`、GitHub 用户名 `coni555`、邮箱（如果将来加联系方式）
 
 ## 跨对话接力
 

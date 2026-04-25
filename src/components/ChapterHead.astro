@@ -1,24 +1,41 @@
 ---
 /*
  * ChapterHead — 章节头
- *   ─── § 01 · ARTICLES
+ *   ─── ⊙ Ⅰ · ARTICLES
  *   The journal — <em>a commonplace book</em>
  *
- * 用 default slot 装大标题（可含 <em>），num 是章节编号字符串
+ * 替代 lixiaolai 的 "§ 01 · ARTICLES" 招式：
+ *   - § → ⊙（CoinGlyph，conilab signature）
+ *   - 阿拉伯数字 01 → 罗马数字 Ⅰ Ⅱ Ⅲ（实验记录簿味道，配合 "lab" 字面）
+ *   - bar 用 accent-front 默认；side="back" 时切到暖铜 accent-back
+ *
+ * num 接受任意字符串，建议用 Roman: I / II / III / IV / V
  */
+import CoinGlyph from "./CoinGlyph.astro";
+
 interface Props {
-  num: string;        // "01"
-  label: string;      // "ARTICLES"
-  allHref?: string;   // 右上角 "All →" 链接
+  num: string;             // "I" / "II" / "III"
+  label: string;           // "ARTICLES"
+  allHref?: string;
   allLabel?: string;
+  side?: "front" | "back"; // 决定 bar / num 颜色，对应硬币正反面
 }
-const { num, label, allHref, allLabel = "All" } = Astro.props;
+const {
+  num,
+  label,
+  allHref,
+  allLabel = "All",
+  side = "front",
+} = Astro.props;
 ---
 
-<div class="chapter-head">
+<div class={`chapter-head chapter-head--${side}`}>
   <div class="chapter-num">
     <span class="bar" aria-hidden="true"></span>
-    § {num} · {label}
+    <CoinGlyph variant="ring" />
+    <span class="num">{num}</span>
+    <span class="dot" aria-hidden="true">·</span>
+    <span class="label">{label}</span>
   </div>
   <h2 class="chapter-title">
     <slot />
@@ -47,17 +64,40 @@ const { num, label, allHref, allLabel = "All" } = Astro.props;
     font-family: var(--mono);
     font-size: var(--fs-xs);
     letter-spacing: 0.14em;
-    color: var(--accent-deep);
     text-transform: uppercase;
     display: flex;
     align-items: center;
-    gap: var(--sp-10);
+    gap: var(--sp-8);
   }
   .chapter-num .bar {
     width: var(--sp-40);
     height: var(--sp-hairline);
-    background: var(--accent-deep);
   }
+  .chapter-num .num {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: var(--fw-light);
+    font-size: var(--fs-md);
+    letter-spacing: 0;
+  }
+  .chapter-num .dot { opacity: 0.5; }
+  .chapter-num .label { letter-spacing: 0.14em; }
+
+  .chapter-head--front .chapter-num,
+  .chapter-head--front .chapter-num .bar {
+    color: var(--accent-front);
+    background: var(--accent-front);
+  }
+  .chapter-head--front .chapter-num,
+  .chapter-head--front .chapter-num .num,
+  .chapter-head--front .chapter-num .label,
+  .chapter-head--front .chapter-num .dot { background: transparent; }
+  .chapter-head--front .chapter-num { color: var(--accent-front); }
+  .chapter-head--front .chapter-num .bar { background: var(--accent-front); }
+
+  .chapter-head--back .chapter-num { color: var(--accent-back); }
+  .chapter-head--back .chapter-num .bar { background: var(--accent-back); }
+
   .chapter-title {
     grid-area: title;
     font-family: var(--serif);
@@ -85,8 +125,8 @@ const { num, label, allHref, allLabel = "All" } = Astro.props;
     transition: all var(--dur-quick);
   }
   .all-link:hover {
-    color: var(--accent-deep-ink);
-    border-bottom-color: var(--accent-deep);
+    color: var(--accent-front-ink);
+    border-bottom-color: var(--accent-front);
   }
   @media (max-width: 720px) {
     .chapter-title { font-size: var(--fs-5xl); }

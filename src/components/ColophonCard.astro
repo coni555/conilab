@@ -1,12 +1,12 @@
 ---
 /*
- * ColophonCard — 报头牌
+ * ColophonCard — 试验登记卡（conilab 版）
  *   - 1px hairline 描边 + paper-2 底
- *   - :before 浮 "§ DISPATCH · COLOPHON" 小邮票
- *   - 三段：head（铭牌）/ rule（中间 § 分隔）/ body（co-line × N）
- *
- * 用 props 喂数据；entries 形如 [{ label: "READING", value: "..." }]
+ *   - :before 浮 "⊙ LABNOTE / 试验登记" 小邮票（替代 lixiaolai 的 § DISPATCH · COLOPHON）
+ *   - 三段：head（双面铭牌）/ rule（中间 ⊙ 分隔）/ body（co-line × N）
+ *   - 右下角 ⊙ 印章 SVG（半透明，"已登记"语义）
  */
+import CoinGlyph from "./CoinGlyph.astro";
 interface Entry {
   label: string;
   value: string;
@@ -20,26 +20,33 @@ interface Props {
   stamp?: string;         // 顶部浮签默认 "§ DISPATCH · COLOPHON"
 }
 const {
-  bureau = "Shaoxing",
-  bureauList = ["Shaoxing", "Hangzhou", "Online"],
+  bureau = "Online",
+  bureauList = ["Online"],
   entries,
-  stamp = "§ DISPATCH · COLOPHON",
+  stamp = "⊙ LABNOTE · 试验登记",
 } = Astro.props;
 ---
 
 <aside class="colophon-card" aria-label="Dispatch and colophon" data-stamp={stamp}>
   <div class="co-head">
     <div class="co-poster" aria-hidden="true">
-      <!-- 简易 motif：硬币双圆 + 中点（替代 lixiaolai 的城市地图）-->
+      <!-- 双面 motif：左右两枚同心圆，象征硬币正反 / 中英 / 阅读·写作 -->
       <svg viewBox="0 0 80 80" aria-hidden="true">
-        <circle cx="40" cy="40" r="36" fill="none" stroke="currentColor" stroke-width="1" />
-        <circle cx="40" cy="40" r="28" fill="none" stroke="currentColor" stroke-width="0.6" />
-        <circle cx="40" cy="40" r="2.4" fill="var(--accent-deep)" />
-        <line x1="22" y1="58" x2="58" y2="22" stroke="var(--accent-deep)" stroke-width="0.8" stroke-linecap="round" />
+        <g transform="translate(20 40)">
+          <circle r="14" fill="none" stroke="var(--accent-front)" stroke-width="1" />
+          <circle r="9"  fill="none" stroke="var(--accent-front)" stroke-width="0.6" />
+          <text y="3" text-anchor="middle" font-family="var(--serif)" font-size="9" font-style="italic" fill="var(--accent-front)">中</text>
+        </g>
+        <g transform="translate(60 40)">
+          <circle r="14" fill="none" stroke="var(--accent-back)" stroke-width="1" />
+          <circle r="9"  fill="none" stroke="var(--accent-back)" stroke-width="0.6" />
+          <text y="3" text-anchor="middle" font-family="var(--serif)" font-size="9" font-style="italic" fill="var(--accent-back)">en</text>
+        </g>
+        <line x1="34" y1="40" x2="46" y2="40" stroke="var(--ink-3)" stroke-width="0.5" />
       </svg>
     </div>
     <dl class="co-dl">
-      <dt class="co-dl-k">CURRENT BUREAU</dt>
+      <dt class="co-dl-k">REGISTRY</dt>
       <dd class="co-dl-v">
         <strong>{bureau}</strong>
         {bureauList.length > 1 && (
@@ -51,7 +58,11 @@ const {
     </dl>
   </div>
 
-  <div class="co-rule" aria-hidden="true"><span>§</span></div>
+  <div class="co-rule" aria-hidden="true">
+    <span class="co-rule-glyph">
+      <CoinGlyph variant="dot" />
+    </span>
+  </div>
 
   <div class="co-body">
     {entries.map((e) => (
@@ -64,6 +75,11 @@ const {
       </div>
     ))}
   </div>
+
+  <!-- 右下角 ⊙ 印章 SVG（已登记语义，半透明）-->
+  <span class="co-stamp" aria-hidden="true">
+    <CoinGlyph variant="stamp" size="3.2em" strokeWidth={0.6} />
+  </span>
 </aside>
 
 <style>
@@ -89,7 +105,21 @@ const {
     font-family: var(--mono);
     font-size: var(--fs-2xs);
     letter-spacing: 0.16em;
-    color: var(--accent-deep);
+    color: var(--accent-front);
+  }
+  .co-stamp {
+    position: absolute;
+    right: var(--sp-18);
+    bottom: var(--sp-14);
+    color: var(--accent-back);
+    opacity: 0.28;
+    pointer-events: none;
+    transform: rotate(-8deg);
+    transition: opacity var(--dur-normal), transform var(--dur-normal);
+  }
+  .colophon-card:hover .co-stamp {
+    opacity: 0.45;
+    transform: rotate(-6deg) scale(1.05);
   }
 
   .co-head {
@@ -160,7 +190,7 @@ const {
   .co-line .k {
     font-family: var(--mono);
     font-size: var(--fs-2xs);
-    color: var(--accent-deep);
+    color: var(--accent-front);
     font-weight: var(--fw-medium);
   }
   .co-line .l {
@@ -175,13 +205,13 @@ const {
     font-size: var(--fs-md);
     color: var(--ink);
   }
-  .co-line .v.accent { color: var(--accent-deep-ink); }
+  .co-line .v.accent { color: var(--accent-front-ink); }
   .co-line .v a {
     border-bottom: var(--sp-hairline) solid transparent;
     transition: border-color var(--dur-quick), color var(--dur-quick);
   }
   .co-line .v a:hover {
-    color: var(--accent-deep-ink);
-    border-bottom-color: var(--accent-deep);
+    color: var(--accent-front-ink);
+    border-bottom-color: var(--accent-front);
   }
 </style>
