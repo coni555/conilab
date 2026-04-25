@@ -90,7 +90,7 @@
   --cjk-track-display:  0.01em;
   --cjk-track-eyebrow:  0.08em;
   --cjk-gap:            0.15em;
-  --cjk-em-color:       oklch(0.75 0.003 250);
+  --cjk-em-color:       oklch(0.42 0.14 240);  /* = accent-front 蓝；全站 CJK em dotted 下划线统一蓝 */
   --cjk-em-line:        dotted;
   --cjk-em-thickness:   1.5px;
   --cjk-em-offset:      0.33em;

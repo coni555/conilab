@@ -1,0 +1,535 @@
+---
+import Base from "../layouts/Base.astro";
+import Kicker from "../components/Kicker.astro";
+import Pullquote from "../components/Pullquote.astro";
+
+// Sticky 目录
+const sections = [
+  { id: "what",    label: "Ⅰ · What this is",       label_zh: "这是什么" },
+  { id: "why",     label: "Ⅱ · Why ≥ 3000 字",      label_zh: "为什么是长文" },
+  { id: "two",     label: "Ⅲ · Two faces",          label_zh: "硬币两面" },
+  { id: "name",    label: "Ⅳ · About the name",     label_zh: "关于 Coni" },
+  { id: "author",  label: "Ⅴ · About the writer",   label_zh: "关于作者" },
+  { id: "colophon",label: "Ⅵ · Colophon",           label_zh: "凡例" },
+];
+---
+
+<Base
+  title="About — conilab"
+  description="A notebook published twice — once in 中文, once in English. ≥ 3000 字 per piece. About the project, the name, and the writer."
+>
+  <section class="about">
+    <div class="wrap about-grid">
+      <!-- ── ASIDE: sticky TOC ── -->
+      <aside class="about-aside" aria-label="Section index">
+        <div class="aside-inner">
+          <Kicker text="contents · 目录" />
+          <ol class="toc">
+            {sections.map((s) => (
+              <li>
+                <a href={`#${s.id}`}>
+                  <span class="toc-en">{s.label}</span>
+                  <span class="toc-zh cjk" lang="zh">{s.label_zh}</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+          <div class="aside-foot">
+            <p class="aside-handle">
+              <span class="cjk" lang="zh">@coni</span> ·
+              <a href="https://github.com/coni555" rel="me">github</a> ·
+              <a href="/articles/rss.xml">rss</a>
+            </p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- ── MAIN: bilingual longform ── -->
+      <article class="about-main">
+        <header class="about-head">
+          <Kicker text="about · 关于" />
+          <h1 class="about-title">
+            A notebook <em>read twice</em>,<br />
+            kept once.
+          </h1>
+          <p class="about-lede cjk" data-lang="zh" lang="zh">
+            一份只发<em>三千字</em>以上长文的笔记本。
+            每一篇都被写两次：一次中文，一次英文——
+            不是翻译，是同一个想法在两种语言里各自降落一次。
+          </p>
+          <p class="about-lede-en" data-lang="en" lang="en">
+            A long-form notebook. Each piece is written twice — once in 中文,
+            once in English. Not a translation: the same thought, landing in
+            another tongue and growing slightly different roots.
+          </p>
+        </header>
+
+        <!-- Ⅰ -->
+        <section id="what" class="about-sec">
+          <h2 class="sec-num">Ⅰ</h2>
+          <h3 class="sec-h">
+            <span class="cjk" lang="zh">这是什么</span>
+            <span class="sec-h-en">What this is</span>
+          </h3>
+
+          <div class="prose cjk" data-lang="zh" lang="zh">
+            <p>
+              <strong>conilab</strong> 是一份个人长文笔记本。
+              没有日更，没有热点，没有短想法——这里只发<em>三千字以上</em>、
+              被认真打磨过的长文。
+            </p>
+            <p>
+              每篇都登记两次：一面中文，一面英文。两面都登记完，才算这枚硬币写完了。
+            </p>
+          </div>
+          <div class="prose" data-lang="en" lang="en">
+            <p>
+              <strong>conilab</strong> is a personal long-form notebook.
+              No daily posts, no chasing trends, no quick takes — only essays
+              that earn their place by being <em>≥ 3000 字</em> and worked
+              through with care.
+            </p>
+            <p>
+              Each piece is registered twice — one face in 中文, one in English.
+              Both faces filed; only then is the coin considered written.
+            </p>
+          </div>
+        </section>
+
+        <!-- Ⅱ -->
+        <section id="why" class="about-sec">
+          <h2 class="sec-num">Ⅱ</h2>
+          <h3 class="sec-h">
+            <span class="cjk" lang="zh">为什么是 ≥ 3000 字</span>
+            <span class="sec-h-en">Why ≥ 3000 字</span>
+          </h3>
+
+          <div class="prose cjk" data-lang="zh" lang="zh">
+            <p>
+              短想法去别处。三千字是一道<em>诚意门槛</em>——它逼着我自己想清楚，
+              而不是写出一段刚好够发朋友圈的金句然后假装那就是结论。
+            </p>
+            <p>
+              不是越长越好。是写到三千字之前就该写完的话题，本来就没必要发。
+            </p>
+          </div>
+          <div class="prose" data-lang="en" lang="en">
+            <p>
+              Shorter thoughts live elsewhere. The 3000-character bar is a
+              <em>friction threshold</em>. It forces me to actually think a
+              thing through, instead of crafting one quotable line and
+              pretending that's the conclusion.
+            </p>
+            <p>
+              Length is not the goal. The point: any topic that closes itself
+              before 3000 字 didn't need to be published in the first place.
+            </p>
+          </div>
+        </section>
+
+        <Pullquote
+          zh="同一个想法只用母语写一遍——它还没完成。翻过来再写一遍，才是同一枚硬币的两面。"
+          en="A thought written only in its native tongue isn't finished. Written again from the other side, it becomes both faces of the same coin."
+        />
+
+        <!-- Ⅲ -->
+        <section id="two" class="about-sec">
+          <h2 class="sec-num">Ⅲ</h2>
+          <h3 class="sec-h">
+            <span class="cjk" lang="zh">硬币的两面</span>
+            <span class="sec-h-en">Two faces, one coin</span>
+          </h3>
+
+          <div class="prose cjk" data-lang="zh" lang="zh">
+            <p>
+              中英不是翻译关系，是同一个核被两种语言土壤分别长一遍——
+              落在中文里长出的形状，和落在英文里长出的形状，<em>会不一样</em>。
+              那不是翻译失误，是双面叙事本来就该这样。
+            </p>
+            <p>
+              所以读中文版，能读到一面；翻过来读英文版，能读到另一面。
+              两面都读，才看见这枚硬币的全貌。
+            </p>
+          </div>
+          <div class="prose" data-lang="en" lang="en">
+            <p>
+              The two languages are not a translation pair — they're the same
+              core, planted in two different language soils, growing
+              <em>slightly different</em> shapes. The differences are not
+              translation drift; they're the whole point.
+            </p>
+            <p>
+              Read the Chinese side and you see one face. Flip the coin, read
+              the English side, and you see the other. Read both — and you
+              actually see the whole coin.
+            </p>
+          </div>
+        </section>
+
+        <!-- Ⅳ -->
+        <section id="name" class="about-sec">
+          <h2 class="sec-num">Ⅳ</h2>
+          <h3 class="sec-h">
+            <span class="cjk" lang="zh">关于"Coni"</span>
+            <span class="sec-h-en">About the name</span>
+          </h3>
+
+          <div class="prose cjk" data-lang="zh" lang="zh">
+            <p>
+              <strong>Coni</strong> 来自 <em>coin</em>，硬币——把最后两个字母
+              <i lang="en">i</i> 和 <i lang="en">n</i> 调换位置就是 coni。
+              名字本身就是一次<em>翻面</em>动作：<code>c-o-i-n</code> 翻过来，<code>c-o-n-i</code>。
+            </p>
+            <p>
+              <strong>conilab</strong> = coni + lab。把硬币的双面叙事
+              做成一间小实验簿——所以章节用罗马数字 Ⅰ/Ⅱ/Ⅲ，所以图标是
+              同心双圆 ⊙，所以你现在看的这一页本身就是实验的一部分。
+            </p>
+          </div>
+          <div class="prose" data-lang="en" lang="en">
+            <p>
+              <strong>Coni</strong> comes from <em>coin</em> — swap the last
+              two letters <i>i</i> and <i>n</i> and you get coni. The name
+              itself is a small <em>flip</em>: <code>c-o-i-n</code> turned
+              around becomes <code>c-o-n-i</code>.
+            </p>
+            <p>
+              <strong>conilab</strong> = coni + lab. The two-faced coin,
+              treated as a small experiment book — hence the Roman numerals
+              Ⅰ/Ⅱ/Ⅲ for chapters, hence the concentric-circle ⊙ glyph,
+              hence this page itself being part of the experiment.
+            </p>
+          </div>
+        </section>
+
+        <!-- Ⅴ -->
+        <section id="author" class="about-sec">
+          <h2 class="sec-num">Ⅴ</h2>
+          <h3 class="sec-h">
+            <span class="cjk" lang="zh">关于作者</span>
+            <span class="sec-h-en">About the writer</span>
+          </h3>
+
+          <div class="prose cjk" data-lang="zh" lang="zh">
+            <p>
+              这里写下的，是一个网名：<strong>@coni</strong>。它来自 <em>coin</em>，硬币。
+            </p>
+            <p>
+              硬币有两面，人也一样：一面<em>向内</em>，记录阅读、写作、情绪和自我修正；
+              一面<em>向外</em>，探索 AI、工具、表达和创造的可能。
+            </p>
+          </div>
+          <div class="prose" data-lang="en" lang="en">
+            <p>
+              All you'll find here is a handle: <strong>@coni</strong>.
+              It comes from <em>coin</em> — a small object with two sides.
+            </p>
+            <p>
+              A person also has more than one side: one turned <em>inward</em>,
+              where reading, writing, emotions, and self-reflection happen;
+              another turned <em>outward</em>, where AI, tools, expression,
+              and creation begin.
+            </p>
+          </div>
+        </section>
+
+        <!-- Ⅵ -->
+        <section id="colophon" class="about-sec">
+          <h2 class="sec-num">Ⅵ</h2>
+          <h3 class="sec-h">
+            <span class="cjk" lang="zh">凡例</span>
+            <span class="sec-h-en">Colophon</span>
+          </h3>
+
+          <dl class="colophon-list">
+            <dt>Type</dt>
+            <dd>
+              <span class="cjk" lang="zh">英文：Source Serif 4 · Inter · JetBrains Mono</span><br />
+              <span class="cjk" lang="zh">中文：Source Han Serif SC（思源宋体）→ PingFang SC fallback</span>
+            </dd>
+
+            <dt>Color</dt>
+            <dd>
+              OKLCH only. <em>正面</em> — accent-front <code>oklch(0.42 0.14 240)</code>.
+              <em>反面</em> — accent-back <code>oklch(0.55 0.11 60)</code>.
+            </dd>
+
+            <dt>Stack</dt>
+            <dd>
+              Astro 6 · TypeScript strict · bun · Cloudflare Pages.
+              No React, no Tailwind. Plain CSS, native components.
+            </dd>
+
+            <dt>Source</dt>
+            <dd>
+              <a href="https://github.com/coni555" rel="me">github.com/coni555</a> ·
+              <a href="/articles/rss.xml">RSS</a> ·
+              <a href="/sitemap-index.xml">sitemap</a>
+            </dd>
+
+            <dt>Built quietly</dt>
+            <dd>
+              <span class="cjk" lang="zh">没有 newsletter，没有评论区，没有点赞按钮。要回应这里的某个想法，请去你自己的笔记本里写一遍。</span>
+              <br />
+              <em>No newsletter, no comments, no like button. The way to respond to a thought here is to go write your own.</em>
+            </dd>
+          </dl>
+        </section>
+      </article>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .about { padding: var(--sp-44) 0 var(--sp-96); }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: var(--sp-72);
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+      gap: var(--sp-32);
+    }
+  }
+
+  /* ─── ASIDE ─── */
+  .about-aside {
+    position: sticky;
+    top: calc(var(--sp-72) + var(--sp-22));
+    align-self: start;
+  }
+  @media (max-width: 900px) {
+    .about-aside { position: static; }
+  }
+  .aside-inner {
+    border-top: 2px solid var(--accent-front);
+    padding-top: var(--sp-18);
+  }
+  .toc {
+    list-style: none;
+    padding: 0;
+    margin: var(--sp-18) 0;
+    display: grid;
+    gap: var(--sp-12);
+  }
+  .toc a {
+    display: grid;
+    gap: var(--sp-2);
+    padding: var(--sp-4) 0;
+    color: var(--ink-2);
+    transition: color var(--dur-quick);
+  }
+  .toc a:hover { color: var(--accent-front-ink); }
+  .toc-en {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-front);
+  }
+  .toc-zh {
+    font-family: var(--cjk-serif);
+    font-size: var(--fs-md);
+    color: var(--ink-2);
+  }
+
+  .aside-foot {
+    margin-top: var(--sp-32);
+    padding-top: var(--sp-18);
+    border-top: var(--sp-hairline) solid var(--rule);
+  }
+  .aside-handle {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.1em;
+    color: var(--ink-3);
+    margin: 0;
+  }
+  .aside-handle a { color: var(--ink-2); }
+  .aside-handle a:hover { color: var(--accent-front-ink); }
+
+  /* ─── MAIN ─── */
+  .about-main {
+    max-width: 64ch;
+  }
+
+  .about-head {
+    border-bottom: var(--sp-hairline) solid var(--rule);
+    padding-bottom: var(--sp-32);
+    margin-bottom: var(--sp-44);
+  }
+  .about-title {
+    font-family: var(--serif);
+    font-size: clamp(var(--fs-7xl), 4.4vw, 56px);
+    line-height: 1.08;
+    margin: var(--sp-12) 0 var(--sp-22);
+    color: var(--ink);
+    font-weight: var(--fw-medium);
+    letter-spacing: -0.01em;
+  }
+  .about-title :global(em) {
+    font-style: italic;
+    font-weight: var(--fw-light);
+    color: var(--accent-back-ink);
+  }
+  .about-lede {
+    font-family: var(--cjk-serif);
+    font-size: var(--fs-xl);
+    line-height: var(--lh-prose);
+    color: var(--ink-2);
+    margin: 0 0 var(--sp-12);
+    font-weight: var(--fw-light);
+  }
+  .about-lede :global(em) {
+    font-style: normal;
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-style: var(--cjk-em-line);
+    text-decoration-color: var(--accent-front);
+    text-decoration-thickness: var(--cjk-em-thickness);
+    text-underline-offset: var(--cjk-em-offset);
+  }
+  .about-lede-en {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: var(--fs-lg);
+    line-height: var(--lh-relaxed);
+    color: var(--ink-3);
+    margin: 0;
+    font-weight: var(--fw-light);
+  }
+
+  /* ─── SECTION ─── */
+  .about-sec {
+    margin: var(--sp-44) 0;
+    scroll-margin-top: var(--sp-96);
+  }
+  .sec-num {
+    font-family: var(--serif);
+    font-size: var(--fs-7xl);
+    line-height: 1;
+    color: var(--accent-front);
+    font-weight: var(--fw-light);
+    letter-spacing: -0.02em;
+    margin: 0 0 var(--sp-4);
+    font-style: italic;
+  }
+  .sec-h {
+    font-family: var(--serif);
+    font-weight: var(--fw-medium);
+    margin: 0 0 var(--sp-22);
+    border-bottom: var(--sp-hairline) solid var(--rule);
+    padding-bottom: var(--sp-10);
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-12);
+    flex-wrap: wrap;
+  }
+  .sec-h .cjk {
+    font-family: var(--cjk-serif);
+    font-size: var(--fs-3xl);
+    color: var(--ink);
+  }
+  .sec-h-en {
+    font-family: var(--serif);
+    font-size: var(--fs-lg);
+    font-style: italic;
+    font-weight: var(--fw-light);
+    color: var(--accent-back-ink);
+  }
+
+  /* ─── PROSE ─── */
+  .prose {
+    font-family: var(--serif);
+    font-size: var(--fs-lg);
+    line-height: var(--lh-prose);
+    color: var(--ink);
+  }
+  .prose.cjk { font-family: var(--cjk-serif); }
+  .prose p { margin: 0 0 var(--sp-14); }
+  .prose p:last-child { margin-bottom: 0; }
+  .prose strong { color: var(--ink); font-weight: var(--fw-medium); }
+  .prose em {
+    font-style: italic;
+    color: var(--accent-back-ink);
+    font-weight: var(--fw-light);
+  }
+  .prose.cjk em {
+    font-style: normal;
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-style: var(--cjk-em-line);
+    text-decoration-color: var(--accent-front);
+    text-decoration-thickness: var(--cjk-em-thickness);
+    text-underline-offset: var(--cjk-em-offset);
+  }
+  .prose a {
+    color: var(--accent-front-ink);
+    border-bottom: var(--sp-hairline) solid var(--accent-front);
+  }
+  .prose code {
+    font-family: var(--mono);
+    font-size: 0.92em;
+    background: color-mix(in oklch, var(--ink) 5%, var(--paper));
+    padding: 0.1em 0.4em;
+    border-radius: 3px;
+  }
+
+  /* —— prose 段落上下间距：相邻 zh/en 段在 show-both 模式下用一道 hairline 分隔 —— */
+  .prose + .prose {
+    margin-top: var(--sp-14);
+    padding-top: var(--sp-14);
+    border-top: var(--sp-hairline) dashed var(--rule);
+  }
+  :global(html.show-zh) .prose + .prose,
+  :global(html.show-en) .prose + .prose {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  /* ─── COLOPHON LIST ─── */
+  .colophon-list {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: var(--sp-14) var(--sp-22);
+    margin: 0;
+    font-family: var(--serif);
+    font-size: var(--fs-md);
+    line-height: var(--lh-relaxed);
+  }
+  .colophon-list dt {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    padding-top: 0.2em;
+  }
+  .colophon-list dd {
+    margin: 0;
+    color: var(--ink-2);
+  }
+  .colophon-list code {
+    font-family: var(--mono);
+    font-size: 0.92em;
+    background: color-mix(in oklch, var(--ink) 5%, var(--paper));
+    padding: 0.1em 0.4em;
+    border-radius: 3px;
+  }
+  .colophon-list em {
+    font-style: italic;
+    color: var(--accent-back-ink);
+  }
+  .colophon-list a {
+    color: var(--accent-front-ink);
+    border-bottom: var(--sp-hairline) solid var(--accent-front);
+  }
+  @media (max-width: 720px) {
+    .colophon-list { grid-template-columns: 1fr; gap: var(--sp-4) 0; }
+    .colophon-list dt { padding-top: var(--sp-8); }
+  }
+</style>

@@ -4,7 +4,47 @@
 > 协作约束看 `CLAUDE.md`，视觉来源看 `~/.claude/projects/-Users-coni/memory/design-ref-literary-paper.md`。
 > conilab 自己的设计语言（脱离 lixiaolai）在下面"创新方向"段。
 
-## 当前状态：M0.5 雏形 + 第一轮去抄袭（可跑）
+## 当前状态：M1 完成（除部署）— 全栈可见、可读、可订阅
+
+> **本次对话（2026-04-25）累计完成**
+>
+> **内容 + 模板**
+> - 文案按"两次降落 / 翻面才完整 / Coni = coin + 一个 i = 观察者"重写：Hero 标题副、Articles 占位、Principles ii、Footer blurb 都换成新 voice
+> - 删除 Principles iii（"不暴露真实身份"那条，列表精简到 i/ii）
+> - 首篇文章入库：[content/articles/2026-04-25-honest-notes.md](content/articles/2026-04-25-honest-notes.md)（双语，3120 字 / en_complete: true）；英文版按"两次降落"理念重新落笔
+>
+> **页面 / 路由**
+> - 单篇文章模板 [src/pages/articles/[...slug].astro](src/pages/articles/[...slug].astro)：双 title + 双 lede + zh body + "⊙ TURN IT OVER ⊙" + en body；marked 渲染 `<!-- LANG:ZH/EN -->` 切分；CJK em dotted 蓝、en em italic 铜
+>   - 加料：reading-progress 顶部 2px 蓝条 / prev/next 双语导航（仅 ≥ 2 篇文章时显示）/ Pullquote 中英并置组件
+> - 列表页 [src/pages/articles/index.astro](src/pages/articles/index.astro) almanac 风：5 列 grid `110/60/1fr/220/60` = date / ZH·EN badge / 中英 title / tags / →；按年分组 + 大年份 + 2px accent-front 粗线分年；mobile 自动 stack
+> - About 页 [src/pages/about.astro](src/pages/about.astro)：左 sticky aside TOC（Ⅰ-Ⅵ + 双语 label）+ 右双语 longform（What this is / Why ≥ 3000 字 / Two faces / About the name / About the writer / Colophon）+ 中央 Pullquote
+> - 首页 Articles chapter 接通：有文章时显示 5 篇最新 + "View all" 链接，没文章时回落占位
+>
+> **基础设施**
+> - RSS：[src/pages/articles/rss.xml.ts](src/pages/articles/rss.xml.ts) 用 @astrojs/rss，head 里 `<link rel="alternate" type="application/rss+xml">` 注入
+> - Sitemap：@astrojs/sitemap 集成，build 时自动生成 sitemap-index.xml
+> - astro.config 添加 `site: 'https://conilab.cn'`（RSS / sitemap 必需）
+> - favicon：单圆+斜线 SVG（与 Mark.astro 同源），accent-front 浅蓝 oklch(0.7 0.12 240)
+>
+> **语言切换器联动**
+> - 文章页 / about 页所有双语段都加了 `data-lang="zh"` / `data-lang="en"` 属性；masthead 三态切换器（中-EN / 中 / EN）通过 `<html>` 的 `show-zh` / `show-en` class 联动 globals.css 切换显隐；单语模式下 `.article-flip` 翻面分隔自动隐藏
+>
+> **Components**
+> - 新增 [src/components/Pullquote.astro](src/components/Pullquote.astro)：中英并置引用 / 双 side 变体（front 蓝 / back 铜）/ ⊙ 角标 / 可选 cite
+>
+> **构建**
+> - `bun run astro check`：0 errors / 0 warnings
+> - `bun run build`：4 页面 + RSS + sitemap，517ms
+>
+> **视觉打磨第二轮（同对话尾声，2026-04-25 后段）**
+> - tokens.css：`--cjk-em-color` 从浅灰统一为 `accent-front` 深蓝 `oklch(0.42 0.14 240)`，全站中文 em dotted 下划线一处改完
+> - globals.css：CJK em 选择器去掉 `:lang(zh)`，只匹配 `.cjk em` / `[data-lang="zh"] em`；原选择器配合 `<html lang="zh-CN">` 会误中所有英文 em
+> - index.astro hero：`italic` 限定到 `.hero-side--back .hero-title em` / `.hero-side--back .hero-sub em`，中文段 em 不再合成 italic 字形（CLAUDE.md 不变量 7 修正）
+> - articles/index.astro：Kicker text 去掉前置 ⊙（Kicker 组件内部已有）；lede 拆 `.almanac-lede` (zh) + `.almanac-lede-en` (en) 两段，CJK em 走蓝 dotted、英文 em italic 铜；dl meta 从 `repeat(3, max-content)` 改为 `max-content 1fr` 两列、限宽 380px，dt-dd 正常对齐
+> - about.astro：两处 Kicker text 去掉前置 ⊙；删除未引用的 `CoinGlyph` import
+>
+> **未做（CLAUDE.md 显式禁止本对话做）**
+> - CF Pages 部署：GitHub repo / DNS / 域名 / 备案 — 留下一对话执行
 
 ✅ 完成：
 
@@ -27,40 +67,34 @@
 - 本地 dev: `cd ~/Sites/conilab && bun run dev` → http://localhost:4321/
 - 类型检查通过：`bun run astro check` 0 errors
 
-## 下一阶段（M1，建议下个对话做）
+## 下一阶段（M2 — 部署 + 内容生产）
 
-按优先级：
+M1 在 2026-04-25 这次对话基本完成。M2 优先级：
 
-1. **视觉调参** — 在浏览器里看雏形，找需要调整的细节：
-   - **双色 hue 是否对**：front 蓝 240 + back 铜 60 — 看实际渲染对比是否够鲜明又不打架
-   - **Hero 对联式版式比例**：1fr / hairline / 1fr 中央分隔是否过窄、中央 ⊙ 位置是否过偏
-   - **水印 ⊙ 的位置/透明度**：5% 是否过淡或过浓
-   - **Principles 罗马小写 i/ii/iii italic 字号**是否够"实验簿"
-   - 中英 hero 标题"两面读 / Read twice"是否有更好的对仗写法
-   - 字体加载（思源宋体 fallback PingFang，将来加 web 子集）
-2. **`/articles` 列表页 (almanac)**：5 列 grid `120/56/1fr/220/80` = date / lang-badge / title / tags / arrow，year-head 大年份 + 2px accent-deep 粗线分年
-3. **单篇文章模板 `/articles/[...slug].astro`**：
-   - 双语段落渲染（基于 schema 的 title_zh/en + body 中英分段）
-   - pullquote 中英并置组件
-   - 阅读进度条
-   - 上下文：上一篇 / 下一篇
-4. **第一篇文章**：你给原文（≥3000 字中文）→ 我做 zh→en 中英对照版 → 落地 `content/articles/2026-04-XX-slug.md`
-5. **`/about` 页**：about-aside sticky 目录 + longform 双语正文 + pullquote
-6. **RSS / sitemap**：用 `@astrojs/rss + @astrojs/sitemap`
-7. **CF Pages 部署**：
-   - GitHub repo（ssh remote）
+1. **CF Pages 部署**（M1.7 顺延）：
+   - GitHub repo（ssh remote）`coni555/conilab` 或 conilab.cn 同名
    - CF Pages 连接 repo，build cmd `bun run build`，output `dist/`
    - 域名 `conilab.cn` DNS 到 CF
-   - 国内 ICP 备案（注意：`conilab.cn` 是 .cn 域名，CF Pages 需要走 CN 节点或考虑用 Cloudflare China Network；如果没备案可以先用 cloudflare.com 的 *.pages.dev 子域过渡）
+   - 国内 ICP 备案（.cn 域名走 Cloudflare China Network 或先用 *.pages.dev 子域过渡）
+2. **第二篇文章**：积累一篇之后，列表页能看到 prev/next 实际效果；可以借机调 Pullquote 在文章模板内的引入位置
+3. **思源宋体 web 子集化**：用 `cn-font-split` 把思源宋体子集成博客可能用到的字符集（中文 ~4500 + 英文 + 数字 + 标点），降到 100KB 内
+4. **/notes 页**：短想法登记（masthead 已有 Notes 入口但没建路由）
+5. **章节级交错版式实验**：目前文章页是 zh 全文 → flip → en 全文，可以试章节级交错（每章 zh 接 en 接 zh），但需要先有第二篇文章的实际阅读体验做对比再决定
 
 ## 已知 / 待办
 
 - [ ] 思源宋体 web 字体子集化（中文 web 字体太大，需要做 subsetting，未来用 `cn-font-split` 或类似工具）
-- [ ] `astro check` 报 7 处 `'z' is deprecated` warning，是 Astro 6 + Zod 引用方式过渡，无影响（github.com/withastro/astro 后续版本会修）
-- [ ] favicon 还是 Astro 默认，需要做 conilab 自己的（硬币 motif 衍生）
-- [ ] `/articles/rss.xml` 路由还没建
-- [ ] 备案号 footer 里写的是"备案号待添加"，等域名实际部署再填
-- [ ] 暂未做 darkmode（lixiaolai 也没做，先不做）
+- [ ] `astro check` 报若干 `'z' is deprecated` + `Kicker.astro Props is declared but never used` hint，是 Astro 6 + Zod 过渡及 Astro `interface Props` 约定的 TS 误报，无影响
+- [x] favicon → 单圆+斜线浅蓝 SVG（2026-04-25）
+- [x] `/articles/rss.xml` 路由建好（2026-04-25）
+- [x] `/articles` almanac 列表页 + 首页 Articles chapter 接通（2026-04-25）
+- [x] 单篇文章页加料：reading progress / prev-next / pullquote / lang-switch 联动（2026-04-25）
+- [x] About 页（2026-04-25）
+- [ ] 单篇文章页可继续加：footnote / aside 注 / TOC（如果文章很长）/ 双语章节并排版式（目前是 zh 整段后接 en 整段，下一对话可考虑章节级交错）
+- [ ] CF Pages 部署（按本对话原计划留给下一对话）：GitHub repo（ssh remote）→ CF Pages 连接 build cmd `bun run build` output `dist/` → 域名 conilab.cn DNS → ICP 备案；过渡用 *.pages.dev
+- [ ] 备案号 footer 里"备案号待添加"，等域名实际部署再填
+- [ ] 暂未做 darkmode（先不做）
+- [ ] Pullquote 组件目前只有 about 页用，单篇文章模板可在第二篇文章时引入实际使用
 
 ## 关键决策（敲定，不要再讨论）
 
@@ -94,6 +128,4 @@
 
 ## 接力上下文
 
-进度看本文件下半部"下一阶段（M1）"。
-
-## 下一阶段（M1，建议下个对话做）
+进度看本文件上半部"下一阶段（M2）"。M1 已完成（除部署项）。

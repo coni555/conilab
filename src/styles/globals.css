@@ -79,9 +79,10 @@ h1 em, h2 em, h3 em {
 
 /* ─────────────────────────────────────────────────────────────
  * CJK em：中文段不用 italic，改 dotted 下划线
- * 标记方式：祖先 .cjk / [data-lang=zh] / :lang(zh)
+ * 标记方式：必须显式 .cjk class 或 [data-lang="zh"]
+ * （不用 :lang(zh) — 因为 <html lang="zh-CN"> 会把所有 em 都误中）
  * ───────────────────────────────────────────────────────────── */
-.cjk em, [data-lang=zh] em, :lang(zh) em {
+.cjk em, [data-lang="zh"] em {
   font-style: normal;
   color: inherit;
   text-decoration: underline;
@@ -90,6 +91,7 @@ h1 em, h2 em, h3 em {
   text-decoration-thickness: var(--cjk-em-thickness);
   text-underline-offset: var(--cjk-em-offset);
 }
+/* 字距（letter-spacing）针对所有中文段安全，可保留 :lang(zh) 兜底 */
 .cjk, .cjk-spacing, :lang(zh) {
   letter-spacing: var(--cjk-track-body);
 }

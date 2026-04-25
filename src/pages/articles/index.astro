@@ -1,0 +1,332 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getCollection } from "astro:content";
+import Kicker from "../../components/Kicker.astro";
+
+const all = await getCollection("articles");
+const articles = all
+  .filter((a) => !a.data.draft)
+  .sort(
+    (a, b) =>
+      new Date(b.data.published_at).getTime() -
+      new Date(a.data.published_at).getTime(),
+  );
+
+// 按年分组
+type Year = string;
+const byYear = new Map<Year, typeof articles>();
+for (const a of articles) {
+  const y = String(new Date(a.data.published_at).getFullYear());
+  if (!byYear.has(y)) byYear.set(y, []);
+  byYear.get(y)!.push(a);
+}
+const years = [...byYear.keys()].sort((a, b) => Number(b) - Number(a));
+
+const fmtDate = (d: Date | string) => {
+  const dt = new Date(d);
+  const m = String(dt.getMonth() + 1).padStart(2, "0");
+  const day = String(dt.getDate()).padStart(2, "0");
+  return `${dt.getFullYear()}.${m}.${day}`;
+};
+const slugOf = (a: (typeof articles)[number]) =>
+  a.data.slug ?? a.id.replace(/\.(md|mdx)$/, "");
+---
+
+<Base
+  title="Articles — conilab"
+  description="A long-form notebook published twice — once in 中文, once in English."
+>
+  <section class="almanac">
+    <div class="wrap">
+      <header class="almanac-head">
+        <Kicker text="articles · 文档登记簿" />
+        <h1 class="almanac-title">
+          The journal — <em>read twice, kept once</em>
+        </h1>
+        <p class="almanac-lede cjk" data-lang="zh" lang="zh">
+          每篇 ≥ <em>3000 字</em>，登记两次：一面中文，一面英文。
+        </p>
+        <p class="almanac-lede-en" data-lang="en" lang="en">
+          Each piece is registered <em>twice</em> — once in 中文, once in English.
+        </p>
+        <dl class="almanac-meta">
+          <dt>Total</dt><dd>{articles.length} entr{articles.length === 1 ? "y" : "ies"}</dd>
+          <dt>Min length</dt><dd>3000 字</dd>
+          <dt>Cadence</dt><dd>~1 long-form / fortnight</dd>
+        </dl>
+      </header>
+
+      {articles.length === 0 ? (
+        <div class="empty">
+          <p data-lang="zh" class="cjk">还没有登记任何文章。第一篇正在酿。</p>
+          <p data-lang="en">No entries yet. The first piece is brewing.</p>
+        </div>
+      ) : (
+        <div class="years">
+          {years.map((y) => (
+            <section class="year-block">
+              <header class="year-head">
+                <h2 class="year-num">{y}</h2>
+                <span class="year-rule" aria-hidden="true"></span>
+                <span class="year-count">
+                  {byYear.get(y)!.length} entr{byYear.get(y)!.length === 1 ? "y" : "ies"}
+                </span>
+              </header>
+
+              <ol class="entries">
+                {byYear.get(y)!.map((a) => (
+                  <li class="entry">
+                    <a class="entry-link" href={`/articles/${slugOf(a)}/`}>
+                      <span class="entry-date">{fmtDate(a.data.published_at)}</span>
+                      <span class="entry-langs" aria-hidden="true">
+                        <span class="lang lang-zh">ZH</span>
+                        {a.data.en_complete && <span class="lang lang-en">EN</span>}
+                      </span>
+                      <span class="entry-titles">
+                        <span class="entry-title-zh cjk" lang="zh">{a.data.title_zh}</span>
+                        <span class="entry-title-en">{a.data.title_en}</span>
+                      </span>
+                      <span class="entry-tags">
+                        {(a.data.tags ?? []).slice(0, 3).join(" · ")}
+                      </span>
+                      <span class="entry-arrow" aria-hidden="true">→</span>
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .almanac { padding: var(--sp-44) 0 var(--sp-96); }
+
+  /* ── HEAD ── */
+  .almanac-head {
+    border-bottom: var(--sp-hairline) solid var(--rule);
+    padding-bottom: var(--sp-32);
+    margin-bottom: var(--sp-44);
+  }
+  .almanac-title {
+    font-family: var(--serif);
+    font-size: clamp(var(--fs-7xl), 4vw, 48px);
+    line-height: 1.1;
+    margin: var(--sp-12) 0 var(--sp-18);
+    color: var(--ink);
+    font-weight: var(--fw-medium);
+    letter-spacing: -0.01em;
+  }
+  .almanac-title :global(em) {
+    font-style: italic;
+    font-weight: var(--fw-light);
+    color: var(--accent-back-ink);
+  }
+  .almanac-lede {
+    font-family: var(--cjk-serif);
+    font-size: var(--fs-xl);
+    line-height: var(--lh-prose);
+    color: var(--ink-2);
+    max-width: 60ch;
+    margin: 0 0 var(--sp-8);
+    font-weight: var(--fw-light);
+  }
+  .almanac-lede-en {
+    font-family: var(--serif);
+    font-size: var(--fs-lg);
+    line-height: var(--lh-relaxed);
+    color: var(--ink-3);
+    font-style: italic;
+    max-width: 60ch;
+    margin: 0 0 var(--sp-22);
+    font-weight: var(--fw-light);
+  }
+  .almanac-lede-en :global(em) {
+    color: var(--accent-back-ink);
+    font-weight: var(--fw-normal);
+  }
+
+  /* dl 改为 dt-dd 列对应：dt 一列 / dd 一列，每行一对 */
+  .almanac-meta {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: var(--sp-22);
+    row-gap: var(--sp-6);
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    margin: 0;
+    max-width: 380px;
+  }
+  .almanac-meta dt {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--ink-3);
+  }
+  .almanac-meta dd {
+    margin: 0;
+    color: var(--ink-2);
+    font-family: var(--sans);
+    font-size: var(--fs-md);
+  }
+
+  /* ── YEAR BLOCK ── */
+  .years { display: grid; gap: var(--sp-72); }
+  .year-block {}
+  .year-head {
+    display: grid;
+    grid-template-columns: max-content 1fr max-content;
+    align-items: baseline;
+    gap: var(--sp-22);
+    border-bottom: 2px solid var(--accent-front);
+    padding-bottom: var(--sp-12);
+    margin-bottom: var(--sp-22);
+  }
+  .year-num {
+    font-family: var(--serif);
+    font-size: clamp(var(--fs-9xl), 6vw, 72px);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin: 0;
+    color: var(--accent-front-ink);
+    font-weight: var(--fw-medium);
+    font-variation-settings: "opsz" 72;
+  }
+  .year-rule { display: none; }
+  .year-count {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  /* ── ENTRY ROW ── */
+  .entries {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .entry {
+    border-bottom: var(--sp-hairline) solid var(--rule);
+  }
+  .entry:last-child { border-bottom: none; }
+
+  .entry-link {
+    display: grid;
+    grid-template-columns: 110px 60px 1fr 220px 60px;
+    align-items: baseline;
+    gap: var(--sp-22);
+    padding: var(--sp-22) 0;
+    color: var(--ink);
+    transition: background var(--dur-quick);
+  }
+  .entry-link:hover {
+    background: color-mix(in oklch, var(--accent-front) 4%, transparent);
+  }
+  .entry-link:hover .entry-arrow {
+    transform: translateX(4px);
+    color: var(--accent-front);
+  }
+  @media (max-width: 900px) {
+    .entry-link {
+      grid-template-columns: max-content 1fr max-content;
+      grid-template-areas:
+        "date lang arrow"
+        "title title title"
+        "tags tags tags";
+      row-gap: var(--sp-8);
+      padding: var(--sp-18) 0;
+    }
+    .entry-date  { grid-area: date; }
+    .entry-langs { grid-area: lang; }
+    .entry-titles { grid-area: title; }
+    .entry-tags  { grid-area: tags; }
+    .entry-arrow { grid-area: arrow; }
+  }
+
+  .entry-date {
+    font-family: var(--mono);
+    font-size: var(--fs-sm);
+    color: var(--ink-3);
+    letter-spacing: 0.04em;
+  }
+  .entry-langs {
+    display: inline-flex;
+    gap: var(--sp-4);
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.14em;
+  }
+  .lang {
+    padding: var(--sp-2) var(--sp-6);
+    border: var(--sp-hairline) solid;
+    border-radius: var(--rad-2);
+  }
+  .lang-zh {
+    color: var(--accent-front);
+    border-color: color-mix(in oklch, var(--accent-front) 50%, var(--rule));
+  }
+  .lang-en {
+    color: var(--accent-back);
+    border-color: color-mix(in oklch, var(--accent-back) 50%, var(--rule));
+  }
+
+  .entry-titles {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    min-width: 0;
+  }
+  .entry-title-zh {
+    font-family: var(--cjk-serif);
+    font-size: var(--fs-2xl);
+    line-height: 1.25;
+    color: var(--ink);
+    font-weight: var(--fw-medium);
+    letter-spacing: -0.005em;
+  }
+  .entry-title-en {
+    font-family: var(--serif);
+    font-size: var(--fs-md);
+    line-height: 1.3;
+    color: var(--ink-3);
+    font-style: italic;
+    font-weight: var(--fw-light);
+  }
+
+  .entry-tags {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    text-align: right;
+  }
+  @media (max-width: 900px) {
+    .entry-tags { text-align: left; }
+  }
+
+  .entry-arrow {
+    font-family: var(--serif);
+    font-size: var(--fs-xl);
+    color: var(--ink-3);
+    text-align: right;
+    transition: transform var(--dur-quick), color var(--dur-quick);
+  }
+
+  /* ── empty ── */
+  .empty {
+    padding: var(--sp-72) 0;
+    color: var(--ink-3);
+    font-family: var(--serif);
+    font-size: var(--fs-lg);
+    display: grid;
+    gap: var(--sp-10);
+    max-width: 50ch;
+  }
+  .empty [data-lang="zh"] { font-family: var(--cjk-serif); }
+  .empty [data-lang="en"] { font-style: italic; }
+</style>

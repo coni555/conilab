@@ -4,11 +4,28 @@ import ChapterHead from "../components/ChapterHead.astro";
 import ColophonCard from "../components/ColophonCard.astro";
 import Kicker from "../components/Kicker.astro";
 import CoinGlyph from "../components/CoinGlyph.astro";
+import { getCollection } from "astro:content";
+
+const all = await getCollection("articles");
+const articles = all
+  .filter((a) => !a.data.draft)
+  .sort(
+    (a, b) =>
+      new Date(b.data.published_at).getTime() -
+      new Date(a.data.published_at).getTime(),
+  );
+
+const fmtDate = (d: Date | string) => {
+  const dt = new Date(d);
+  return `${dt.getFullYear()}.${String(dt.getMonth() + 1).padStart(2, "0")}.${String(dt.getDate()).padStart(2, "0")}`;
+};
+const slugOf = (a: (typeof articles)[number]) =>
+  a.data.slug ?? a.id.replace(/\.(md|mdx)$/, "");
 
 const colophonEntries = [
   { label: "Reading",  value: "TBD — 待登记" },
   { label: "Writing",  value: "First long-form, brewing", accent: true, href: "#" },
-  { label: "Shipping", value: "0 entries · 试验簿初开" },
+  { label: "Shipping", value: `${articles.length} entr${articles.length === 1 ? "y" : "ies"} · ${articles.length === 0 ? "试验簿初开" : "首篇已登记"}` },
   { label: "Watching", value: "AI alignment notes" },
 ];
 ---
@@ -29,12 +46,13 @@ const colophonEntries = [
         <div class="hero-side hero-side--front" data-side="front">
           <div class="hero-side-tag">正面 · ZH</div>
           <h1 class="hero-title cjk" lang="zh">
-            两面读<br />
-            一遍世界
+            正面读一次<br />
+            <em>翻过来</em>再读一次
           </h1>
           <p class="hero-sub cjk" lang="zh">
-            一份只发<em>三千字</em>以上长文的笔记本。<br />
-            每一篇都被读两次：一次中文，一次英文。
+            不是<em>翻译</em>。是同一个想法落在<br />
+            另一种语言的土壤上，长出<br />
+            稍微不同的形状。
           </p>
         </div>
 
@@ -45,12 +63,13 @@ const colophonEntries = [
         <div class="hero-side hero-side--back" data-side="back">
           <div class="hero-side-tag">REVERSE · EN</div>
           <h1 class="hero-title">
-            Read <em>twice</em>,<br />
-            once <em>each side</em>.
+            Read it once.<br />
+            Now <em>turn it over</em>.
           </h1>
           <p class="hero-sub">
-            A notebook that publishes only when a piece reaches <em>3000 字</em> —
-            and only after it has been written in both languages.
+            Not a <em>translation</em>. The same thought,
+            landing in another tongue — and growing
+            slightly different roots.
           </p>
         </div>
       </div>
@@ -84,19 +103,41 @@ const colophonEntries = [
         The journal — <em>read twice, kept once</em>
       </ChapterHead>
 
-      <div class="placeholder">
-        <Kicker text="no entries yet · 暂无文章" accent />
-        <div class="bilingual">
-          <p data-lang="zh" class="cjk">
-            这里很快会出现第一篇<em>三千字以上</em>的长文。每篇登记两次：
-            一面是<em>中文</em>，一面是<em>English</em>。
-          </p>
-          <p data-lang="en">
-            The first <em>≥3000-字</em> piece is brewing. Each entry is registered
-            twice — once on the <em>front</em> face, once on the <em>reverse</em>.
-          </p>
+      {articles.length === 0 ? (
+        <div class="placeholder">
+          <Kicker text="no entries yet · 暂无文章" accent />
+          <div class="bilingual">
+            <p data-lang="zh" class="cjk">
+              第一篇<em>三千字以上</em>的长文正在酿。同一个核——
+              一次落在<em>中文</em>里，一次落在<em>English</em>里。
+            </p>
+            <p data-lang="en">
+              The first <em>≥3000-字</em> piece is brewing. One core —
+              landing once in <em>中文</em>, once in <em>English</em>.
+            </p>
+          </div>
         </div>
-      </div>
+      ) : (
+        <ol class="recent">
+          {articles.slice(0, 5).map((a) => (
+            <li class="recent-item">
+              <a class="recent-link" href={`/articles/${slugOf(a)}/`}>
+                <span class="recent-date">{fmtDate(a.data.published_at)}</span>
+                <span class="recent-titles">
+                  <span class="recent-title-zh cjk" lang="zh">{a.data.title_zh}</span>
+                  <span class="recent-title-en">{a.data.title_en}</span>
+                </span>
+                <span class="recent-arrow" aria-hidden="true">→</span>
+              </a>
+            </li>
+          ))}
+          <li class="recent-all">
+            <a href="/articles/" class="recent-all-link">
+              View all {articles.length} entr{articles.length === 1 ? "y" : "ies"} <span aria-hidden="true">→</span>
+            </a>
+          </li>
+        </ol>
+      )}
     </div>
   </section>
 
@@ -126,23 +167,11 @@ const colophonEntries = [
           <span class="p-num">ii</span>
           <div class="bilingual">
             <p data-lang="zh" class="cjk">
-              每篇都要被<em>读两次</em>：一次写、一次译。译稿不是附加，是同一篇的另一面。
+              一个想法只用<em>母语</em>写一遍，它还没<em>完成</em>。翻过来再写一遍，才是同一枚硬币的两面。
             </p>
             <p data-lang="en">
-              Each piece is <em>read twice</em>: once written, once translated.
-              The translation isn't a supplement — it's the other face of the same coin.
-            </p>
-          </div>
-        </li>
-        <li>
-          <span class="p-num">iii</span>
-          <div class="bilingual">
-            <p data-lang="zh" class="cjk">
-              不暴露任何<em>真实身份信息</em>。这里只有一个网名 @coni 和一组想法。
-            </p>
-            <p data-lang="en">
-              No <em>real-world identity</em> appears here. Only a handle (@coni)
-              and a set of ideas.
+              A thought written only in its <em>native tongue</em> isn't <em>finished</em>.
+              Written again from the other side, it becomes both faces of the same coin.
             </p>
           </div>
         </li>
@@ -213,12 +242,15 @@ const colophonEntries = [
     font-variation-settings: "opsz" 72;
   }
   .hero-side--front .hero-title { font-family: var(--cjk-serif); }
-  .hero-title :global(em) {
-    font-style: italic;
-    font-weight: var(--fw-light);
+  .hero-title :global(em) { font-weight: var(--fw-light); }
+  .hero-side--front .hero-title :global(em) {
+    /* CJK em：不 italic，走 globals.css 的 dotted 蓝下划线 */
+    color: var(--accent-front-ink);
   }
-  .hero-side--front .hero-title :global(em) { color: var(--accent-front-ink); }
-  .hero-side--back  .hero-title :global(em) { color: var(--accent-back-ink); }
+  .hero-side--back .hero-title :global(em) {
+    font-style: italic;
+    color: var(--accent-back-ink);
+  }
 
   .hero-sub {
     font-family: var(--serif);
@@ -231,9 +263,12 @@ const colophonEntries = [
   }
   .hero-side--front .hero-sub { font-family: var(--cjk-serif); }
   .hero-side--back  .hero-sub { margin-left: auto; }
-  .hero-sub :global(em) { font-style: italic; }
+  /* 英文段 em italic，中文段走 globals.css 的 CJK em（normal + 蓝 dotted） */
   .hero-side--front .hero-sub :global(em) { color: var(--accent-front-ink); }
-  .hero-side--back  .hero-sub :global(em) { color: var(--accent-back-ink); }
+  .hero-side--back  .hero-sub :global(em) {
+    font-style: italic;
+    color: var(--accent-back-ink);
+  }
 
   /* 中央分隔：垂直 hairline + 中点 ⊙ —— "硬币剖面" */
   .hero-divider {
@@ -339,6 +374,84 @@ const colophonEntries = [
   }
   .bilingual [data-lang="en"] :global(em) {
     color: var(--accent-front-ink);
+  }
+
+  /* ─── RECENT articles list (homepage Ⅰ chapter) ─── */
+  .recent {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-width: 70ch;
+  }
+  .recent-item {
+    border-bottom: var(--sp-hairline) solid var(--rule);
+  }
+  .recent-link {
+    display: grid;
+    grid-template-columns: 100px 1fr 40px;
+    gap: var(--sp-22);
+    align-items: baseline;
+    padding: var(--sp-18) 0;
+    color: var(--ink);
+    transition: background var(--dur-quick);
+  }
+  .recent-link:hover {
+    background: color-mix(in oklch, var(--accent-front) 4%, transparent);
+  }
+  .recent-link:hover .recent-arrow {
+    transform: translateX(4px);
+    color: var(--accent-front);
+  }
+  .recent-date {
+    font-family: var(--mono);
+    font-size: var(--fs-sm);
+    color: var(--ink-3);
+    letter-spacing: 0.04em;
+  }
+  .recent-titles {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+  .recent-title-zh {
+    font-family: var(--cjk-serif);
+    font-size: var(--fs-xl);
+    color: var(--ink);
+    font-weight: var(--fw-medium);
+    line-height: 1.3;
+  }
+  .recent-title-en {
+    font-family: var(--serif);
+    font-size: var(--fs-md);
+    color: var(--ink-3);
+    font-style: italic;
+    line-height: 1.3;
+  }
+  .recent-arrow {
+    font-family: var(--serif);
+    color: var(--ink-3);
+    text-align: right;
+    transition: transform var(--dur-quick), color var(--dur-quick);
+  }
+  .recent-all {
+    padding-top: var(--sp-22);
+    list-style: none;
+  }
+  .recent-all-link {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent-back);
+    border-bottom: var(--sp-hairline) solid color-mix(in oklch, var(--accent-back) 50%, var(--rule));
+    padding-bottom: var(--sp-2);
+  }
+  .recent-all-link:hover { color: var(--accent-back-ink); }
+  @media (max-width: 720px) {
+    .recent-link {
+      grid-template-columns: max-content 1fr max-content;
+      gap: var(--sp-12);
+    }
   }
 
   /* ─── PRINCIPLES list ─── */

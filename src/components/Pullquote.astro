@@ -1,0 +1,89 @@
+---
+/**
+ * Pullquote — 中英并置引用组件
+ * 用法：
+ *   <Pullquote zh="..." en="..." cite="..." />
+ * 或在 markdown 内：
+ *   <Pullquote zh="..." en="..." />
+ */
+interface Props {
+  zh?: string;
+  en?: string;
+  cite?: string;
+  side?: "front" | "back";
+}
+const { zh, en, cite, side = "back" } = Astro.props;
+---
+
+<aside class:list={["pullquote", `pullquote--${side}`]}>
+  <div class="pq-mark" aria-hidden="true">⊙</div>
+  <div class="pq-body">
+    {zh && (
+      <p class="pq-zh cjk" data-lang="zh" lang="zh">{zh}</p>
+    )}
+    {en && (
+      <p class="pq-en" data-lang="en" lang="en">{en}</p>
+    )}
+  </div>
+  {cite && <footer class="pq-cite">— {cite}</footer>}
+</aside>
+
+<style>
+  .pullquote {
+    margin: var(--sp-44) calc(var(--sp-22) * -1);
+    padding: var(--sp-32) var(--sp-44);
+    border-top: 2px solid;
+    border-bottom: var(--sp-hairline) solid var(--rule);
+    position: relative;
+    background: color-mix(in oklch, var(--paper-2) 60%, var(--paper));
+  }
+  .pullquote--front { border-top-color: var(--accent-front); }
+  .pullquote--back  { border-top-color: var(--accent-back); }
+
+  .pq-mark {
+    position: absolute;
+    top: var(--sp-22);
+    right: var(--sp-22);
+    font-size: var(--fs-2xl);
+    opacity: 0.18;
+  }
+  .pullquote--front .pq-mark { color: var(--accent-front); }
+  .pullquote--back  .pq-mark { color: var(--accent-back); }
+
+  .pq-body { display: grid; gap: var(--sp-12); max-width: 60ch; }
+
+  .pq-zh {
+    font-family: var(--cjk-serif);
+    font-size: var(--fs-2xl);
+    line-height: 1.55;
+    color: var(--ink);
+    font-weight: var(--fw-medium);
+    margin: 0;
+    letter-spacing: 0.01em;
+  }
+  .pq-en {
+    font-family: var(--serif);
+    font-size: var(--fs-xl);
+    line-height: var(--lh-relaxed);
+    color: var(--ink-2);
+    font-style: italic;
+    font-weight: var(--fw-light);
+    margin: 0;
+  }
+
+  .pq-cite {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-top: var(--sp-18);
+  }
+
+  @media (max-width: 720px) {
+    .pullquote {
+      margin: var(--sp-32) 0;
+      padding: var(--sp-22) var(--sp-22);
+    }
+  }
+</style>
