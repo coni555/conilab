@@ -87,6 +87,19 @@ content.config.ts  # Astro content collections schema
 
 允许出现：网名 `@coni` / `coni` / `硬币`、域名 `conilab.cn`、GitHub 用户名 `coni555`、邮箱（如果将来加联系方式）
 
+## 会话卫生（防 image dimension limit）
+
+**症状**：长会话反复触发 `An image in the conversation exceeds the dimension limit for many-image requests (2000px). Start a new session with fewer images.`
+
+**根因**：每个 turn SDK 把整段 image 历史重发给 API；多图请求有 2000px 单边维度上限。Retina 截屏（CF dashboard / 浏览器预览）轻易超阈，会话一旦塞几十张就反复爆。
+
+**对策（按优先级）**：
+1. 验证内容/结构用 `preview_snapshot`（DOM 文本），**不要默认 `preview_screenshot`**
+2. 视觉效果只在 milestone 末尾截一张给用户看
+3. 必须截图先压尺寸：`sips -Z 1500 input.png --out out.png`（长边 1500px 内）
+4. CF 控制台 / wrangler 状态用 CLI（`bunx wrangler whoami` / `pages project list` / `pages deployment list`）替代贴 dashboard 截图
+5. 一个 milestone（部署成功、commit 推上）完成就 `/clear` 起新会话，用 `HANDOFF.md` 接力
+
 ## 跨对话接力
 
 进度看 `HANDOFF.md`。每次大阶段完成更新它。

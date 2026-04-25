@@ -1,0 +1,130 @@
+---
+import Base from "../../layouts/Base.astro";
+import Kicker from "../../components/Kicker.astro";
+
+// notes 集合暂未建立——本页先做占位，避免 masthead nav 404。
+// 真有 notes 之后，把 placeholder 块替换成与 articles/index.astro 同构的列表即可。
+---
+
+<Base
+  title="Notes — conilab"
+  description="Quick takes — book marginalia, half-thoughts, one-line observations. The other face of the coin."
+>
+  <section class="almanac">
+    <div class="wrap">
+      <header class="almanac-head">
+        <Kicker text="notes · 短想登记簿" />
+        <h1 class="almanac-title">
+          The margins — <em>kept brief</em>
+        </h1>
+        <p class="almanac-lede cjk" data-lang="zh" lang="zh">
+          硬币的另一面：<em>三言两语</em>就能说完的短想——书摘、灵感闪过、一句话观察。
+        </p>
+        <p class="almanac-lede-en" data-lang="en" lang="en">
+          The other face of the coin: <em>quick takes</em> — book marginalia,
+          half-thoughts, one-line observations.
+        </p>
+        <dl class="almanac-meta">
+          <dt>Length</dt><dd>brief — by design</dd>
+          <dt>Cadence</dt><dd>whenever something lands</dd>
+          <dt>Languages</dt><dd>whichever it lands in</dd>
+        </dl>
+      </header>
+
+      <div class="empty">
+        <p data-lang="zh" class="cjk">还没有登记任何短想。这里现在还空着。</p>
+        <p data-lang="en">No notes yet. This face of the coin is still empty.</p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .almanac { padding: var(--sp-44) 0 var(--sp-96); }
+
+  .almanac-head {
+    border-bottom: var(--sp-hairline) solid var(--rule);
+    padding-bottom: var(--sp-32);
+    margin-bottom: var(--sp-44);
+  }
+  .almanac-title {
+    font-family: var(--serif);
+    font-size: clamp(var(--fs-7xl), 4vw, 48px);
+    line-height: 1.1;
+    margin: var(--sp-12) 0 var(--sp-18);
+    color: var(--ink);
+    font-weight: var(--fw-medium);
+    letter-spacing: -0.01em;
+  }
+  .almanac-title :global(em) {
+    font-style: italic;
+    font-weight: var(--fw-light);
+    color: var(--accent-back-ink);
+  }
+  .almanac-lede {
+    font-family: var(--cjk-serif);
+    font-size: var(--fs-xl);
+    line-height: var(--lh-prose);
+    color: var(--ink-2);
+    max-width: 60ch;
+    margin: 0 0 var(--sp-8);
+    font-weight: var(--fw-light);
+  }
+  .almanac-lede :global(em) {
+    font-style: normal;
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-style: var(--cjk-em-line);
+    text-decoration-color: var(--accent-back);
+    text-decoration-thickness: var(--cjk-em-thickness);
+    text-underline-offset: var(--cjk-em-offset);
+  }
+  .almanac-lede-en {
+    font-family: var(--serif);
+    font-size: var(--fs-lg);
+    line-height: var(--lh-relaxed);
+    color: var(--ink-3);
+    font-style: italic;
+    max-width: 60ch;
+    margin: 0 0 var(--sp-22);
+    font-weight: var(--fw-light);
+  }
+  .almanac-lede-en :global(em) {
+    color: var(--accent-back-ink);
+    font-weight: var(--fw-normal);
+  }
+
+  .almanac-meta {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: var(--sp-22);
+    row-gap: var(--sp-6);
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    margin: 0;
+    max-width: 380px;
+  }
+  .almanac-meta dt {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--ink-3);
+  }
+  .almanac-meta dd {
+    margin: 0;
+    color: var(--ink-2);
+    font-family: var(--sans);
+    font-size: var(--fs-md);
+  }
+
+  .empty {
+    padding: var(--sp-72) 0;
+    color: var(--ink-3);
+    font-family: var(--serif);
+    font-size: var(--fs-lg);
+    display: grid;
+    gap: var(--sp-10);
+    max-width: 50ch;
+  }
+  .empty [data-lang="zh"] { font-family: var(--cjk-serif); }
+  .empty [data-lang="en"] { font-style: italic; }
+</style>

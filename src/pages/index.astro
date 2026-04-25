@@ -46,13 +46,12 @@ const colophonEntries = [
         <div class="hero-side hero-side--front" data-side="front" data-lang="zh">
           <div class="hero-side-tag">正面 · ZH</div>
           <h1 class="hero-title cjk" lang="zh">
-            正面读一次<br />
-            <em>翻过来</em>再读一次
+            一面写<em>长文</em><br />
+            一面写<em>短想</em>
           </h1>
           <p class="hero-sub cjk" lang="zh">
-            不是<em>翻译</em>。是同一个想法落在<br />
-            另一种语言的土壤上，长出<br />
-            稍微不同的形状。
+            长文住 <em>ARTICLES</em>，三千字起、中英对照。<br />
+            短想住 <em>NOTES</em>，三言两语、即写即发。
           </p>
         </div>
 
@@ -63,13 +62,12 @@ const colophonEntries = [
         <div class="hero-side hero-side--back" data-side="back" data-lang="en">
           <div class="hero-side-tag">REVERSE · EN</div>
           <h1 class="hero-title">
-            Read it once.<br />
-            Now <em>turn it over</em>.
+            One face for <em>essays</em>.<br />
+            The other for <em>notes</em>.
           </h1>
           <p class="hero-sub">
-            Not a <em>translation</em>. The same thought,
-            landing in another tongue — and growing
-            slightly different roots.
+            Long pieces ship to <em>ARTICLES</em> — ≥ 3000 字, both sides.
+            Quick takes ship to <em>NOTES</em> — once, briefly.
           </p>
         </div>
       </div>
@@ -127,16 +125,43 @@ const colophonEntries = [
   </section>
 
   <!-- ============================================================
+       CHAPTER Ⅱ · NOTES（短想：与 ARTICLES 平行的另一面）
+       ============================================================ -->
+  <section class="chapter chapter--notes" id="notes">
+    <div class="wrap">
+      <ChapterHead num="Ⅱ" label="NOTES" allHref="/notes" side="back">
+        The margins — <em>quick takes, kept brief</em>
+      </ChapterHead>
+
+      <div class="placeholder">
+        <Kicker text="no notes yet · 暂无短想" accent />
+        <div class="bilingual">
+          <p data-lang="zh" class="cjk">
+            这里以后会是<em>三言两语</em>就能说完的短想——书摘、
+            灵感闪过、一句话观察。一面归长文，一面归短想，
+            这边现在还空着。
+          </p>
+          <p data-lang="en">
+            This is where <em>quick notes</em> will land — book marginalia,
+            half-thoughts, one-line observations. One face for essays;
+            the other, this. Empty for now.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
        REGISTRY — 试验登记卡（meta + colophon），从 hero-foot 升级为独立段
        ============================================================ -->
   <section class="registry">
     <div class="wrap">
       <div class="registry-grid">
         <dl class="hero-meta">
-          <dt>Min length</dt>   <dd>3000 字</dd>
-          <dt>Languages</dt>    <dd>中文 · English</dd>
-          <dt>Cadence</dt>      <dd>~1 long-form / fortnight</dd>
           <dt>Faces</dt>        <dd>two — by design</dd>
+          <dt>Languages</dt>    <dd>中文 · English</dd>
+          <dt>Articles</dt>     <dd>≥ 3000 字 · ~1 / fortnight</dd>
+          <dt>Notes</dt>        <dd>brief · whenever</dd>
         </dl>
 
         <ColophonCard
@@ -149,12 +174,12 @@ const colophonEntries = [
   </section>
 
   <!-- ============================================================
-       CHAPTER Ⅱ · PRINCIPLES
+       CHAPTER Ⅲ · PRINCIPLES
        (替代 lixiaolai-style ABOUT；不出现真实身份)
        ============================================================ -->
   <section class="chapter" id="principles">
     <div class="wrap">
-      <ChapterHead num="Ⅱ" label="PRINCIPLES" side="back">
+      <ChapterHead num="Ⅲ" label="PRINCIPLES">
         What this notebook <em>refuses</em>
       </ChapterHead>
 
@@ -163,10 +188,12 @@ const colophonEntries = [
           <span class="p-num">i</span>
           <div class="bilingual">
             <p data-lang="zh" class="cjk">
-              不发任何<em>低于三千字</em>的内容。短想法去别处。
+              两面分工，<em>不混发</em>：长文走 ARTICLES，三千字起、中英对照；
+              短想走 NOTES，<em>三言两语</em>就好。
             </p>
             <p data-lang="en">
-              Nothing under <em>3000 字</em> ships here. Shorter thoughts live elsewhere.
+              <em>Two faces, kept separate.</em> Long pieces ship to ARTICLES — ≥ 3000 字, both sides.
+              Notes ship to NOTES — <em>brief</em>, once, done.
             </p>
           </div>
         </li>
@@ -174,11 +201,12 @@ const colophonEntries = [
           <span class="p-num">ii</span>
           <div class="bilingual">
             <p data-lang="zh" class="cjk">
-              一个想法只用<em>母语</em>写一遍，它还没<em>完成</em>。翻过来再写一遍，才是同一枚硬币的两面。
+              一面用来<em>沉淀</em>，一面用来<em>即兴</em>——硬币翻一下，
+              两种思考都有家。
             </p>
             <p data-lang="en">
-              A thought written only in its <em>native tongue</em> isn't <em>finished</em>.
-              Written again from the other side, it becomes both faces of the same coin.
+              <em>One face settles. The other flashes.</em>
+              Flip the coin and both modes of thought have a home.
             </p>
           </div>
         </li>
