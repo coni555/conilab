@@ -4,7 +4,20 @@
 > 协作约束看 `CLAUDE.md`，视觉来源看 `~/.claude/projects/-Users-coni/memory/design-ref-literary-paper.md`。
 > conilab 自己的设计语言（脱离 lixiaolai）在下面"创新方向"段。
 
-## 当前状态：M1 完成（除部署）— 全栈可见、可读、可订阅
+## 当前状态：M2 部署完成 — https://conilab.cn 已上线
+
+> **2026-04-25 部署阶段**
+>
+> - GitHub repo：[coni555/conilab](https://github.com/coni555/conilab) (public)
+> - Cloudflare Pages 项目：`conilab`（直接上传 `dist/`，未走 Git 集成）
+> - 自定义域名：`conilab.cn`（apex，CF CNAME flatten 到 `conilab.pages.dev`，proxy 开）
+> - SSL：CF 自动签发（Google CA），首次绑定后约 2 分钟生效
+> - 部署 URL：https://conilab.cn ✅ + https://conilab.pages.dev（保留作为 fallback）
+> - 工具链：本机 `wrangler` OAuth 登录 → `wrangler pages project create conilab` + `wrangler pages deploy dist` 完成首次发布；apex CNAME 通过 dashboard 创建（OAuth scope 不含 DNS:Edit，wrangler 也没有 dns 子命令，走 dashboard 是最直路径）
+> - **未做（M2 后续）**：ICP 备案 — .cn 域名国内稳定访问需要，海外/小圈子先用，备案另起流程
+> - **未做（M2 后续）**：将后续部署接通 GitHub Actions 或 CF Pages Git 集成实现 push-to-deploy；当前每次发版需本地 `bun run build && bunx wrangler pages deploy dist --project-name=conilab`
+
+## M1 完成（部署前阶段）— 全栈可见、可读、可订阅
 
 > **本次对话（2026-04-25）累计完成**
 >
@@ -91,8 +104,9 @@ M1 在 2026-04-25 这次对话基本完成。M2 优先级：
 - [x] 单篇文章页加料：reading progress / prev-next / pullquote / lang-switch 联动（2026-04-25）
 - [x] About 页（2026-04-25）
 - [ ] 单篇文章页可继续加：footnote / aside 注 / TOC（如果文章很长）/ 双语章节并排版式（目前是 zh 整段后接 en 整段，下一对话可考虑章节级交错）
-- [ ] CF Pages 部署（按本对话原计划留给下一对话）：GitHub repo（ssh remote）→ CF Pages 连接 build cmd `bun run build` output `dist/` → 域名 conilab.cn DNS → ICP 备案；过渡用 *.pages.dev
-- [ ] 备案号 footer 里"备案号待添加"，等域名实际部署再填
+- [x] CF Pages 部署（2026-04-25 完成）：repo coni555/conilab + Pages project conilab + apex conilab.cn 绑定
+- [ ] ICP 备案：footer 里"备案号待添加"，备案下来后填
+- [ ] push-to-deploy：当前手动 `wrangler pages deploy dist`，下一步可接 CF Pages Git 集成或 GitHub Actions
 - [ ] 暂未做 darkmode（先不做）
 - [ ] Pullquote 组件目前只有 about 页用，单篇文章模板可在第二篇文章时引入实际使用
 
