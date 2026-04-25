@@ -4,7 +4,7 @@
 > 协作约束看 `CLAUDE.md`，视觉来源看 `~/.claude/projects/-Users-coni/memory/design-ref-literary-paper.md`。
 > conilab 自己的设计语言（脱离 lixiaolai）在下面"创新方向"段。
 
-## 当前状态：M2 部署完成 — https://conilab.cn 已上线
+## 当前状态：M2 部署完成 + 上线后第一轮文案/动效迭代
 
 > **2026-04-25 部署阶段**
 >
@@ -15,7 +15,20 @@
 > - 部署 URL：https://conilab.cn ✅ + https://conilab.pages.dev（保留作为 fallback）
 > - 工具链：本机 `wrangler` OAuth 登录 → `wrangler pages project create conilab` + `wrangler pages deploy dist` 完成首次发布；apex CNAME 通过 dashboard 创建（OAuth scope 不含 DNS:Edit，wrangler 也没有 dns 子命令，走 dashboard 是最直路径）
 > - **未做（M2 后续）**：ICP 备案 — .cn 域名国内稳定访问需要，海外/小圈子先用，备案另起流程
-> - **未做（M2 后续）**：将后续部署接通 GitHub Actions 或 CF Pages Git 集成实现 push-to-deploy；当前每次发版需本地 `bun run build && bunx wrangler pages deploy dist --project-name=conilab`
+
+> **2026-04-25 上线后迭代（M2.1 — 当晚同对话延伸）**
+>
+> 部署完成后这次对话又叠了 5 个 commit，内容打磨到位：
+>
+> - **`28f7acf` 首页文案 + 信息层级**：footer 删掉 "c-o-i-n flipped to c-o-n-i" 名字梗只留核心 blurb；Colophon 4 行（READING 《上行》/ WRITING 酝酿中 / SHIPPING entries 计数 / WATCHING）；首页 ARTICLES chapter 提前到 hero 之后让最新文章首屏可见
+> - **`6e0ffcd` 默认 EN + 克制动效**：lang switcher 默认状态从"中-EN 双语"改 EN 单语（首访默认 EN，再访 localStorage 记忆）；hero 入场动画（rubric → ZH 侧 → ⊙ → EN 侧 错峰淡入上滑 700ms / cubic-bezier(0.2,0.7,0.2,1)）；CoinGlyph hover 沿 Y 轴 360° 翻转（"硬币两面"motif 强化）；hero 水印 ⊙ 240s/圈慢速旋转。所有动效都尊重 `prefers-reduced-motion`
+> - **`caf921a` 主页 NOTES 重写（已 revert）**：尝试把 hero 改成"长文/短想"双面 + 加 CHAPTER Ⅱ NOTES。问题：弄丢了 hero 的中英诗意。下一条 revert
+> - **`86ee4bd` revert 上一条**：index.astro 单文件 `git checkout 6e0ffcd` 恢复。**保留**两件事：(a) `src/pages/notes/index.astro` 占位页（修 masthead `/notes` 404）；(b) `CLAUDE.md` 新增"会话卫生"章节（image dimension limit 根因 + 5 条对策）
+> - **`4826e58` notebook → article reframe**：把 article-only 形容（3000 字 / 双语机制）从全局位置撤回。**主页**: PRINCIPLES 标题 `What this notebook refuses` → `What an article refuses`；**Footer**: 删 "Long-form notes that land twice…" blurb（这条 site-wide 用 article-only 机制描述全站）；**About**: title `A notebook read twice, kept once.` → `An article read twice, kept once.`，lede 删掉首句"A long-form notebook" / "一份只发三千字以上长文的笔记本"，section Ⅰ 去掉"个人长文笔记本"的"长文"+"no quick takes"，加 `/notes` 链接指向短想去处
+>
+> **push-to-deploy 验证**：本会话内 push 到 main 后 CF Pages 自动构建并部署成功（确认 GitHub-connected auto-deploy 链路通），不再需要手动 `wrangler pages deploy`。原 M2 后续清单里这一项可以划掉
+>
+> **/notes 路由现状**：占位页就位（`src/pages/notes/index.astro`，almanac head 风格 + empty state），masthead nav 不再 404；但还没建 `notes` content collection / 单 note 模板 / 列表逻辑——真要写第一条 note 时再扩
 
 ## M1 完成（部署前阶段）— 全栈可见、可读、可订阅
 
@@ -105,8 +118,14 @@ M1 在 2026-04-25 这次对话基本完成。M2 优先级：
 - [x] About 页（2026-04-25）
 - [ ] 单篇文章页可继续加：footnote / aside 注 / TOC（如果文章很长）/ 双语章节并排版式（目前是 zh 整段后接 en 整段，下一对话可考虑章节级交错）
 - [x] CF Pages 部署（2026-04-25 完成）：repo coni555/conilab + Pages project conilab + apex conilab.cn 绑定
-- [ ] ICP 备案：footer 里"备案号待添加"，备案下来后填
-- [ ] push-to-deploy：当前手动 `wrangler pages deploy dist`，下一步可接 CF Pages Git 集成或 GitHub Actions
+- [x] push-to-deploy（2026-04-25 M2.1 验证）：GitHub-connected auto-deploy 链路通，push 到 main 自动跑 build & deploy，不再需要本地 `wrangler pages deploy`
+- [x] /notes 占位页（2026-04-25 M2.1）：修 masthead `/notes` 404
+- [x] 默认语言 EN + hero/coin/水印动效（2026-04-25 M2.1）
+- [x] article-only 形容收回到 article scope（2026-04-25 M2.1）：home/footer/about 三处 notebook 误代指 article 机制的位置都已 reframe
+- [ ] ICP 备案：footer 里"备案号待添加"，备案下来后填（M2.1 已删 footer blurb，备案占位仍在 footer-bottom）
+- [ ] /notes 真内容化：当前是占位 empty state，建 `notes` content collection + 单 note 模板 + 列表逻辑（写第一条 note 前再做）
+- [ ] 第二篇文章：列表页 prev/next 实际效果 + Pullquote 在文章模板的使用
+- [ ] 思源宋体 web 子集化：cn-font-split 把中文字体降到 100KB 内
 - [ ] 暂未做 darkmode（先不做）
 - [ ] Pullquote 组件目前只有 about 页用，单篇文章模板可在第二篇文章时引入实际使用
 
@@ -142,4 +161,9 @@ M1 在 2026-04-25 这次对话基本完成。M2 优先级：
 
 ## 接力上下文
 
-进度看本文件上半部"下一阶段（M2）"。M1 已完成（除部署项）。
+M1 + M2 + M2.1 文案/动效迭代均完成（详见上方"当前状态"）。最近活跃方向（按优先级）：
+1. **/notes 真内容化** — 当前 `/notes` 是占位 empty state，写第一条短想前需建 `notes` content collection + schema + 单 note 模板 + 列表逻辑（参考 articles 同构）
+2. **第二篇文章** — 跑通 articles 列表 prev/next 实际效果 + Pullquote 在文章模板的引入
+3. **ICP 备案 / 思源宋体子集化** — 见上方待办清单
+
+**会话卫生提醒**（2026-04-25 入血泪经验）：长会话累积 Retina 截图会触发 image dimension limit 反复爆。每个 milestone 完成（部署成功 / commit 推上）就 `/clear`，用本文件接力。详见 `CLAUDE.md` 的"会话卫生"章节。
