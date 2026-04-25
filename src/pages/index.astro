@@ -23,9 +23,9 @@ const slugOf = (a: (typeof articles)[number]) =>
   a.data.slug ?? a.id.replace(/\.(md|mdx)$/, "");
 
 const colophonEntries = [
-  { label: "Reading",  value: "TBD — 待登记" },
-  { label: "Writing",  value: "First long-form, brewing", accent: true, href: "#" },
-  { label: "Shipping", value: `${articles.length} entr${articles.length === 1 ? "y" : "ies"} · ${articles.length === 0 ? "试验簿初开" : "首篇已登记"}` },
+  { label: "Reading",  value: "《上行》" },
+  { label: "Writing",  value: "酝酿中 · brewing", accent: true },
+  { label: "Shipping", value: `${articles.length} entr${articles.length === 1 ? "y" : "ies"} · 已登记` },
   { label: "Watching", value: "AI alignment notes" },
 ];
 ---
@@ -76,28 +76,13 @@ const colophonEntries = [
 
       <!-- 水印叠底（借自 design-ref-editorial 招式：装饰性大字叠在内容后面）-->
       <div class="hero-watermark" aria-hidden="true">⊙</div>
-
-      <div class="hero-foot">
-        <dl class="hero-meta">
-          <dt>Min length</dt>   <dd>3000 字</dd>
-          <dt>Languages</dt>    <dd>中文 · English</dd>
-          <dt>Cadence</dt>      <dd>~1 long-form / fortnight</dd>
-          <dt>Faces</dt>        <dd>two — by design</dd>
-        </dl>
-
-        <ColophonCard
-          bureau="conilab.cn"
-          bureauList={["conilab.cn", "github/coni555"]}
-          entries={colophonEntries}
-        />
-      </div>
     </div>
   </section>
 
   <!-- ============================================================
-       CHAPTER Ⅰ · ARTICLES
+       CHAPTER Ⅰ · ARTICLES（提前到 hero 之后，让最新文章首屏可见）
        ============================================================ -->
-  <section class="chapter" id="articles">
+  <section class="chapter chapter--articles" id="articles">
     <div class="wrap">
       <ChapterHead num="Ⅰ" label="ARTICLES" allHref="/articles">
         The journal — <em>read twice, kept once</em>
@@ -142,6 +127,28 @@ const colophonEntries = [
   </section>
 
   <!-- ============================================================
+       REGISTRY — 试验登记卡（meta + colophon），从 hero-foot 升级为独立段
+       ============================================================ -->
+  <section class="registry">
+    <div class="wrap">
+      <div class="registry-grid">
+        <dl class="hero-meta">
+          <dt>Min length</dt>   <dd>3000 字</dd>
+          <dt>Languages</dt>    <dd>中文 · English</dd>
+          <dt>Cadence</dt>      <dd>~1 long-form / fortnight</dd>
+          <dt>Faces</dt>        <dd>two — by design</dd>
+        </dl>
+
+        <ColophonCard
+          bureau="conilab.cn"
+          bureauList={["conilab.cn", "github/coni555"]}
+          entries={colophonEntries}
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
        CHAPTER Ⅱ · PRINCIPLES
        (替代 lixiaolai-style ABOUT；不出现真实身份)
        ============================================================ -->
@@ -182,7 +189,7 @@ const colophonEntries = [
 
 <style>
   /* ─── HERO ─── */
-  .hero { padding: var(--sp-72) 0 var(--sp-80); position: relative; overflow: hidden; }
+  .hero { padding: var(--sp-48) 0 var(--sp-56); position: relative; overflow: hidden; }
 
   .hero-rubric {
     font-family: var(--mono);
@@ -190,7 +197,7 @@ const colophonEntries = [
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--ink-3);
-    margin-bottom: var(--sp-44);
+    margin-bottom: var(--sp-28);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -302,20 +309,20 @@ const colophonEntries = [
     font-weight: 200;
   }
 
-  /* —— hero foot：meta + colophon 卡 —— */
-  .hero-foot {
-    margin-top: var(--sp-72);
-    padding-top: var(--sp-32);
+  /* —— REGISTRY：试验登记卡（meta + colophon）—— */
+  .registry {
+    padding: var(--sp-32) 0 var(--sp-48);
     border-top: var(--sp-hairline) solid var(--rule);
+    margin-top: var(--sp-32);
+  }
+  .registry-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--sp-44);
     align-items: start;
-    position: relative;
-    z-index: 1;
   }
   @media (max-width: 900px) {
-    .hero-foot { grid-template-columns: 1fr; gap: var(--sp-32); }
+    .registry-grid { grid-template-columns: 1fr; gap: var(--sp-32); }
   }
   .hero-meta {
     font-family: var(--mono);
