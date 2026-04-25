@@ -1,0 +1,94 @@
+---
+/*
+ * ChapterHead — 章节头
+ *   ─── § 01 · ARTICLES
+ *   The journal — <em>a commonplace book</em>
+ *
+ * 用 default slot 装大标题（可含 <em>），num 是章节编号字符串
+ */
+interface Props {
+  num: string;        // "01"
+  label: string;      // "ARTICLES"
+  allHref?: string;   // 右上角 "All →" 链接
+  allLabel?: string;
+}
+const { num, label, allHref, allLabel = "All" } = Astro.props;
+---
+
+<div class="chapter-head">
+  <div class="chapter-num">
+    <span class="bar" aria-hidden="true"></span>
+    § {num} · {label}
+  </div>
+  <h2 class="chapter-title">
+    <slot />
+  </h2>
+  {allHref && (
+    <a class="all-link" href={allHref}>{allLabel} <span aria-hidden="true">→</span></a>
+  )}
+</div>
+
+<style>
+  .chapter-head {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "num all"
+      "title all";
+    column-gap: var(--sp-24);
+    row-gap: var(--sp-10);
+    align-items: end;
+    padding: var(--sp-48) 0 var(--sp-26);
+    border-bottom: var(--sp-hairline) solid var(--rule);
+    margin-bottom: var(--sp-32);
+  }
+  .chapter-num {
+    grid-area: num;
+    font-family: var(--mono);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.14em;
+    color: var(--accent-deep);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: var(--sp-10);
+  }
+  .chapter-num .bar {
+    width: var(--sp-40);
+    height: var(--sp-hairline);
+    background: var(--accent-deep);
+  }
+  .chapter-title {
+    grid-area: title;
+    font-family: var(--serif);
+    font-weight: var(--fw-normal);
+    font-size: var(--fs-7xl);
+    letter-spacing: -0.015em;
+    line-height: var(--lh-title-loose);
+    margin: 0;
+  }
+  .chapter-title :global(em) {
+    font-style: italic;
+    font-weight: var(--fw-light);
+    color: var(--ink-2);
+  }
+  .all-link {
+    grid-area: all;
+    font-family: var(--mono);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    align-self: end;
+    padding-bottom: var(--sp-6);
+    border-bottom: var(--sp-hairline) solid transparent;
+    transition: all var(--dur-quick);
+  }
+  .all-link:hover {
+    color: var(--accent-deep-ink);
+    border-bottom-color: var(--accent-deep);
+  }
+  @media (max-width: 720px) {
+    .chapter-title { font-size: var(--fs-5xl); }
+  }
+</style>

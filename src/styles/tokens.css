@@ -1,0 +1,149 @@
+/*
+ * conilab design tokens
+ * Source: lixiaolai.com OKLCH 设计系统（见 memory/design-ref-literary-paper.md），
+ *         强调色由朱砂 hue 255 改为 conilab 深蓝 hue 240，命名语义化（accent-deep）。
+ *
+ * 改动表（vs lixiaolai）：
+ *   - --vermillion / --vermillion-ink → --accent-deep / --accent-deep-ink，hue 255 → 240
+ *   - 字体：Newsreader → Source Serif 4；新增 --cjk-serif 显式分离（思源宋体 fallback PingFang）
+ *   - 其余 (--paper / --ink / --rule / sp-* / fs-* / lh-* / cjk-*) 直接保留：
+ *     这套骨架是 lixiaolai 的精度遗产，没必要为了不一样而不一样
+ */
+
+:root {
+  /* ──────────────────────────────────────────────────────
+   * 色板（OKLCH 双纸 + 三墨 + 单一深色强调）
+   * ────────────────────────────────────────────────────── */
+  --paper:        oklch(0.985 0.001 250);   /* 主纸底（暖白）*/
+  --paper-2:      oklch(0.965 0.002 250);   /* aside / 卡片背景，浅一档 */
+  --rule:         oklch(0.880 0.002 250);   /* 1px hairline 分隔线 */
+  --rule-soft:    oklch(0.930 0.002 250);   /* 内嵌 dashed 行间分隔 */
+
+  --ink:          oklch(0.200 0.003 250);   /* 主字色 */
+  --ink-2:        oklch(0.380 0.003 250);   /* 次字色（lede / dt 等）*/
+  --ink-3:        oklch(0.580 0.003 250);   /* 灰字（kicker / breadcrumb 等）*/
+
+  --accent-deep:      oklch(0.42 0.14 240); /* conilab 强调色：深蓝 */
+  --accent-deep-ink:  oklch(0.32 0.12 240); /* 加深态：h1 em / 链接 hover */
+
+  --moss:         oklch(0.480 0.06  140);   /* 备用 olive 绿（书脊/状态）*/
+  --indigo:       oklch(0.420 0.09  260);   /* 备用 indigo（书脊/状态）*/
+
+  /* 状态色 */
+  --info-ink:     var(--accent-deep-ink);
+  --info-bg:      color-mix(in oklch, var(--accent-deep) 8%, var(--paper));
+  --info-rule:    color-mix(in oklch, var(--accent-deep) 30%, var(--rule));
+  --warn-ink:     oklch(0.46 0.12 75);
+  --warn-bg:      oklch(0.97 0.02 75);
+  --ok-ink:       oklch(0.42 0.10 155);
+  --ok-bg:        oklch(0.97 0.02 155);
+  --err-ink:      oklch(0.46 0.14 25);
+  --err-bg:       oklch(0.97 0.02 25);
+
+  /* 阴影（极克制；多数组件不用阴影靠 hairline）*/
+  --shadow-hair:  color-mix(in oklch, var(--ink) 4%, transparent);
+  --shadow-soft:  color-mix(in oklch, var(--ink) 6%, transparent);
+  --shadow-mid:   color-mix(in oklch, var(--ink) 8%, transparent);
+  --shadow-pop:   color-mix(in oklch, var(--ink) 12%, transparent);
+  --shadow-veil:  color-mix(in oklch, var(--ink) 40%, transparent);
+
+  /* ──────────────────────────────────────────────────────
+   * 字体栈
+   * Source Serif 4 / Inter / JetBrains Mono（@fontsource 自托管）
+   * 思源宋体 fallback 到 PingFang（用户机器若有就用，未来可加 web 子集）
+   * ────────────────────────────────────────────────────── */
+  --serif:
+    "Source Serif 4", "Source Serif", ui-serif, Georgia,
+    "Source Han Serif SC", "Songti SC", "PingFang SC",
+    "Microsoft YaHei", "Hiragino Sans GB", "Noto Serif CJK SC", serif;
+
+  --cjk-serif:
+    "Source Han Serif SC", "Songti SC", "PingFang SC",
+    "Microsoft YaHei", "Hiragino Sans GB", "Noto Serif CJK SC", serif;
+
+  --sans:
+    "Inter", ui-sans-serif, system-ui,
+    "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB",
+    "Noto Sans CJK SC", "Noto Sans SC", sans-serif;
+
+  --mono:
+    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --cjk-sans:
+    "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB",
+    "Noto Sans CJK SC", "Noto Sans SC", sans-serif;
+
+  /* ──────────────────────────────────────────────────────
+   * CJK 排印（按层级差异化字距 + 中文 em 用 dotted 下划线）
+   * ────────────────────────────────────────────────────── */
+  --cjk-track-body:     0.03em;
+  --cjk-track-display:  0.01em;
+  --cjk-track-eyebrow:  0.08em;
+  --cjk-gap:            0.15em;
+  --cjk-em-color:       oklch(0.75 0.003 250);
+  --cjk-em-line:        dotted;
+  --cjk-em-thickness:   1.5px;
+  --cjk-em-offset:      0.33em;
+  --track-tag:          0.06em;
+  --opacity-disabled:   0.55;
+
+  /* ──────────────────────────────────────────────────────
+   * 布局 / 断点
+   * ────────────────────────────────────────────────────── */
+  --gutter:         36px;
+  --gutter-narrow:  20px;
+  --maxw:           1240px;
+  --bp-sm:          640px;
+  --bp-md:          720px;
+  --bp-lg:          900px;
+  --bp-xl:          1100px;
+
+  /* ──────────────────────────────────────────────────────
+   * 字号阶（极细密 26 档，奢侈品级排印精度，全部抄 lixiaolai）
+   * ────────────────────────────────────────────────────── */
+  --fs-9: 9px;     --fs-2xs: 10px;  --fs-xs: 11px;   --fs-sm: 12px;
+  --fs-md: 13px;   --fs-base: 14px; --fs-lg: 15px;   --fs-body: 16px;
+  --fs-17: 17px;   --fs-xl: 18px;   --fs-19: 19px;   --fs-2xl: 20px;
+  --fs-21: 21px;   --fs-3xl: 22px;  --fs-4xl: 24px;  --fs-26: 26px;
+  --fs-5xl: 28px;  --fs-30: 30px;   --fs-6xl: 32px;  --fs-7xl: 36px;
+  --fs-8xl: 38px;  --fs-9xl: 40px;  --fs-44: 44px;   --fs-10xl: 48px;
+  --fs-52: 52px;   --fs-hero: 64px;
+
+  /* 字重 */
+  --fw-light: 300; --fw-normal: 400; --fw-medium: 500;
+  --fw-semibold: 600; --fw-bold: 700;
+
+  /* 行高（语义命名）*/
+  --lh-heading:      1;
+  --lh-title:        1.02;
+  --lh-title-loose:  1.05;
+  --lh-condensed:    1.35;
+  --lh-base:         1.4;
+  --lh-normal:       1.5;
+  --lh-prose:        1.55;
+  --lh-relaxed:      1.6;
+  --lh-relaxed-plus: 1.65;
+  --lh-loose:        1.85;
+
+  /* 圆角（极克制，仅 pill 按钮用大圆角）*/
+  --rad-xs: 1px; --rad-2: 2px; --rad-sm: 3px; --rad-md: 4px;
+  --rad-lg: 6px; --rad-xl: 8px; --rad-2xl: 10px; --rad-3xl: 12px;
+  --rad-pill: 999px;
+
+  /* 间距阶（1px 起，方便 hairline 直接用 var）*/
+  --sp-hairline: 1px;
+  --sp-2: 2px;   --sp-3: 3px;   --sp-4: 4px;   --sp-5: 5px;   --sp-6: 6px;
+  --sp-7: 7px;   --sp-8: 8px;   --sp-9: 9px;   --sp-10: 10px; --sp-11: 11px;
+  --sp-12: 12px; --sp-13: 13px; --sp-14: 14px; --sp-15: 15px; --sp-16: 16px;
+  --sp-18: 18px; --sp-20: 20px; --sp-22: 22px; --sp-24: 24px; --sp-26: 26px;
+  --sp-28: 28px; --sp-30: 30px; --sp-32: 32px; --sp-36: 36px; --sp-40: 40px;
+  --sp-44: 44px; --sp-48: 48px; --sp-52: 52px; --sp-56: 56px; --sp-60: 60px;
+  --sp-64: 64px; --sp-72: 72px; --sp-80: 80px; --sp-96: 96px; --sp-120: 120px;
+
+  /* 动效 */
+  --dur-quick:  0.15s;
+  --dur-normal: 0.20s;
+
+  /* z-index 阶 */
+  --z-popover: 10;
+}

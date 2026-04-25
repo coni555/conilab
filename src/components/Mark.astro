@@ -1,0 +1,65 @@
+---
+/*
+ * conilab 品牌标
+ * 硬币 ampersand SVG = 圆 + 斜线
+ *   - 圆 = 硬币（你的 ID "硬币"）
+ *   - 斜线 = 中英分隔的 / + 古铜钱方孔意象的现代化
+ * 整体 stroke-width 0.75 致敬 lucide 笔触
+ */
+interface Props {
+  href?: string;
+  size?: "lg" | "sm";
+}
+const { href = "/", size = "lg" } = Astro.props;
+---
+
+<a class={`mark mark--${size}`} href={href} aria-label="conilab, home">
+  <span class="word">conilab</span>
+  <svg
+    class="coin-amp"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="0.75"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <circle cx="12" cy="12" r="9.5" />
+    <line x1="7" y1="17" x2="17" y2="7" />
+  </svg>
+  <slot name="handle" />
+</a>
+
+<style>
+  .mark {
+    font-family: var(--serif);
+    font-weight: var(--fw-medium);
+    letter-spacing: -0.01em;
+    display: inline-flex;
+    gap: var(--sp-10);
+    align-items: baseline;
+    color: var(--ink);
+  }
+  .mark--lg { font-size: var(--fs-3xl); }
+  .mark--sm { font-size: var(--fs-2xl); }
+
+  .coin-amp {
+    color: var(--accent-deep);
+    width: 1em;
+    height: 1em;
+    align-self: center;
+    flex: none;
+    animation: coin-tilt 4.8s ease-in-out infinite;
+  }
+
+  /* 硬币微动：每 5s 在圆心绕 z 轴轻微摆动 */
+  @keyframes coin-tilt {
+    0%, 100% { transform: rotate(0deg); }
+    50%      { transform: rotate(8deg); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .coin-amp { animation: none; }
+  }
+</style>

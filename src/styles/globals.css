@@ -1,0 +1,114 @@
+/* ─────────────────────────────────────────────────────────────
+ * conilab globals
+ * 仅放：reset / body 基础 / heading 通用 / em 双语处理 / 中英切换 CSS
+ * 组件样式写在各自的 .astro 文件 <style> 内
+ * ───────────────────────────────────────────────────────────── */
+
+@import "@fontsource/source-serif-4/400.css";
+@import "@fontsource/source-serif-4/400-italic.css";
+@import "@fontsource/source-serif-4/300.css";
+@import "@fontsource/source-serif-4/300-italic.css";
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/jetbrains-mono/400.css";
+
+@import "./tokens.css";
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: var(--fs-lg);
+  line-height: var(--lh-prose);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img, svg { display: block; max-width: 100%; }
+
+::selection {
+  background: color-mix(in oklch, var(--accent-deep) 20%, var(--paper));
+  color: var(--ink);
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: var(--sp-6);
+  background: var(--ink);
+  color: var(--paper);
+  padding: var(--sp-8) var(--sp-12);
+  z-index: 100;
+}
+.skip-link:focus { left: var(--sp-6); }
+
+.wrap {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+@media (max-width: 720px) {
+  .wrap { padding: 0 var(--gutter-narrow); }
+}
+
+/* ─────────────────────────────────────────────────────────────
+ * 通用 heading 语义（具体页内字号 / em 行为各组件覆盖）
+ * 招式：h1/h2/h3 用 serif normal/light，em 用 italic light + 强调色
+ * ───────────────────────────────────────────────────────────── */
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  font-weight: var(--fw-normal);
+  letter-spacing: -0.015em;
+  margin: 0;
+  color: var(--ink);
+}
+h1 em, h2 em, h3 em {
+  font-style: italic;
+  font-weight: var(--fw-light);
+  color: var(--accent-deep-ink);
+}
+
+/* ─────────────────────────────────────────────────────────────
+ * CJK em：中文段不用 italic，改 dotted 下划线
+ * 标记方式：祖先 .cjk / [data-lang=zh] / :lang(zh)
+ * ───────────────────────────────────────────────────────────── */
+.cjk em, [data-lang=zh] em, :lang(zh) em {
+  font-style: normal;
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-style: var(--cjk-em-line);
+  text-decoration-color: var(--cjk-em-color);
+  text-decoration-thickness: var(--cjk-em-thickness);
+  text-underline-offset: var(--cjk-em-offset);
+}
+.cjk, .cjk-spacing, :lang(zh) {
+  letter-spacing: var(--cjk-track-body);
+}
+
+/* ─────────────────────────────────────────────────────────────
+ * 双语切换（CSS-only 三态：show-both / show-zh / show-en）
+ * 文章正文里：<p data-lang="zh">…</p><p data-lang="en">…</p>
+ * 默认双显，切换器加根 class 即可单显
+ * ───────────────────────────────────────────────────────────── */
+html.show-zh [data-lang="en"] { display: none; }
+html.show-en [data-lang="zh"] { display: none; }
+/* show-both（默认）什么都不藏 */
+
+/* 文章里英文段视觉降级（当中英共显，英文做"译注"风）*/
+.bilingual [data-lang="en"] {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ink-3);
+  font-size: 0.95em;
+  line-height: var(--lh-relaxed);
+  margin-top: 0.4em;
+}

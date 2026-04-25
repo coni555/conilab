@@ -1,17 +1,215 @@
 ---
+import Base from "../layouts/Base.astro";
+import ChapterHead from "../components/ChapterHead.astro";
+import ColophonCard from "../components/ColophonCard.astro";
+import Kicker from "../components/Kicker.astro";
 
+const colophonEntries = [
+  { label: "Reading",  value: "Why We Sleep — Matthew Walker" },
+  { label: "Writing",  value: "On the limits of attention", accent: true, href: "#" },
+  { label: "Shipping", value: "0 articles · the journal begins" },
+  { label: "Watching", value: "AI alignment notes by @anthropic" },
+];
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Base>
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-rubric">
+        <span>Shaoxing · Hangzhou · Online</span>
+      </div>
+      <div class="hero-grid">
+        <div>
+          <h1 class="hero-title">
+            A student,<br />
+            <em>re-reading</em><br />
+            the world<br />
+            with <em>AI</em>.
+          </h1>
+          <p class="hero-sub">
+            Long-form bilingual notes by Coni. Each piece ≥ 3000 字, paired with
+            its English translation — written between Obsidian and the open web.
+          </p>
+          <dl class="hero-meta">
+            <dt>Born</dt>           <dd>2006 · Shaoxing, Zhejiang</dd>
+            <dt>Languages</dt>      <dd>中文 · English</dd>
+            <dt>Cadence</dt>        <dd>~1 long-form / fortnight</dd>
+            <dt>Min length</dt>     <dd>3000 字</dd>
+            <dt>Since</dt>          <dd>2026 (this lab)</dd>
+          </dl>
+        </div>
+        <ColophonCard
+          bureau="Shaoxing"
+          bureauList={["Shaoxing", "Hangzhou", "Online"]}
+          entries={colophonEntries}
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CHAPTER 01 · ARTICLES (placeholder, no real entries yet)
+       ============================================================ -->
+  <section class="chapter" id="articles">
+    <div class="wrap">
+      <ChapterHead num="01" label="ARTICLES" allHref="/articles">
+        The journal — <em>a commonplace book, kept bilingually</em>
+      </ChapterHead>
+
+      <div class="placeholder">
+        <Kicker text="§ no entries yet · 暂无文章" accent />
+        <p class="cjk" lang="zh">
+          这里很快会出现第一篇<em>三千字以上</em>的长文。每一篇都会有对照的英文版本，
+          作为我"用 AI 重新认识世界"的一种实践记录。
+        </p>
+        <p lang="en">
+          The first ≥3000-word piece is brewing. Every entry will ship with a
+          paired English version — a record of <em>re-reading</em> the world
+          with AI as company.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CHAPTER 02 · ABOUT
+       ============================================================ -->
+  <section class="chapter" id="about">
+    <div class="wrap">
+      <ChapterHead num="02" label="ABOUT" allHref="/about">
+        Who is <em>@coni</em>
+      </ChapterHead>
+
+      <div class="bilingual lede">
+        <p data-lang="zh" class="cjk">
+          张干，网名"硬币"。浙江绍兴人，2006 年生。Obsidian 重度用户，370+ 篇日记无间断。
+          这里不是公众号的复刻，是为<em>长文</em>准备的另一个房间。
+        </p>
+        <p data-lang="en">
+          Zhang Gan, online <em>@coni</em> ("coin"). Born in 2006 in Shaoxing,
+          Zhejiang. Heavy Obsidian user with 370+ unbroken daily entries. This is
+          not a mirror of any social feed — it is a separate room reserved for
+          <em>long-form</em>.
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ─── HERO ─── */
+  .hero { padding: var(--sp-72) 0 var(--sp-80); }
+  .hero-rubric {
+    font-family: var(--mono);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: var(--sp-28);
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: var(--sp-72);
+    align-items: stretch;
+  }
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; gap: var(--sp-40); }
+  }
+  .hero-title {
+    font-family: var(--serif);
+    font-weight: var(--fw-normal);
+    font-size: clamp(var(--fs-10xl), 7vw, 96px);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    margin: 0 0 var(--sp-28);
+    color: var(--ink);
+    font-variation-settings: "opsz" 72;
+  }
+  .hero-title :global(em) {
+    font-style: italic;
+    font-weight: var(--fw-light);
+    color: var(--accent-deep-ink);
+  }
+  .hero-sub {
+    font-family: var(--serif);
+    font-size: var(--fs-3xl);
+    line-height: 1.45;
+    color: var(--ink-2);
+    max-width: 30ch;
+    margin: 0 0 var(--sp-32);
+    font-weight: var(--fw-light);
+  }
+  .hero-meta {
+    font-family: var(--mono);
+    font-size: var(--fs-sm);
+    color: var(--ink-3);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--sp-6) var(--sp-18);
+    max-width: 420px;
+    margin: 0;
+  }
+  .hero-meta dt {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .hero-meta dd {
+    margin: 0;
+    color: var(--ink-2);
+    font-family: var(--sans);
+    font-size: var(--fs-md);
+  }
+
+  /* ─── CHAPTER ─── */
+  .chapter { padding: var(--sp-32) 0; }
+
+  .placeholder {
+    padding: var(--sp-48) 0;
+    display: grid;
+    gap: var(--sp-18);
+    max-width: 64ch;
+  }
+  .placeholder p {
+    font-family: var(--serif);
+    font-size: var(--fs-xl);
+    line-height: var(--lh-prose);
+    color: var(--ink-2);
+    margin: 0;
+  }
+  .placeholder p[lang="en"] {
+    font-style: italic;
+    color: var(--ink-3);
+    font-size: var(--fs-lg);
+  }
+  .placeholder p[lang="en"] :global(em) {
+    color: var(--accent-deep-ink);
+  }
+
+  /* ─── BILINGUAL LEDE ─── */
+  .lede {
+    display: grid;
+    gap: var(--sp-12);
+    max-width: 62ch;
+    font-family: var(--serif);
+    font-size: var(--fs-2xl);
+    line-height: var(--lh-prose);
+    color: var(--ink-2);
+    font-weight: var(--fw-light);
+    margin: 0;
+    padding: var(--sp-22) 0;
+  }
+  .lede p { margin: 0; }
+  .lede [data-lang="en"] {
+    font-style: italic;
+    color: var(--ink-3);
+    font-size: var(--fs-lg);
+    line-height: var(--lh-relaxed);
+  }
+  .lede [data-lang="en"] :global(em) {
+    color: var(--accent-deep-ink);
+  }
+</style>

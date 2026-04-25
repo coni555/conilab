@@ -1,0 +1,149 @@
+---
+import Mark from "./Mark.astro";
+
+interface Props {
+  /** 当前日期，DD.MM.YYYY 欧式 */
+  today?: string;
+}
+
+const today =
+  Astro.props.today ??
+  new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  })
+    .format(new Date())
+    .replaceAll("/", ".");
+
+const navItems = [
+  { href: "/articles", label: "Articles" },
+  { href: "/notes", label: "Notes" },
+  { href: "/about", label: "About" },
+];
+---
+
+<header class="masthead">
+  <div class="wrap masthead-row">
+    <Mark>
+      <span slot="handle" class="handle">@coni — {today}</span>
+    </Mark>
+
+    <nav class="primary" aria-label="Primary">
+      <ul>
+        {navItems.map((it) => <li><a href={it.href}>{it.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="lang-switcher" role="group" aria-label="Language">
+      <button data-lang="both" class="lang-btn is-active" aria-pressed="true">中 / EN</button>
+      <button data-lang="zh"   class="lang-btn">中</button>
+      <button data-lang="en"   class="lang-btn">EN</button>
+    </div>
+  </div>
+</header>
+
+<script>
+  // CSS-only 切换：根 class 控制 [data-lang] 显隐
+  const root = document.documentElement;
+  const btns = document.querySelectorAll<HTMLButtonElement>(".lang-btn");
+  const apply = (mode: string) => {
+    root.classList.remove("show-zh", "show-en");
+    if (mode === "zh") root.classList.add("show-zh");
+    if (mode === "en") root.classList.add("show-en");
+    btns.forEach((b) => {
+      const on = b.dataset.lang === mode;
+      b.classList.toggle("is-active", on);
+      b.setAttribute("aria-pressed", String(on));
+    });
+    try { localStorage.setItem("conilab-lang", mode); } catch {}
+  };
+  btns.forEach((b) =>
+    b.addEventListener("click", () => apply(b.dataset.lang || "both"))
+  );
+  try {
+    const saved = localStorage.getItem("conilab-lang");
+    if (saved && saved !== "both") apply(saved);
+  } catch {}
+</script>
+
+<style>
+  .masthead {
+    border-bottom: var(--sp-hairline) solid var(--rule);
+    padding: var(--sp-16) 0 var(--sp-14);
+    position: sticky;
+    top: 0;
+    background: color-mix(in oklch, var(--paper) 92%, transparent);
+    -webkit-backdrop-filter: blur(var(--sp-10));
+    backdrop-filter: blur(var(--sp-10));
+    z-index: 10;
+  }
+  .masthead-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--sp-24);
+  }
+
+  .handle {
+    font-family: var(--mono);
+    font-size: var(--fs-sm);
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding-left: var(--sp-12);
+    border-left: var(--sp-hairline) solid var(--rule);
+    margin-left: var(--sp-6);
+    align-self: center;
+  }
+
+  nav.primary ul {
+    display: flex;
+    gap: var(--sp-28);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-family: var(--sans);
+    font-size: var(--fs-md);
+  }
+  nav.primary a {
+    color: var(--ink-2);
+    border-bottom: var(--sp-hairline) solid transparent;
+    padding-bottom: var(--sp-2);
+    transition: color var(--dur-quick), border-color var(--dur-quick);
+  }
+  nav.primary a:hover {
+    color: var(--accent-deep-ink);
+    border-bottom-color: var(--accent-deep);
+  }
+
+  .lang-switcher {
+    display: flex;
+    gap: var(--sp-4);
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.1em;
+  }
+  .lang-btn {
+    border: var(--sp-hairline) solid var(--rule);
+    background: transparent;
+    color: var(--ink-3);
+    padding: var(--sp-4) var(--sp-10);
+    border-radius: var(--rad-pill);
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all var(--dur-quick);
+  }
+  .lang-btn:hover { border-color: var(--ink-3); color: var(--ink); }
+  .lang-btn.is-active {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  @media (max-width: 720px) {
+    .masthead-row { flex-wrap: wrap; gap: var(--sp-10); }
+    nav.primary { order: 3; flex-basis: 100%; }
+    nav.primary ul { gap: var(--sp-18); justify-content: flex-start; }
+  }
+</style>

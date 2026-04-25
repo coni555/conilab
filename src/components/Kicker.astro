@@ -1,0 +1,30 @@
+---
+/*
+ * § Kicker — 段落符做小标题
+ * 招式：mono uppercase 0.10~0.14em tracking + ink-3 灰 / 可切 accent-deep
+ */
+interface Props {
+  text: string;
+  accent?: boolean;
+  as?: "div" | "span";
+}
+const { text, accent = false, as = "div" } = Astro.props;
+const Tag = as as any;
+---
+
+<Tag class={`kicker ${accent ? "kicker--accent" : ""}`}>{text}</Tag>
+
+<style>
+  .kicker {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    font-weight: var(--fw-normal);
+  }
+  .kicker--accent {
+    color: var(--accent-deep);
+    letter-spacing: 0.14em;
+  }
+</style>

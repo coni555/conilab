@@ -1,0 +1,187 @@
+---
+/*
+ * ColophonCard — 报头牌
+ *   - 1px hairline 描边 + paper-2 底
+ *   - :before 浮 "§ DISPATCH · COLOPHON" 小邮票
+ *   - 三段：head（铭牌）/ rule（中间 § 分隔）/ body（co-line × N）
+ *
+ * 用 props 喂数据；entries 形如 [{ label: "READING", value: "..." }]
+ */
+interface Entry {
+  label: string;
+  value: string;
+  accent?: boolean;
+  href?: string;
+}
+interface Props {
+  bureau?: string;        // 显示在铭牌"BUREAUX"下
+  bureauList?: string[];
+  entries: Entry[];
+  stamp?: string;         // 顶部浮签默认 "§ DISPATCH · COLOPHON"
+}
+const {
+  bureau = "Shaoxing",
+  bureauList = ["Shaoxing", "Hangzhou", "Online"],
+  entries,
+  stamp = "§ DISPATCH · COLOPHON",
+} = Astro.props;
+---
+
+<aside class="colophon-card" aria-label="Dispatch and colophon" data-stamp={stamp}>
+  <div class="co-head">
+    <div class="co-poster" aria-hidden="true">
+      <!-- 简易 motif：硬币双圆 + 中点（替代 lixiaolai 的城市地图）-->
+      <svg viewBox="0 0 80 80" aria-hidden="true">
+        <circle cx="40" cy="40" r="36" fill="none" stroke="currentColor" stroke-width="1" />
+        <circle cx="40" cy="40" r="28" fill="none" stroke="currentColor" stroke-width="0.6" />
+        <circle cx="40" cy="40" r="2.4" fill="var(--accent-deep)" />
+        <line x1="22" y1="58" x2="58" y2="22" stroke="var(--accent-deep)" stroke-width="0.8" stroke-linecap="round" />
+      </svg>
+    </div>
+    <dl class="co-dl">
+      <dt class="co-dl-k">CURRENT BUREAU</dt>
+      <dd class="co-dl-v">
+        <strong>{bureau}</strong>
+        {bureauList.length > 1 && (
+          <span class="co-dl-list">
+            {bureauList.filter((b) => b !== bureau).map((b) => <span>· {b}</span>)}
+          </span>
+        )}
+      </dd>
+    </dl>
+  </div>
+
+  <div class="co-rule" aria-hidden="true"><span>§</span></div>
+
+  <div class="co-body">
+    {entries.map((e) => (
+      <div class="co-line">
+        <span class="k" aria-hidden="true">•</span>
+        <span class="l">{e.label}</span>
+        <span class={`v ${e.accent ? "accent" : ""}`}>
+          {e.href ? <a href={e.href}>{e.value}</a> : e.value}
+        </span>
+      </div>
+    ))}
+  </div>
+</aside>
+
+<style>
+  .colophon-card {
+    border: var(--sp-hairline) solid var(--rule);
+    background: var(--paper-2);
+    padding: var(--sp-36) var(--sp-32) var(--sp-26);
+    font-family: var(--mono);
+    color: var(--ink);
+    position: relative;
+    display: grid;
+    gap: var(--sp-20);
+    align-self: stretch;
+    min-height: 100%;
+  }
+  .colophon-card::before {
+    content: attr(data-stamp);
+    position: absolute;
+    top: calc(var(--sp-9) * -1);
+    left: var(--sp-22);
+    background: var(--paper);
+    padding: 0 var(--sp-10);
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.16em;
+    color: var(--accent-deep);
+  }
+
+  .co-head {
+    display: grid;
+    grid-template-columns: var(--sp-72) 1fr;
+    gap: var(--sp-18);
+    align-items: center;
+    padding-bottom: var(--sp-4);
+  }
+  .co-poster {
+    width: var(--sp-72);
+    height: var(--sp-72);
+    color: var(--ink-3);
+  }
+  .co-poster svg { width: 100%; height: 100%; }
+
+  .co-dl { margin: 0; }
+  .co-dl-k {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: var(--sp-4);
+  }
+  .co-dl-v {
+    margin: 0;
+    font-family: var(--mono);
+    font-size: var(--fs-md);
+    color: var(--ink);
+  }
+  .co-dl-v strong { font-weight: var(--fw-medium); }
+  .co-dl-list {
+    color: var(--ink-3);
+    margin-left: var(--sp-6);
+  }
+  .co-dl-list span { margin-right: var(--sp-4); }
+
+  .co-rule {
+    position: relative;
+    height: var(--sp-hairline);
+    background: var(--rule);
+    margin: 0;
+  }
+  .co-rule span {
+    position: absolute;
+    left: 50%;
+    top: calc(var(--sp-10) * -1);
+    transform: translateX(-50%);
+    background: var(--paper-2);
+    padding: 0 var(--sp-12);
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: var(--fs-base);
+    color: var(--ink-3);
+  }
+
+  .co-body { display: grid; gap: var(--sp-2); }
+  .co-line {
+    display: grid;
+    grid-template-columns: var(--sp-20) var(--sp-72) 1fr;
+    gap: var(--sp-12);
+    align-items: baseline;
+    padding: var(--sp-6) 0;
+    border-bottom: var(--sp-hairline) dashed var(--rule-soft);
+  }
+  .co-line:last-child { border-bottom: none; }
+  .co-line .k {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    color: var(--accent-deep);
+    font-weight: var(--fw-medium);
+  }
+  .co-line .l {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .co-line .v {
+    font-family: var(--mono);
+    font-size: var(--fs-md);
+    color: var(--ink);
+  }
+  .co-line .v.accent { color: var(--accent-deep-ink); }
+  .co-line .v a {
+    border-bottom: var(--sp-hairline) solid transparent;
+    transition: border-color var(--dur-quick), color var(--dur-quick);
+  }
+  .co-line .v a:hover {
+    color: var(--accent-deep-ink);
+    border-bottom-color: var(--accent-deep);
+  }
+</style>
