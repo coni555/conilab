@@ -26,9 +26,37 @@
 > - **`86ee4bd` revert 上一条**：index.astro 单文件 `git checkout 6e0ffcd` 恢复。**保留**两件事：(a) `src/pages/notes/index.astro` 占位页（修 masthead `/notes` 404）；(b) `CLAUDE.md` 新增"会话卫生"章节（image dimension limit 根因 + 5 条对策）
 > - **`4826e58` notebook → article reframe**：把 article-only 形容（3000 字 / 双语机制）从全局位置撤回。**主页**: PRINCIPLES 标题 `What this notebook refuses` → `What an article refuses`；**Footer**: 删 "Long-form notes that land twice…" blurb（这条 site-wide 用 article-only 机制描述全站）；**About**: title `A notebook read twice, kept once.` → `An article read twice, kept once.`，lede 删掉首句"A long-form notebook" / "一份只发三千字以上长文的笔记本"，section Ⅰ 去掉"个人长文笔记本"的"长文"+"no quick takes"，加 `/notes` 链接指向短想去处
 >
-> **push-to-deploy 验证**：本会话内 push 到 main 后 CF Pages 自动构建并部署成功（确认 GitHub-connected auto-deploy 链路通），不再需要手动 `wrangler pages deploy`。原 M2 后续清单里这一项可以划掉
+> **⚠️ 修正（M2.1 当时的误判）**：M2.1 期间我以为 GitHub push 触发了 CF Pages 自动 deploy，看到 conilab.cn 反映"Two faces"等内容就以为新版上线。**实际**：旧 conilab 项目是 direct-upload 模式（HANDOFF 第 12 行已写明"未走 Git 集成"），从来不会响应 git push；我看到的"Two faces" 一直是更早 wrangler 手动部署的 caf921a 版本，不是 push 上去的 9474e21。所以 86ee4bd / 4826e58 / 9474e21 这三个 commit 在 M2.1 期间根本没上 production。真正修复见下方 M2.2 段
 >
 > **/notes 路由现状**：占位页就位（`src/pages/notes/index.astro`，almanac head 风格 + empty state），masthead nav 不再 404；但还没建 `notes` content collection / 单 note 模板 / 列表逻辑——真要写第一条 note 时再扩
+
+> **2026-04-26 凌晨 — M2.2 部署模式迁移：direct upload → Git 集成**
+>
+> **背景**：M2.1 期间发现旧 conilab 项目是 direct-upload 模式，git push 不会自动 deploy；wrangler OAuth token 又掉了，手动 deploy 也卡住。决定一次性迁到 Git 集成。
+>
+> **执行**（通过 Chrome MCP 全程操作 dashboard 完成）：
+> 1. 创建新 Pages 项目 **`conilab-blog`**（不能用 `conilab` 名字 — 旧项目占着，且 CF Pages **项目名不可改**）。Connect to Git → coni555/conilab → main branch → Astro preset
+> 2. **Build config 关键 3 项**：
+>    - Build command: `bun install && bun run build`（**不是**默认的 `npm run build`）
+>    - Build output: `dist`
+>    - Env vars: `NODE_VERSION=22` + **`SKIP_DEPENDENCY_INSTALL=1`**
+> 3. **`SKIP_DEPENDENCY_INSTALL=1` 是踩坑解药**：CF Pages 默认在 build command 之前会跑一次 `npm install --progress=false`，对 Astro 6 + 这堆 deps 立刻 npm eresolve（peer deps 冲突）。设了这个 env var 后 CF 直接跳到 build command，由 `bun install` 自己装 deps（bun 解析比 npm 宽松），3 秒装完 347 包。**前两次 build 失败就是栽在这里**
+> 4. CF 没识别 `bun.lock`（新格式，文本 JSON）—— 说明 CF Pages 的 lockfile auto-detect 现在只看 `bun.lockb`（旧格式 binary）。所以必须靠 `SKIP_DEPENDENCY_INSTALL=1` 强制走 build command 的 bun
+> 5. Build 成功后，把 conilab.cn 自定义域名从旧项目摘掉、绑到新项目（CF 自动重建 CNAME `@` → `conilab-blog.pages.dev`）。**切换不可用窗口约 6 分钟**（CF SSL 重签）
+> 6. 旧 direct-upload conilab 项目已删除（`conilab.pages.dev` 子域释放）
+>
+> **新部署模式**（生效）：
+> - Production: https://conilab.cn ✅（指向新 Git 项目）
+> - Fallback: https://conilab-blog.pages.dev（**注意：不再是 conilab.pages.dev**，因为新项目名带 -blog 后缀，CF Pages 项目名 immutable）
+> - **发版流程**：`git push origin main` → CF 自动 build & deploy（2-3 分钟）。再也不需要 `wrangler pages deploy`
+> - Preview deployments：任何非 main 分支 push 都会自动得到 `<commit>.conilab-blog.pages.dev` preview URL（多人协作 / 草稿审阅友好）
+> - Build log：CF dashboard → conilab-blog → Deployments → 点 commit hash 看完整 log
+>
+> **本次 commit 链 9474e21 终于真上线**（M2.1 期间因 direct-upload 模式没生效）：
+> - 主页 hero 中英诗意（"翻过来再读一次 / Read it once. Now turn it over."）保留
+> - CHAPTER Ⅱ NOTES 章节 + Registry 4 行（Faces / Languages / Articles / Notes）+ Principles Ⅲ "两面分工 + 沉淀/即兴"
+> - About 页 article reframe（4826e58）
+> - Footer 删 long-form blurb
 
 ## M1 完成（部署前阶段）— 全栈可见、可读、可订阅
 
@@ -118,7 +146,8 @@ M1 在 2026-04-25 这次对话基本完成。M2 优先级：
 - [x] About 页（2026-04-25）
 - [ ] 单篇文章页可继续加：footnote / aside 注 / TOC（如果文章很长）/ 双语章节并排版式（目前是 zh 整段后接 en 整段，下一对话可考虑章节级交错）
 - [x] CF Pages 部署（2026-04-25 完成）：repo coni555/conilab + Pages project conilab + apex conilab.cn 绑定
-- [x] push-to-deploy（2026-04-25 M2.1 验证）：GitHub-connected auto-deploy 链路通，push 到 main 自动跑 build & deploy，不再需要本地 `wrangler pages deploy`
+- [x] **CF Pages 迁到 Git 集成**（2026-04-26 M2.2）：旧 direct-upload `conilab` 项目删除；新 Git-connected `conilab-blog` 项目（`bun install && bun run build` + `SKIP_DEPENDENCY_INSTALL=1` 解 npm peer deps eresolve）；fallback URL `conilab-blog.pages.dev`；conilab.cn 已切到新项目
+- [x] push-to-deploy（2026-04-26 M2.2 真正验证）：git push origin main → CF auto-build 2-3 分钟上线
 - [x] /notes 占位页（2026-04-25 M2.1）：修 masthead `/notes` 404
 - [x] 默认语言 EN + hero/coin/水印动效（2026-04-25 M2.1）
 - [x] article-only 形容收回到 article scope（2026-04-25 M2.1）：home/footer/about 三处 notebook 误代指 article 机制的位置都已 reframe
