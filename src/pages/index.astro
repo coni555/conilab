@@ -43,7 +43,7 @@ const colophonEntries = [
       </div>
 
       <div class="hero-couplet">
-        <div class="hero-side hero-side--front" data-side="front">
+        <div class="hero-side hero-side--front" data-side="front" data-lang="zh">
           <div class="hero-side-tag">正面 · ZH</div>
           <h1 class="hero-title cjk" lang="zh">
             正面读一次<br />
@@ -56,11 +56,11 @@ const colophonEntries = [
           </p>
         </div>
 
-        <div class="hero-divider" aria-hidden="true">
+        <div class="hero-divider" aria-hidden="true" data-lang="both">
           <CoinGlyph variant="dot" size="1.4em" />
         </div>
 
-        <div class="hero-side hero-side--back" data-side="back">
+        <div class="hero-side hero-side--back" data-side="back" data-lang="en">
           <div class="hero-side-tag">REVERSE · EN</div>
           <h1 class="hero-title">
             Read it once.<br />
@@ -191,6 +191,28 @@ const colophonEntries = [
   /* ─── HERO ─── */
   .hero { padding: var(--sp-48) 0 var(--sp-56); position: relative; overflow: hidden; }
 
+  /* —— 入场动画：rubric → ZH 侧 → 中央 ⊙ → EN 侧 错峰淡入上滑 —— */
+  @keyframes hero-rise {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .hero-rubric,
+  .hero-side--front,
+  .hero-divider,
+  .hero-side--back {
+    animation: hero-rise 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  .hero-rubric       { animation-delay:   0ms; }
+  .hero-side--front  { animation-delay: 120ms; }
+  .hero-divider      { animation-delay: 200ms; }
+  .hero-side--back   { animation-delay: 280ms; }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-rubric,
+    .hero-side--front,
+    .hero-divider,
+    .hero-side--back { animation: none; }
+  }
+
   .hero-rubric {
     font-family: var(--mono);
     font-size: var(--fs-xs);
@@ -225,6 +247,17 @@ const colophonEntries = [
   @media (max-width: 900px) {
     .hero-side--back { text-align: left; }
   }
+
+  /* —— 单语模式：折叠 couplet 为单列，hero-divider 隐藏 —— */
+  :global(html.show-zh) .hero-couplet,
+  :global(html.show-en) .hero-couplet {
+    grid-template-columns: 1fr;
+  }
+  :global(html.show-zh) .hero-divider,
+  :global(html.show-en) .hero-divider { display: none; }
+  /* EN 单语：标题居左 + sub 也居左（覆盖原 back 右对齐） */
+  :global(html.show-en) .hero-side--back { text-align: left; }
+  :global(html.show-en) .hero-side--back .hero-sub { margin-left: 0; }
   .hero-side-tag {
     font-family: var(--mono);
     font-size: var(--fs-2xs);
@@ -307,6 +340,16 @@ const colophonEntries = [
     pointer-events: none;
     z-index: 0;
     font-weight: 200;
+    /* 慢速旋转：240s/圈，几乎察觉不到的 living quality */
+    transform-origin: center;
+    animation: watermark-drift 240s linear infinite;
+  }
+  @keyframes watermark-drift {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-watermark { animation: none; }
   }
 
   /* —— REGISTRY：试验登记卡（meta + colophon）—— */

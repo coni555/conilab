@@ -14,7 +14,7 @@ const {
 ---
 
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -26,6 +26,16 @@ const {
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="alternate" type="application/rss+xml" title="conilab" href="/articles/rss.xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <!-- Pre-paint lang state: avoid flash of bilingual content before lang-switcher script runs.
+         Default = 'en' if no localStorage. Honors prior choice. -->
+    <script is:inline>
+      try {
+        var saved = localStorage.getItem("conilab-lang");
+        var mode = saved || "en";
+        if (mode === "zh") document.documentElement.classList.add("show-zh");
+        else if (mode === "en") document.documentElement.classList.add("show-en");
+      } catch (_) {}
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>

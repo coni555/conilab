@@ -36,9 +36,9 @@ const navItems = [
     </nav>
 
     <div class="lang-switcher" role="group" aria-label="Language">
-      <button data-lang="both" class="lang-btn is-active" aria-pressed="true">中 / EN</button>
+      <button data-lang="both" class="lang-btn">中 / EN</button>
       <button data-lang="zh"   class="lang-btn">中</button>
-      <button data-lang="en"   class="lang-btn">EN</button>
+      <button data-lang="en"   class="lang-btn is-active" aria-pressed="true">EN</button>
     </div>
   </div>
 </header>
@@ -61,10 +61,13 @@ const navItems = [
   btns.forEach((b) =>
     b.addEventListener("click", () => apply(b.dataset.lang || "both"))
   );
+  // 与 Base.astro 的 inline 预绘脚本一致：默认 'en'；尊重之前的选择
   try {
     const saved = localStorage.getItem("conilab-lang");
-    if (saved && saved !== "both") apply(saved);
-  } catch {}
+    apply(saved || "en");
+  } catch {
+    apply("en");
+  }
 </script>
 
 <style>
