@@ -6,11 +6,18 @@ import Footer from "../components/Footer.astro";
 interface Props {
   title?: string;
   description?: string;
+  image?: string;
+  url?: string;
 }
+const site = "https://conilab.cn";
 const {
   title = "conilab — a notebook by @coni",
   description = "Long-form bilingual notes by Coni. Re-learning the world with AI, one ≥3000-word piece at a time.",
+  image = "/og-default.png",
+  url,
 } = Astro.props;
+const canonicalUrl = url ?? new URL(Astro.url.pathname, site).href;
+const ogImage = image.startsWith("http") ? image : new URL(image, site).href;
 ---
 
 <!doctype html>
@@ -20,9 +27,18 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="alternate" type="application/rss+xml" title="conilab" href="/articles/rss.xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />

@@ -1,0 +1,90 @@
+---
+import Base from "../layouts/Base.astro";
+import CoinGlyph from "../components/CoinGlyph.astro";
+import Kicker from "../components/Kicker.astro";
+---
+
+<Base title="404 — conilab" description="Page not found.">
+  <section class="lost">
+    <div class="wrap">
+      <Kicker text="404 · NOT FOUND" accent />
+
+      <div class="coin-mark" aria-hidden="true">
+        <CoinGlyph variant="slash" size="4em" />
+      </div>
+
+      <h1>
+        <span data-lang="zh" class="cjk" lang="zh">翻遍了，没找到这一面。</span>
+        <span data-lang="en">This side of the coin doesn't exist.</span>
+      </h1>
+
+      <p class="lede">
+        <span data-lang="zh" class="cjk" lang="zh">可能链接过期了，也可能从未铸造过。</span>
+        <span data-lang="en">The link may have expired — or was never minted.</span>
+      </p>
+
+      <a href="/" class="back-link">
+        <span data-lang="zh" class="cjk" lang="zh">← 回到正面</span>
+        <span data-lang="en">← Back to the front</span>
+      </a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .lost {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: var(--sp-60) 0;
+  }
+
+  .coin-mark {
+    margin: var(--sp-32) 0 var(--sp-28);
+    color: var(--ink-3);
+  }
+
+  h1 {
+    font-family: var(--serif);
+    font-size: var(--fs-4xl);
+    font-weight: var(--fw-normal);
+    line-height: var(--lh-snug);
+    margin-bottom: var(--sp-16);
+  }
+  h1 span { display: block; }
+  h1 [data-lang="en"] {
+    font-size: var(--fs-xl);
+    font-style: italic;
+    font-weight: var(--fw-light);
+    color: var(--ink-2);
+    margin-top: var(--sp-6);
+  }
+
+  .lede {
+    font-family: var(--sans);
+    font-size: var(--fs-md);
+    color: var(--ink-3);
+    margin-bottom: var(--sp-32);
+  }
+  .lede span { display: block; }
+  .lede [data-lang="en"] {
+    font-style: italic;
+    margin-top: var(--sp-4);
+  }
+
+  .back-link {
+    font-family: var(--mono);
+    font-size: var(--fs-sm);
+    letter-spacing: 0.06em;
+    color: var(--accent-front);
+    border-bottom: var(--sp-hairline) solid var(--accent-front);
+    padding-bottom: var(--sp-2);
+    transition: color var(--dur-quick), border-color var(--dur-quick);
+  }
+  .back-link:hover {
+    color: var(--accent-front-ink);
+    border-color: var(--accent-front-ink);
+  }
+</style>

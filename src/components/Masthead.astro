@@ -21,6 +21,7 @@ const navItems = [
   { href: "/notes", label: "Notes" },
   { href: "/about", label: "About" },
 ];
+const pathname = Astro.url.pathname;
 ---
 
 <header class="masthead">
@@ -31,7 +32,7 @@ const navItems = [
 
     <nav class="primary" aria-label="Primary">
       <ul>
-        {navItems.map((it) => <li><a href={it.href}>{it.label}</a></li>)}
+        {navItems.map((it) => <li><a href={it.href} {...(pathname.startsWith(it.href) ? {"aria-current": "page"} : {})}>{it.label}</a></li>)}
       </ul>
     </nav>
 
@@ -115,7 +116,8 @@ const navItems = [
     padding-bottom: var(--sp-2);
     transition: color var(--dur-quick), border-color var(--dur-quick);
   }
-  nav.primary a:hover {
+  nav.primary a:hover,
+  nav.primary a[aria-current="page"] {
     color: var(--accent-deep-ink);
     border-bottom-color: var(--accent-deep);
   }
