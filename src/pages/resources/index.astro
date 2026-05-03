@@ -1,0 +1,185 @@
+---
+import Base from "../../layouts/Base.astro";
+import Kicker from "../../components/Kicker.astro";
+import CoinGlyph from "../../components/CoinGlyph.astro";
+
+const resources = [
+  {
+    title_zh: "Claude Code 打磨手册",
+    title_en: "Orange Book",
+    desc_zh: "从零开始用 Claude Code 构建 agent 的实战手册。暗色 A4 长图，可打印。",
+    desc_en: "A hands-on handbook for building agents with Claude Code. Dark A4 long-scroll, printable.",
+    href: "/resources/orange-book.html",
+    tag: "handbook",
+    date: "2026",
+  },
+];
+---
+
+<Base
+  title="Resources — conilab"
+  description="Public artifacts by @coni — handbooks, tools, and experiments."
+>
+  <section class="resources">
+    <div class="wrap">
+      <header class="resources-head">
+        <Kicker text="resources · 作品" accent />
+        <h1 class="resources-title">
+          <span class="cjk" lang="zh">可以公开的创作结果</span>
+        </h1>
+        <p class="resources-lede-en" data-lang="en">
+          Public artifacts — things I've made and shipped.
+        </p>
+      </header>
+
+      <ul class="resource-list">
+        {resources.map((r) => (
+          <li class="resource-entry">
+            <a href={r.href} target="_blank" rel="noopener" class="resource-link">
+              <div class="resource-meta">
+                <span class="resource-tag">{r.tag}</span>
+                <span class="resource-date">{r.date}</span>
+              </div>
+              <h2 class="resource-title">
+                <span class="resource-title-zh cjk" lang="zh">{r.title_zh}</span>
+                <span class="resource-title-en">{r.title_en}</span>
+              </h2>
+              <p class="resource-desc cjk" data-lang="zh" lang="zh">{r.desc_zh}</p>
+              <p class="resource-desc" data-lang="en">{r.desc_en}</p>
+              <span class="resource-arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .resources {
+    padding: var(--sp-44) 0 var(--sp-96);
+  }
+
+  .resources-head {
+    border-bottom: var(--sp-hairline) solid var(--rule);
+    padding-bottom: var(--sp-32);
+    margin-bottom: var(--sp-44);
+  }
+  .resources-title {
+    font-family: var(--cjk-serif);
+    font-size: clamp(var(--fs-4xl), 4vw, var(--fs-7xl));
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-snug);
+    margin: var(--sp-12) 0 var(--sp-14);
+    color: var(--ink);
+  }
+  .resources-lede-en {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: var(--fs-lg);
+    color: var(--ink-3);
+    font-weight: var(--fw-light);
+    margin: 0;
+  }
+
+  .resource-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--sp-22);
+  }
+
+  .resource-entry {
+    border: var(--sp-hairline) solid var(--rule);
+    border-radius: var(--rad-4);
+    transition: border-color var(--dur-quick), background var(--dur-quick);
+  }
+  .resource-entry:hover {
+    border-color: var(--accent-front);
+    background: color-mix(in oklch, var(--accent-front) 3%, var(--paper));
+  }
+
+  .resource-link {
+    display: block;
+    padding: var(--sp-28) var(--sp-32);
+    position: relative;
+  }
+
+  .resource-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-12);
+    margin-bottom: var(--sp-14);
+  }
+  .resource-tag {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-front);
+    border: var(--sp-hairline) solid var(--accent-front);
+    padding: var(--sp-2) var(--sp-8);
+    border-radius: var(--rad-pill);
+  }
+  .resource-date {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    color: var(--ink-3);
+    letter-spacing: 0.1em;
+  }
+
+  .resource-title {
+    font-family: var(--serif);
+    font-weight: var(--fw-medium);
+    margin: 0 0 var(--sp-10);
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-12);
+    flex-wrap: wrap;
+  }
+  .resource-title-zh {
+    font-family: var(--cjk-serif);
+    font-size: var(--fs-3xl);
+    color: var(--ink);
+  }
+  .resource-title-en {
+    font-family: var(--serif);
+    font-size: var(--fs-lg);
+    font-style: italic;
+    font-weight: var(--fw-light);
+    color: var(--accent-back-ink);
+  }
+
+  .resource-desc {
+    font-family: var(--sans);
+    font-size: var(--fs-md);
+    color: var(--ink-2);
+    line-height: var(--lh-relaxed);
+    margin: 0 0 var(--sp-4);
+  }
+  .resource-desc[data-lang="en"] {
+    font-style: italic;
+    color: var(--ink-3);
+    font-size: var(--fs-sm);
+  }
+
+  .resource-arrow {
+    position: absolute;
+    right: var(--sp-28);
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: var(--fs-xl);
+    color: var(--ink-3);
+    transition: transform var(--dur-quick), color var(--dur-quick);
+  }
+  .resource-entry:hover .resource-arrow {
+    transform: translateY(-50%) translateX(3px);
+    color: var(--accent-front);
+  }
+
+  @media (max-width: 720px) {
+    .resource-link { padding: var(--sp-22) var(--sp-18); }
+    .resource-arrow { display: none; }
+  }
+</style>

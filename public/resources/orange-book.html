@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Claude Code 打磨手册 · Orange Book</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,500&family=JetBrains+Mono:wght@400;500;700&family=Noto+Serif+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0c0a08;
+  --bg-soft: #14110d;
+  --bg-card: #1a1612;
+  --bg-card-hover: #221c16;
+  --bg-deep: #050403;
+  --paper: #f5efe6;
+  --text: #e8e0d0;
+  --text-mute: #8a8275;
+  --text-dim: #4a443a;
+  --accent: #d97757;
+  --accent-bright: #f0986b;
+  --accent-deep: #b85a3c;
+  --accent-soft: rgba(217, 119, 87, 0.12);
+  --sage: #87a96b;
+  --rule: #2a241c;
+  --rule-strong: #3a3024;
+
+  --font-serif-en: 'Fraunces', 'Times New Roman', serif;
+  --font-serif-cn: 'Noto Serif SC', 'Songti SC', serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* ============ Cover / Back page chrome (from design) ============ */
+.cover-page::after { content: none !important; }
+
+.top-edge::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent) 50%, transparent);
+  opacity: 0.4;
+  z-index: 15;
+}
+
+.a4-topbar {
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--font-mono);
+  font-size: 8pt; letter-spacing: 0.18em;
+  color: var(--text-mute);
+  text-transform: uppercase;
+  padding-bottom: 3mm;
+  border-bottom: 0.5px solid var(--rule);
+  position: relative;
+  z-index: 2;
+}
+.a4-topbar .tb-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent); display: inline-block;
+  margin-right: 10px; vertical-align: middle;
+  box-shadow: 0 0 8px var(--accent);
+}
+
+@page { size: A4; margin: 0; }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  font-family: 'Noto Serif SC', 'Songti SC', serif;
+  color: var(--text);
+  background: #050403;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.page {
+  width: 210mm;
+  min-height: 297mm;
+  margin: 0 auto;
+  padding: 22mm 20mm 20mm;
+  background: var(--bg);
+  background-image:
+    radial-gradient(circle at 85% 12%, rgba(217, 119, 87, 0.10) 0%, transparent 45%),
+    radial-gradient(circle at 8% 88%, rgba(135, 169, 107, 0.05) 0%, transparent 40%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 长图模式：页之间无缝拼接 + 顶部橙色亮线做分隔 */
+.page + .page {
+  border-top: 1px solid rgba(217, 119, 87, 0.25);
+}
+
+@media print {
+  .page {
+    page-break-after: always;
+    break-after: page;
+  }
+  .page:last-child {
+    page-break-after: auto;
+  }
+  .page + .page { border-top: 0; }
+}
+
+.page::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 0.85 0 0 0 0 0.78 0 0 0 0 0.65 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  opacity: 0.5;
+  z-index: 0;
+}
+
+.page::after {
+  content: 'CONI · ORANGE BOOK · 2026 · CONI';
+  position: absolute;
+  right: 4mm;
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+  transform-origin: center right;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7pt;
+  letter-spacing: 0.45em;
+  color: var(--accent);
+  opacity: 0.18;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.page > * { position: relative; z-index: 1; }
+
+/* ============ Top bar ============ */
+.top-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8pt; letter-spacing: 0.18em;
+  color: var(--text-mute);
+  margin-bottom: 14mm;
+  padding-bottom: 4mm;
+  border-bottom: 0.5px solid var(--rule);
+}
+
+.top-bar .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent); display: inline-block; margin-right: 10px;
+  vertical-align: middle;
+}
+
+.top-bar .left { display: flex; align-items: center; gap: 18px; }
+.top-bar .left .sep { color: var(--text-dim); }
+.top-bar .right { color: var(--text-dim); }
+
+/* ============ Title ============ */
+.chapter-title {
+  font-family: 'Fraunces', 'Noto Serif SC', serif;
+  font-weight: 400;
+  font-size: 58pt;
+  line-height: 1.0;
+  letter-spacing: -0.015em;
+  color: var(--paper);
+  margin-bottom: 4mm;
+}
+.chapter-title .accent {
+  color: var(--accent);
+  font-style: italic;
+  font-weight: 500;
+}
+.chapter-title-zh {
+  font-family: 'Fraunces', 'Noto Serif SC', serif;
+  font-size: 36pt;
+  font-weight: 300;
+  color: var(--text);
+  line-height: 1.15;
+  margin-bottom: 5mm;
+}
+
+.subtitle {
+  font-size: 11pt;
+  line-height: 1.65;
+  color: var(--text-mute);
+  max-width: 160mm;
+  margin-bottom: 12mm;
+}
+.subtitle .em { color: var(--accent-bright); }
+
+/* ============ Section header ============ */
+.section-head {
+  display: flex; align-items: baseline;
+  margin: 8mm 0 4mm;
+  gap: 12px;
+}
+.section-head .num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9pt;
+  color: var(--accent);
+  letter-spacing: 0.15em;
+}
+.section-head .title {
+  font-family: 'Fraunces', 'Noto Serif SC', serif;
+  font-size: 18pt;
+  font-weight: 500;
+  color: var(--paper);
+  letter-spacing: -0.005em;
+}
+.section-head .title .italic { font-style: italic; color: var(--accent-bright); }
+.section-head::before {
+  content: '';
+  width: 10mm; height: 1px;
+  background: var(--accent);
+  margin-right: 2mm;
+  align-self: center;
+}
+
+/* ============ Body ============ */
+.body {
+  font-size: 10pt;
+  line-height: 1.75;
+  color: var(--text);
+}
+.body p { margin-bottom: 3mm; }
+.body strong { color: var(--accent-bright); font-weight: 600; }
+.body code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8.8pt;
+  background: var(--bg-card);
+  color: var(--accent-bright);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 0.5px solid var(--rule);
+}
+
+.body ul, .body ol { margin: 2mm 0 3mm 6mm; }
+.body li { margin-bottom: 1.5mm; }
+.body li::marker { color: var(--accent); }
+
+.quote {
+  border-left: 2px solid var(--accent);
+  padding: 2mm 0 2mm 5mm;
+  margin: 4mm 0;
+  color: var(--text-mute);
+  font-size: 9.5pt;
+  font-style: italic;
+  line-height: 1.65;
+}
+
+/* ============ Cards grid ============ */
+.card-grid {
+  display: grid;
+  gap: 4mm;
+  margin: 4mm 0;
+}
+.card-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+.card-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+.card {
+  background: var(--bg-card);
+  border: 0.5px solid var(--rule);
+  border-left: 2px solid var(--accent);
+  padding: 5mm 6mm;
+  border-radius: 2px;
+}
+.card .label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7.5pt;
+  color: var(--accent);
+  letter-spacing: 0.2em;
+  margin-bottom: 2mm;
+}
+.card .head {
+  font-family: 'Fraunces', 'Noto Serif SC', serif;
+  font-size: 12pt;
+  color: var(--paper);
+  margin-bottom: 2.5mm;
+  font-weight: 500;
+  font-style: italic;
+}
+.card .desc {
+  font-size: 9pt;
+  line-height: 1.65;
+  color: var(--text);
+}
+.card .desc strong { color: var(--accent-bright); }
+.card .say {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7.5pt;
+  color: var(--text-mute);
+  letter-spacing: 0.1em;
+  margin: 3mm 0 1.5mm;
+}
+.card .quote-box {
+  background: rgba(217, 119, 87, 0.06);
+  border-left: 1.5px solid var(--accent);
+  padding: 2.5mm 3.5mm;
+  font-size: 9pt;
+  color: var(--text);
+  margin-bottom: 3mm;
+  border-radius: 2px;
+}
+.card .meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8pt;
+  color: var(--text-mute);
+}
+
+/* ============ Key table ============ */
+.kv-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 3mm 0;
+  font-size: 9pt;
+}
+.kv-table th, .kv-table td {
+  text-align: left;
+  padding: 2.5mm 3mm;
+  border-bottom: 0.5px solid var(--rule);
+  vertical-align: top;
+}
+.kv-table th {
+  color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7.5pt;
+  letter-spacing: 0.15em;
+  font-weight: 500;
+  text-transform: uppercase;
+  padding-bottom: 2mm;
+  border-bottom: 1px solid var(--rule-strong);
+}
+.kv-table td code {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent-bright);
+  font-size: 8.5pt;
+}
+
+/* ============ Callout ============ */
+.callout {
+  background: var(--bg-card);
+  border: 0.5px solid var(--rule);
+  border-top: 2px solid var(--accent);
+  padding: 5mm 6mm;
+  border-radius: 2px;
+  margin: 5mm 0;
+}
+.callout .tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7.5pt;
+  color: var(--accent);
+  letter-spacing: 0.2em;
+  margin-bottom: 2mm;
+}
+.callout .content {
+  font-size: 9.5pt;
+  line-height: 1.7;
+}
+
+/* ============ Footer ============ */
+.footer {
+  position: absolute;
+  bottom: 8mm; left: 20mm; right: 20mm;
+  display: flex; justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7.5pt;
+  color: var(--text-dim);
+  letter-spacing: 0.18em;
+  padding-top: 3mm;
+  border-top: 0.5px solid var(--rule);
+}
+.footer .center { color: var(--text-mute); }
+
+/* ============ Diagonal badge ============ */
+.badge {
+  position: absolute;
+  top: 36mm; right: 20mm;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7.5pt;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  padding: 1.5mm 3mm;
+  border: 0.5px solid var(--accent);
+  border-radius: 2px;
+}
+
+/* ============ Image frame ============ */
+.figure {
+  background: var(--bg-card);
+  border: 0.5px solid var(--rule);
+  padding: 4mm;
+  border-radius: 3px;
+  margin: 4mm 0;
+  text-align: center;
+}
+.figure img { max-width: 100%; height: auto; }
+.figure .cap {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7.5pt;
+  color: var(--text-mute);
+  margin-top: 2.5mm;
+  letter-spacing: 0.12em;
+}
+
+/* ============ 2-col layout helper ============ */
+.two-col {
+  column-count: 2;
+  column-gap: 8mm;
+  column-rule: 0.5px solid var(--rule);
+}
+.two-col p { break-inside: avoid; }
+
+/* Simple key:value rows */
+.kv-list {
+  display: grid;
+  grid-template-columns: 35mm 1fr;
+  gap: 2mm 5mm;
+  font-size: 9pt;
+  margin: 3mm 0;
+}
+.kv-list dt {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8.5pt;
+  color: var(--accent);
+}
+.kv-list dd { color: var(--text); }
+
+/* Mnemonic */
+.mnemo {
+  background: rgba(217, 119, 87, 0.05);
+  border: 0.5px solid var(--rule-strong);
+  padding: 5mm 6mm;
+  margin: 5mm 0;
+  border-radius: 2px;
+}
+.mnemo h4 {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  color: var(--accent-bright);
+  font-size: 11pt;
+  margin-bottom: 3mm;
+  font-weight: 500;
+}
+.mnemo code {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent-bright);
+  font-size: 8.8pt;
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- PAGE 1 · COVER A · MONOLITH（from design handoff） -->
+<!-- ============================================================ -->
+<section class="page cover-page top-edge">
+  <!-- top bar -->
+  <div class="a4-topbar">
+    <div><span class="tb-dot"></span>FIELD GUIDE · VOL.01</div>
+    <div style="color: var(--text-dim);">FOR YOUR OWN AGENT · 2026 · 04 · 19</div>
+  </div>
+
+  <!-- massive 01 -->
+  <div style="
+    position: absolute; top: 56mm; right: 14mm;
+    font-family: var(--font-serif-en);
+    font-style: italic; font-weight: 300;
+    font-size: 340pt; line-height: 0.8;
+    color: var(--accent);
+    opacity: 0.12;
+    letter-spacing: -0.05em;
+    pointer-events: none; user-select: none;
+  ">01</div>
+
+  <!-- title block -->
+  <div style="margin-top: 56mm; position: relative;">
+    <div style="
+      font-family: var(--font-mono); font-size: 9pt;
+      color: var(--accent); letter-spacing: 0.32em;
+      margin-bottom: 10mm;
+    ">THE ORANGE BOOK · N° 01</div>
+
+    <div style="
+      font-family: var(--font-serif-en);
+      font-size: 92pt; line-height: 0.88;
+      font-weight: 300; color: var(--paper);
+      letter-spacing: -0.03em;
+      font-variation-settings: 'opsz' 144, 'SOFT' 50;
+    ">
+      How to<br>
+      <span style="
+        font-style: italic; font-weight: 500;
+        color: var(--accent-bright);
+      ">sharpen</span>
+      <br>
+      your agent<span style="color: var(--accent);">.</span>
+    </div>
+
+    <div style="
+      margin-top: 10mm;
+      padding-left: 14mm;
+      border-left: 1px solid var(--accent);
+      max-width: 130mm;
+    ">
+      <div style="
+        font-family: var(--font-serif-cn);
+        font-size: 22pt; font-weight: 400; color: var(--paper);
+        letter-spacing: 0.02em; line-height: 1.25;
+      ">Claude Code 打磨手册</div>
+      <div style="
+        font-family: var(--font-serif-cn);
+        font-size: 11pt; color: var(--text-mute);
+        margin-top: 3mm; font-weight: 300; line-height: 1.6;
+      ">
+        一个大学生的 agent 协作实践与沉淀 ——<br>
+        <span style="color: var(--accent); font-style: italic;">
+          memory · skill · handoff · flywheel.
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5 volumes strip bottom -->
+  <div style="
+    position: absolute; bottom: 34mm; left: 20mm; right: 20mm;
+  ">
+    <div style="
+      font-family: var(--font-mono); font-size: 8pt;
+      color: var(--text-mute); letter-spacing: 0.22em;
+      margin-bottom: 4mm; display: flex; align-items: center; gap: 4mm;
+    ">
+      <span style="width: 8mm; height: 1px; background: var(--accent);"></span>
+      CONTENTS · 本册 5 卷
+    </div>
+    <div style="
+      display: grid; grid-template-columns: repeat(5, 1fr);
+      gap: 4mm;
+    ">
+      <div style="padding-top: 3mm; border-top: 1.5px solid var(--accent);">
+        <div style="font-family: var(--font-mono); font-size: 7.5pt; color: var(--accent); letter-spacing: 0.2em;">Nº 01</div>
+        <div style="font-family: var(--font-serif-cn); font-size: 10pt; color: var(--paper); margin-top: 2mm; font-weight: 500;">Memory 系统</div>
+        <div style="font-family: var(--font-serif-en); font-style: italic; font-size: 8pt; color: var(--text-dim); letter-spacing: 0.15em; margin-top: 1mm;">MEMORIA</div>
+      </div>
+      <div style="padding-top: 3mm; border-top: 1.5px solid var(--accent);">
+        <div style="font-family: var(--font-mono); font-size: 7.5pt; color: var(--accent); letter-spacing: 0.2em;">Nº 02</div>
+        <div style="font-family: var(--font-serif-cn); font-size: 10pt; color: var(--paper); margin-top: 2mm; font-weight: 500;">Skill 系统</div>
+        <div style="font-family: var(--font-serif-en); font-style: italic; font-size: 8pt; color: var(--text-dim); letter-spacing: 0.15em; margin-top: 1mm;">ARS</div>
+      </div>
+      <div style="padding-top: 3mm; border-top: 1.5px solid var(--accent);">
+        <div style="font-family: var(--font-mono); font-size: 7.5pt; color: var(--accent); letter-spacing: 0.2em;">Nº 03</div>
+        <div style="font-family: var(--font-serif-cn); font-size: 10pt; color: var(--paper); margin-top: 2mm; font-weight: 500;">沉淀迭代</div>
+        <div style="font-family: var(--font-serif-en); font-style: italic; font-size: 8pt; color: var(--text-dim); letter-spacing: 0.15em; margin-top: 1mm;">FLYWHEEL</div>
+      </div>
+      <div style="padding-top: 3mm; border-top: 1.5px solid var(--accent);">
+        <div style="font-family: var(--font-mono); font-size: 7.5pt; color: var(--accent); letter-spacing: 0.2em;">Nº 04</div>
+        <div style="font-family: var(--font-serif-cn); font-size: 10pt; color: var(--paper); margin-top: 2mm; font-weight: 500;">项目工作</div>
+        <div style="font-family: var(--font-serif-en); font-style: italic; font-size: 8pt; color: var(--text-dim); letter-spacing: 0.15em; margin-top: 1mm;">HARNESS</div>
+      </div>
+      <div style="padding-top: 3mm; border-top: 1.5px solid var(--accent);">
+        <div style="font-family: var(--font-mono); font-size: 7.5pt; color: var(--accent); letter-spacing: 0.2em;">Nº 05</div>
+        <div style="font-family: var(--font-serif-cn); font-size: 10pt; color: var(--paper); margin-top: 2mm; font-weight: 500;">Field Tips</div>
+        <div style="font-family: var(--font-serif-en); font-style: italic; font-size: 8pt; color: var(--text-dim); letter-spacing: 0.15em; margin-top: 1mm;">TIPS</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- bottom metadata — ISBN style -->
+  <div style="
+    position: absolute; bottom: 10mm; left: 20mm; right: 20mm;
+    display: flex; justify-content: space-between; align-items: flex-end;
+    font-family: var(--font-mono); font-size: 7.5pt;
+    color: var(--text-dim); letter-spacing: 0.18em;
+    padding-top: 3mm; border-top: 0.5px solid var(--rule);
+  ">
+    <div>BY CONI · 2026</div>
+    <div style="color: var(--accent);">ORANGE BOOK · Nº 01 · v 1.0</div>
+    <div>
+      <div style="display: flex; gap: 1px; margin-bottom: 2mm; justify-content: flex-end;">
+        <div style="width: 1px; height: 8mm; background: var(--text-mute);"></div>
+        <div style="width: 1px; height: 8mm; background: transparent;"></div>
+        <div style="width: 2px; height: 8mm; background: var(--text-mute);"></div>
+        <div style="width: 1px; height: 8mm; background: transparent;"></div>
+        <div style="width: 3px; height: 8mm; background: var(--text-mute);"></div>
+        <div style="width: 1px; height: 8mm; background: transparent;"></div>
+        <div style="width: 1px; height: 8mm; background: var(--text-mute);"></div>
+        <div style="width: 2px; height: 8mm; background: transparent;"></div>
+        <div style="width: 1px; height: 8mm; background: var(--text-mute);"></div>
+        <div style="width: 4px; height: 8mm; background: transparent;"></div>
+        <div style="width: 1px; height: 8mm; background: var(--text-mute);"></div>
+        <div style="width: 1px; height: 8mm; background: transparent;"></div>
+        <div style="width: 2px; height: 8mm; background: var(--text-mute);"></div>
+        <div style="width: 1px; height: 8mm; background: transparent;"></div>
+        <div style="width: 3px; height: 8mm; background: var(--text-mute);"></div>
+        <div style="width: 1px; height: 8mm; background: transparent;"></div>
+        <div style="width: 1px; height: 8mm; background: var(--text-mute);"></div>
+        <div style="width: 2px; height: 8mm; background: transparent;"></div>
+        <div style="width: 1px; height: 8mm; background: var(--text-mute);"></div>
+        <div style="width: 1px; height: 8mm; background: transparent;"></div>
+        <div style="width: 2px; height: 8mm; background: var(--text-mute);"></div>
+      </div>
+      ISBN · self-published
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PAGE 2 · Chapter 1 — Memory 系统 · 概述 -->
+<!-- ============================================================ -->
+<section class="page">
+  <div class="top-bar">
+    <div class="left"><span class="dot"></span>FIELD GUIDE N° 01 · MEMORY SYSTEM</div>
+    <div class="right">2026 · 04 · 19 · v 1.0</div>
+  </div>
+
+  <div class="badge">CHAPTER · 01</div>
+
+  <h1 class="chapter-title">How to use your<br><span class="accent">memory</span></h1>
+  <div class="chapter-title-zh">让 Claude 越用越懂你</div>
+
+  <div class="subtitle">
+    memory 系统解决的是这件事——<span class="em">让 Claude 对你的理解可以跨对话累积</span>，像一个真正越用越懂你的搭档。不用每次重新自我介绍，踩过的坑也不会再踩第二次。
+  </div>
+
+  <div class="section-head">
+    <div class="title">为什么需要这套系统？</div>
+  </div>
+  <div class="body">
+    <p>先讲痛点——如果你没遇到过下面这些，可能暂时不需要这套：</p>
+    <ul>
+      <li><strong>每次新对话要重新自我介绍</strong>：Claude 不知道你是谁、用什么语言、喜欢什么风格</li>
+      <li><strong>上次踩过的坑还会再踩</strong>：调过的 bug、纠正过的做法、确认过的方案，下次开新对话全忘</li>
+      <li><strong>项目上下文跨对话丢失</strong>：每次开头都要"先读 HANDOFF.md"，累积的经验没地方沉淀</li>
+      <li><strong>Claude 的理解停留在这次会话</strong>：你花一小时解释的东西，下次会话全部重来</li>
+    </ul>
+  </div>
+
+  <div class="section-head">
+    <div class="title">三个核心设计原则</div>
+  </div>
+  <div class="card-grid cols-3">
+    <div class="card">
+      <div class="label">PRINCIPLE · 01</div>
+      <div class="head">单一主仓 + symlink</div>
+      <div class="desc">所有 cwd 下的 memory 目录都 symlink 到同一个主仓。换目录、换项目，记忆全局可用。</div>
+    </div>
+    <div class="card">
+      <div class="label">PRINCIPLE · 02</div>
+      <div class="head">七类分层 + 准入门槛</div>
+      <div class="desc">不同类型的知识有不同的沉淀逻辑和淘汰规则，防止记忆无限膨胀。</div>
+    </div>
+    <div class="card">
+      <div class="label">PRINCIPLE · 03</div>
+      <div class="head">外置 cc-personal 资产</div>
+      <div class="desc">规则、完整文档、归档都住在 <code>~/cc-personal/</code>，不污染出厂目录，备份迁移都不影响。</div>
+    </div>
+  </div>
+
+  <div class="section-head">
+    <div class="title">七种记忆类型 · 对应人类直觉</div>
+  </div>
+  <table class="kv-table">
+    <thead><tr><th style="width: 28mm;">类型</th><th>人话理解</th></tr></thead>
+    <tbody>
+      <tr><td><code>user</code></td><td>我是谁（身份、技术栈、协作风格）</td></tr>
+      <tr><td><code>feedback</code></td><td>我踩过什么坑（带"上次错了"叙事）</td></tr>
+      <tr><td><code>preference</code></td><td>我喜欢怎么干（无错误叙事的纯偏好）</td></tr>
+      <tr><td><code>project</code></td><td>我在做什么（活跃项目的上下文）</td></tr>
+      <tr><td><code>retro</code></td><td>我做完了什么（项目完整复盘叙事）</td></tr>
+      <tr><td><code>reference</code></td><td>我读过什么（外部知识的入口）</td></tr>
+      <tr><td><code>decision</code></td><td>我为啥选 A 不选 B（架构权衡）</td></tr>
+    </tbody>
+  </table>
+
+  <div class="footer">
+    <div>CLAUDE CODE · ORANGE BOOK · © CONI</div>
+    <div class="center">CHAPTER 01 · MEMORY SYSTEM</div>
+    <div>PAGE 02</div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PLATE I · Memory 系统架构图（全页插图） -->
+<!-- ============================================================ -->
+<section class="page" style="display:flex;flex-direction:column;">
+  <div class="top-bar">
+    <div class="left"><span class="dot"></span>PLATE · I · ARCHITECTURE MAP</div>
+    <div class="right">MEMORY SYSTEM v3.1 · 2026 · 04 · 19</div>
+  </div>
+
+  <div style="margin-bottom: 6mm;">
+    <div style="font-family: 'JetBrains Mono', monospace; font-size: 8pt; color: var(--accent); letter-spacing: 0.25em; margin-bottom: 3mm;">§ 1 · 一张图看清整套系统</div>
+    <h2 style="font-family: 'Fraunces', 'Noto Serif SC', serif; font-size: 32pt; font-weight: 400; color: var(--paper); line-height: 1.1; letter-spacing: -0.01em;">
+      The <span style="font-style:italic; color: var(--accent);">architecture</span> in one glance
+    </h2>
+  </div>
+
+  <div class="figure" style="padding: 6mm; background: var(--bg-soft); border: 0.5px solid var(--rule-strong); flex: 1; display:flex; flex-direction:column; justify-content:center;">
+    <img src="memory-system-map.png" alt="Memory System Architecture Map v3.1" style="width: 100%; height: auto; display:block;"/>
+    <div class="cap" style="margin-top: 5mm; text-align: center;">MEMORY SYSTEM MAP · v 3 · 1 · 从新对话启动到知识沉淀的完整路径</div>
+  </div>
+
+  <div style="margin-top: 5mm; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4mm; font-size: 8.5pt; line-height: 1.6; color: var(--text-mute);">
+    <div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 7.5pt; color: var(--accent); letter-spacing: 0.2em; margin-bottom: 1.5mm;">LINE · 01</div>
+      <div><span style="color: var(--text);">黑色实线</span> = 自动加载（永久吃 token）</div>
+    </div>
+    <div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 7.5pt; color: var(--accent); letter-spacing: 0.2em; margin-bottom: 1.5mm;">LINE · 02</div>
+      <div><span style="color: var(--text);">灰色虚线</span> = 按需读取（Claude 判断后拉取）</div>
+    </div>
+    <div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 7.5pt; color: var(--accent); letter-spacing: 0.2em; margin-bottom: 1.5mm;">LINE · 03</div>
+      <div><span style="color: var(--text);">橙色虚线</span> = 写入 / 沉淀路径（含更新索引回环）</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>CLAUDE CODE · ORANGE BOOK · © CONI</div>
+    <div class="center">PLATE · I · ARCH MAP</div>
+    <div>INSERT</div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PAGE 3 · Memory 系统 · 怎么装 + 对比 + FAQ -->
+<!-- ============================================================ -->
+<section class="page">
+  <div class="top-bar">
+    <div class="left"><span class="dot"></span>FIELD GUIDE N° 01 · MEMORY SYSTEM</div>
+    <div class="right">INSTALL · COMPARE · FAQ</div>
+  </div>
+
+  <div class="section-head">
+    <div class="title">怎么自己装一套？</div>
+  </div>
+  <div class="body">
+    <p>配套有一份可执行的安装手册 <code>memory-system-setup-CONI.md</code>。</p>
+    <p>用法非常简单：</p>
+    <ol>
+      <li>下载 <code>memory-system-setup-CONI.md</code></li>
+      <li>打开 Claude Code，把这份文件发给它，说一句「按这份手册给我装 memory 系统」</li>
+      <li>Claude 会按 12 步执行，每步之间停下来让你确认</li>
+      <li>全程约 5–10 分钟</li>
+    </ol>
+    <p>手册里包含：宪法文件、MEMORY.md 索引、user-profile 骨架、CLAUDE.md 更新、cc-personal 目录、symlink 收敛脚本、健康检查脚本、budget 自动刷新脚本、settings.json hook 配置——全套复制可用。</p>
+  </div>
+
+  <div class="section-head">
+    <div class="title">hygiene 宪法 · 核心四条（必遵）</div>
+  </div>
+  <div class="body">
+    <ol>
+      <li>写新记忆前先 <code>grep</code> 现有文件，能更新旧的就不开新文件</li>
+      <li>MEMORY.md 只放指针（一行 hook），不放内容</li>
+      <li>主仓只留"跨对话会用"的知识，外部参考归 <code>~/cc-personal/references/</code></li>
+      <li>永远不自动写入，用户确认后才沉淀</li>
+    </ol>
+    <div class="quote">这四条是记忆系统不退化的关键。没这套宪法，再好的分类都会膨胀成垃圾堆。</div>
+  </div>
+
+  <div class="section-head">
+    <div class="title">和其他方案的对比</div>
+  </div>
+  <table class="kv-table">
+    <thead>
+      <tr>
+        <th>方案</th><th>载体</th><th>谁控制</th><th>成本</th><th>可迁移</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>本方案</strong></td><td>纯本地 md 文件</td><td>你完全掌控</td><td>0</td><td>完全可迁移</td></tr>
+      <tr><td>mem0 / zep</td><td>云端向量库</td><td>依赖第三方</td><td>订阅费</td><td>绑定服务</td></tr>
+      <tr><td>Cursor / Windsurf</td><td>IDE 自管</td><td>IDE 决定</td><td>内置</td><td>不可移植</td></tr>
+    </tbody>
+  </table>
+  <div class="body">
+    <p><strong>本地文件的优势</strong>：你能 <code>cat</code> 能 <code>grep</code> 能 <code>git diff</code>，记忆系统对你透明，不是黑盒。</p>
+  </div>
+
+  <div class="callout">
+    <div class="tag">FAQ</div>
+    <div class="content">
+      <p><strong>Q: Claude 会不会偷偷乱写记忆？</strong><br>
+      不会。hygiene 宪法第 4 条 "suggest, never auto-save"——Claude 每次只会建议"要不要沉淀这条"，你确认后才写文件。</p>
+      <p style="margin-top: 2mm;"><strong>Q: 换电脑怎么迁移？</strong><br>
+      备份两个目录就行：<code>~/.claude/projects/&lt;家目录转义名&gt;/memory/</code> 和 <code>~/cc-personal/</code>。重装 Claude Code 不影响。</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>CLAUDE CODE · ORANGE BOOK · © CONI</div>
+    <div class="center">CHAPTER 01 · MEMORY SYSTEM</div>
+    <div>PAGE 03</div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PAGE 4 · Chapter 2 — Skill 系统 -->
+<!-- ============================================================ -->
+<section class="page">
+  <div class="top-bar">
+    <div class="left"><span class="dot"></span>FIELD GUIDE N° 02 · SKILL SYSTEM</div>
+    <div class="right">2026 · 04 · 19 · v 1.0</div>
+  </div>
+
+  <div class="badge">CHAPTER · 02</div>
+
+  <h1 class="chapter-title">The art of<br><span class="accent">skill crafting</span></h1>
+  <div class="chapter-title-zh">沉淀工作流与工具</div>
+
+  <div class="subtitle">
+    skill 不是 AI 的额外功能，是你把重复动作<span class="em">固化成可复用单元</span>的手段。三条思路对应三种 skill 来源，一条反常识设计原则让你知道什么时候停手。
+  </div>
+
+  <div class="section-head">
+    <div class="num">§ 2.1</div>
+    <div class="title">skill 的创建 · 三种思路</div>
+  </div>
+
+  <div class="card-grid cols-3">
+    <div class="card">
+      <div class="label">PATH · 01</div>
+      <div class="head">GitHub 现成项目打包</div>
+      <div class="desc">看到好用的 GitHub 工具（如抓视频的 <code>yt-dlp</code>），直接把项目地址给 agent，让它帮你打包成 skill。以后调用就能直接出结果，不用每次重配环境。</div>
+    </div>
+    <div class="card">
+      <div class="label">PATH · 02</div>
+      <div class="head">工作流内化</div>
+      <div class="desc">跑完一轮完整工作流后，如果还会重复用，把它内化成 skill——以后调用自动走完所有步骤，省时间也省 token。</div>
+    </div>
+    <div class="card">
+      <div class="label">PATH · 03</div>
+      <div class="head">skill-creator 从零</div>
+      <div class="desc">任何想法冒出来的时候，打开 <code>skill-creator</code>，跟它对话就能生成新 skill——从 capture intent 到 iterate 全流程托管。</div>
+    </div>
+  </div>
+
+  <div class="section-head">
+    <div class="num">§ 2.2</div>
+    <div class="title">skill 的下载 · 两个安全守则</div>
+  </div>
+
+  <div class="card-grid cols-2">
+    <div class="card">
+      <div class="label">SAFETY · 01</div>
+      <div class="head">先审计再下载</div>
+      <div class="desc">下载任何 skill 前，先让你的 agent 审计一下它的安全性——读源码、查权限、看有没有可疑调用。<strong>防人之心不可无。</strong></div>
+    </div>
+    <div class="card">
+      <div class="label">SAFETY · 02</div>
+      <div class="head">保持精简</div>
+      <div class="desc">非必要任务不要下载过多 skill。<strong>"麻雀虽小，五脏俱全"</strong>——每个 skill 的 description 都会占用 token 预算，留着不用的 skill 是在稀释 Claude 的判断力。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>CLAUDE CODE · ORANGE BOOK · © CONI</div>
+    <div class="center">CHAPTER 02 · SKILL SYSTEM</div>
+    <div>PAGE 04</div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PAGE 5 · Chapter 3 上 — 沉淀迭代系统 · 素材 & 项目完结 -->
+<!-- ============================================================ -->
+<section class="page">
+  <div class="top-bar">
+    <div class="left"><span class="dot"></span>FIELD GUIDE N° 03 · CONSOLIDATION</div>
+    <div class="right">2026 · 04 · 19 · v 1.0</div>
+  </div>
+
+  <div class="badge">CHAPTER · 03</div>
+
+  <h1 class="chapter-title">The flywheel of<br><span class="accent">越用越强</span></h1>
+  <div class="chapter-title-zh">沉淀迭代系统</div>
+
+  <div class="subtitle">
+    让 AI 在陪你工作的过程中<span class="em">持续学习你的审美、偏好、踩坑历史</span>，而不是每次都从零开始。沉淀不是事后补作业，是工作流的一部分。
+  </div>
+
+  <div class="section-head">
+    <div class="num">§ 3.1</div>
+    <div class="title">素材沉淀 · 让 AI 更懂你的参考</div>
+  </div>
+
+  <div class="card-grid cols-2">
+    <div class="card">
+      <div class="say">YOU SAY</div>
+      <div class="quote-box">"这个设计我想沉淀，以后可以参考。风格是编辑杂志感。"</div>
+      <div class="desc">cc 提取配色 / 版式 / 字体 / 交互细节，判断风格类型，写一个独立 reference 文件，含来源 URL + 适用场景。</div>
+      <div class="meta">→ memory/design-ref-&lt;风格&gt;.md</div>
+    </div>
+    <div class="card">
+      <div class="say">YOU SAY</div>
+      <div class="quote-box">"这篇文章你读读，值得吸收的写进 principles / rules，其他一行索引防重复。"</div>
+      <div class="desc">cc 扫取 → 按 1–10 分评分 → ≥7 分提取归纳点 → 追加到 principles 或 rules → review-log 加一行索引。</div>
+      <div class="meta">→ cc-personal/references/ + article-review-log.md</div>
+    </div>
+  </div>
+
+  <div class="section-head">
+    <div class="num">§ 3.2</div>
+    <div class="title">项目完结沉淀 · 三种触发场景</div>
+  </div>
+
+  <div class="quote">先讲时机问题：沉淀不一定要等"项目完结"。<strong>踩坑当场、meta 审视当场就该沉淀</strong>——冷了就忘细节，两周后只剩"好像之前遇到过什么问题"的模糊感。下面三种是典型的"项目级"完结场景。</div>
+
+  <div class="card-grid cols-3">
+    <div class="card">
+      <div class="label">SCENARIO · 01</div>
+      <div class="head">一直搞不定，最后才搞定</div>
+      <div class="desc">一件事一直搞不定，最后才搞定——让 agent 深度复盘，把失败路径、关键突破点总结成 feedback 存进 memory。</div>
+      <div class="meta" style="margin-top: 3mm;">→ memory/feedback-&lt;主题&gt;.md</div>
+    </div>
+    <div class="card">
+      <div class="label">SCENARIO · 02</div>
+      <div class="head">比上次更顺利</div>
+      <div class="desc">同类项目比上次更顺，说明有值得固化的改进——把这次做法迭代进化，写成 skill 或 feedback。</div>
+      <div class="meta" style="margin-top: 3mm;">→ skills/ 或 memory/feedback-*</div>
+    </div>
+    <div class="card">
+      <div class="label">SCENARIO · 03</div>
+      <div class="head">项目彻底结束</div>
+      <div class="desc">三层沉淀同步推进：<strong>行为规则</strong> → CLAUDE.md；<strong>用户理解</strong> → user-profile / feedback；<strong>完整叙事</strong> → retro-&lt;项目&gt;-&lt;日期&gt;.md</div>
+      <div class="meta" style="margin-top: 3mm;">→ CLAUDE.md + memory/retro-*.md</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>CLAUDE CODE · ORANGE BOOK · © CONI</div>
+    <div class="center">CHAPTER 03 · CONSOLIDATION · 上</div>
+    <div>PAGE 05</div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PAGE 6 · Chapter 3 下 — 协作体验优化 7 条 + projects 教训 -->
+<!-- ============================================================ -->
+<section class="page">
+  <div class="top-bar">
+    <div class="left"><span class="dot"></span>FIELD GUIDE N° 03 · CONSOLIDATION</div>
+    <div class="right">7 TACTICS · ONE LESSON</div>
+  </div>
+
+  <div class="section-head">
+    <div class="num">§ 3.3</div>
+    <div class="title">协作体验优化 · 7 条实用建议</div>
+  </div>
+
+  <div class="card-grid cols-2">
+    <div class="card">
+      <div class="label">TACTIC · 01</div>
+      <div class="head">项目完毕主动复盘</div>
+      <div class="desc">每次项目结束跟 agent 复盘大小问题，可汲取的部分吸收到 memory——你会越用越强。</div>
+    </div>
+    <div class="card">
+      <div class="label">TACTIC · 02</div>
+      <div class="head">handoff 先写，harness 后谈</div>
+      <div class="desc">建好项目文件夹，第一件事让 agent 写 <code>HANDOFF.md</code>。连开十几个对话都不会丢上下文。</div>
+    </div>
+    <div class="card">
+      <div class="label">TACTIC · 03</div>
+      <div class="head">重复工作流转成 skill</div>
+      <div class="desc">同一流程走 2-3 次还在手动推进，就该做成 skill——省时间也省 token。</div>
+    </div>
+    <div class="card">
+      <div class="label">TACTIC · 04</div>
+      <div class="head">耐心等待 agent 思考</div>
+      <div class="desc">2-3 分钟没回复正常，可能在思考。超过 5 分钟再追问。<strong>非必要不打断。</strong></div>
+    </div>
+    <div class="card">
+      <div class="label">TACTIC · 05</div>
+      <div class="head">聊天记录本地可恢复</div>
+      <div class="desc">被打断、找不到聊天框——新开对话框让 agent 读取本地聊天 json 就行。（费 token 但保命）</div>
+    </div>
+    <div class="card">
+      <div class="label">TACTIC · 06</div>
+      <div class="head">cc 里用 codex 装插件</div>
+      <div class="desc">同时用 cc 和 codex 但更喜欢 cc 界面——在 cc 里装 codex 插件，协同执行任务。</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="tag">TACTIC · 07 · ★ GENERATOR-EVALUATOR</div>
+    <div class="content">
+      <p><strong>让同一个 agent 做两次</strong>：第一次当评审（挑毛病、打分、列优先级），第二次当执行（按评审结果改）。</p>
+      <p style="margin-top: 2mm;">比直接说"帮我把 X 改好"质量好一个数量级——agent 第一步建立"哪里有问题"的心智模型，第二步带着这个模型针对性改。</p>
+      <p style="margin-top: 3mm; font-family: 'JetBrains Mono', monospace; font-size: 8.5pt; color: var(--text-mute);">
+        Round 1 → 「评价一下这份 X，指出最该改的 3 个点，按优先级排」<br>
+        Round 2 → 「按你刚列的 3 个点改一下」
+      </p>
+      <p style="margin-top: 2mm; color: var(--text-mute); font-size: 8.5pt; font-style: italic;">对付费手册、公众号文章、skill 文档、代码重构都管用。</p>
+    </div>
+  </div>
+
+  <div class="section-head">
+    <div class="num">§ 3.4</div>
+    <div class="title">一个教训 · projects 目录要规范</div>
+  </div>
+
+  <div class="body">
+    <p>每次对话都随意打开文件夹，整个 <code>projects/</code> 目录会越来越乱。<strong>办事前先想好在哪个文件夹工作</strong>，别图省事用默认目录。</p>
+    <p>还有一点——中文文件夹名会被 Claude Code 识别成一串连字符（比如 <code>MBTI测评应用</code> → <code>----</code>），定位完全没法看。</p>
+    <div class="quote">如果你希望 <code>projects/</code> 一眼就能看清，养成给项目目录用<strong>英文 / 拼音命名</strong>的习惯——比如 <code>mbti-app</code> 而不是 <code>MBTI测评应用</code>。</div>
+  </div>
+
+  <div class="footer">
+    <div>CLAUDE CODE · ORANGE BOOK · © CONI</div>
+    <div class="center">CHAPTER 03 · CONSOLIDATION · 下</div>
+    <div>PAGE 06</div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PAGE 7 · Chapter 4 — 项目工作系统 -->
+<!-- ============================================================ -->
+<section class="page">
+  <div class="top-bar">
+    <div class="left"><span class="dot"></span>FIELD GUIDE N° 04 · PROJECT SYSTEM</div>
+    <div class="right">2026 · 04 · 19 · v 1.0</div>
+  </div>
+
+  <div class="badge">CHAPTER · 04</div>
+
+  <h1 class="chapter-title">Two pillars of<br><span class="accent">project work</span></h1>
+  <div class="chapter-title-zh">项目工作系统 · handoff + harness</div>
+
+  <div class="subtitle">
+    项目工作系统是让你和 agent 在项目级别配合的<span class="em">基础设施</span>——一旦跑通，你能同时开十几个对话框并行推进不同模块而不失控。只需要两根支柱。
+  </div>
+
+  <div class="section-head">
+    <div class="num">§ 4.1</div>
+    <div class="title">handoff 工作文档 · 项目连续性的第一保障</div>
+  </div>
+
+  <div class="body">
+    <p>每次启动新项目，<strong>第一件事就是让 agent 写一份 <code>HANDOFF.md</code></strong>——记录当前进度、关键决策、待办事项、已知坑点。</p>
+    <p>它的作用不是做给人看的，而是做给<strong>未来的 agent</strong> 看的：</p>
+    <ul>
+      <li>对话上下文被压缩时，它是唯一能跨 session 延续的记忆</li>
+      <li>开新对话框时，让 agent 先读 HANDOFF 再动手，3 秒进入状态</li>
+      <li>项目中途换设备、暂停几天回来接手，看 HANDOFF 就能继续</li>
+    </ul>
+  </div>
+
+  <div class="section-head">
+    <div class="num">§ 4.2</div>
+    <div class="title">Harness · 约束先行，防止 agent 跑偏</div>
+  </div>
+
+  <div class="body">
+    <p>Harness 字面意思是"马具"——项目开始前先给 agent 套上"该做什么 / 不该做什么"的约束框架，它就不会在工作中跑偏。</p>
+    <p>我自己的 harness 一般包括三部分：</p>
+  </div>
+
+  <div class="card-grid cols-3">
+    <div class="card">
+      <div class="label">HARNESS · 01</div>
+      <div class="head">项目级 CLAUDE.md</div>
+      <div class="desc">写清楚项目目标、技术栈、交付形态。每次 agent 都会读到，约束每一步决策。</div>
+    </div>
+    <div class="card">
+      <div class="label">HARNESS · 02</div>
+      <div class="head">NEVER 列表</div>
+      <div class="desc">明确写"绝对不要做 X / 不要碰 Y"。比 positive 指令更有约束力——NEVER 不能被"创意性解读"。</div>
+    </div>
+    <div class="card">
+      <div class="label">HARNESS · 03</div>
+      <div class="head">目录结构约定</div>
+      <div class="desc">新文件该放哪、怎么命名。没有这条，agent 会把文件四处散落。</div>
+    </div>
+  </div>
+
+  <div class="body" style="margin-top: 5mm;">
+    <p><strong>为什么必须先做 harness</strong>：没有规矩的工作空间，agent 会用自己的惯性填空；等它按自己的方式铺开了你再纠正就晚了，每次对话都在重新教。<strong>规则要写在前面，不是纠偏的时候才补。</strong></p>
+  </div>
+
+  <div class="callout">
+    <div class="tag">TWO PILLARS · CONFIGURED</div>
+    <div class="content">
+      <p><strong>handoff + harness 是项目工作系统的两根支柱：</strong></p>
+      <p style="margin-top: 2mm;">· <strong>handoff</strong> 管纵向连续性——跨 session、换设备、中途暂停回来都能接上</p>
+      <p>· <strong>harness</strong> 管横向约束性——同时开十几个对话推进不同模块也不会各自跑偏</p>
+      <p style="margin-top: 3mm; color: var(--text-mute); font-style: italic;">两件配齐，你就能同时推进多个复杂项目而不失控。</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>CLAUDE CODE · ORANGE BOOK · © CONI</div>
+    <div class="center">CHAPTER 04 · PROJECT SYSTEM</div>
+    <div>PAGE 07</div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PAGE 8 · Chapter 5 — Tips -->
+<!-- ============================================================ -->
+<section class="page">
+  <div class="top-bar">
+    <div class="left"><span class="dot"></span>FIELD GUIDE N° 05 · FIELD TIPS</div>
+    <div class="right">2026 · 04 · 19 · v 1.0</div>
+  </div>
+
+  <div class="badge">CHAPTER · 05</div>
+
+  <h1 class="chapter-title">Three<br><span class="accent">field tips</span></h1>
+  <div class="chapter-title-zh">几条独立的实用 tips</div>
+
+  <div class="subtitle">
+    前面各章节讲完了系统性的方法论，这里收录<span class="em">几条独立的实用 tips</span>——和前面不重复，单独看每一条都能立刻用上。
+  </div>
+
+  <div class="card-grid cols-3" style="margin-top: 15mm;">
+    <div class="card">
+      <div class="label">TIP · 01</div>
+      <div class="head">agent 帮你查论文改格式</div>
+      <div class="desc">如果你还在写论文，让 agent 直接去找文献、改格式、核对引用——节省大量机械劳动。</div>
+    </div>
+    <div class="card">
+      <div class="label">TIP · 02</div>
+      <div class="head">截图画图优先命令行</div>
+      <div class="desc">让 cc 截图/画图时，优先用命令行工具（<code>chrome --headless</code>、<code>playwright</code> 等），<strong>别走 MCP 截图</strong>——MCP 把图像 base64 塞进上下文，吃 token 严重（约 3–5K tk/张 vs CLI 的 ~50 tk，差距约 50 倍）。</div>
+    </div>
+    <div class="card">
+      <div class="label">TIP · 03</div>
+      <div class="head">飞书用户装 lark-cli</div>
+      <div class="desc">用飞书办公的话，装 <code>lark-cli</code> 能让 agent 直接读写你的飞书文档、表格、日历、消息——写进飞书云文档、发消息汇报进度都可以。agent 延伸到日常协作平台，不再是孤立在终端里的工具。</div>
+    </div>
+  </div>
+
+  <div class="mnemo">
+    <h4>Mnemonic · 速记口诀</h4>
+    <div style="font-size: 10pt; line-height: 2; color: var(--text);">
+      <div>写规矩 · 看 <code>CLAUDE.md</code></div>
+      <div>装工具 · 看 <code>settings.json</code></div>
+      <div>教技能 · 进 <code>skills/</code></div>
+      <div>找记忆 · 翻 <code>projects/.../memory/</code></div>
+      <div>做项目 · 先 <code>HANDOFF.md</code> 再谈 harness</div>
+      <div style="color: var(--text-mute); font-style: italic; margin-top: 3mm; font-size: 9pt;">其余都是 Claude 的家务，不必操心。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>CLAUDE CODE · ORANGE BOOK · © CONI</div>
+    <div class="center">CHAPTER 05 · FIELD TIPS</div>
+    <div>PAGE 08</div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- BACK COVER B · SIGNED LETTER（from design handoff） -->
+<!-- ============================================================ -->
+<section class="page cover-page top-edge">
+  <div class="a4-topbar">
+    <div><span class="tb-dot"></span>BACK · 尾页 · SIGNED</div>
+    <div style="color: var(--text-dim);">END · 2026 · 04 · 19</div>
+  </div>
+
+  <!-- Big thanks -->
+  <div style="margin-top: 30mm; position: relative;">
+    <div style="
+      font-family: var(--font-mono); font-size: 9pt;
+      color: var(--accent); letter-spacing: 0.32em;
+      margin-bottom: 6mm;
+    ">A LETTER · 后记</div>
+
+    <div style="
+      font-family: var(--font-serif-en);
+      font-size: 96pt; line-height: 0.9;
+      font-weight: 300; color: var(--paper);
+      letter-spacing: -0.035em;
+      font-variation-settings: 'opsz' 144, 'SOFT' 100;
+    ">
+      <span style="font-style: italic; color: var(--accent-bright); font-weight: 500;">Thank</span>
+      <br>
+      <span>you</span><span style="color: var(--accent);">.</span>
+    </div>
+  </div>
+
+  <!-- handwritten-ish letter body -->
+  <div style="
+    margin-top: 16mm;
+    padding: 0 6mm;
+    max-width: 155mm;
+    font-family: var(--font-serif-cn);
+    font-size: 11pt; line-height: 1.95;
+    color: var(--text); font-weight: 300;
+  ">
+    <p style="margin-bottom: 4mm;">
+      读到这一页，说明你真的把这本手册翻完了 ——
+      <br>
+      一个写下它的大学生，先向你鞠一躬。
+    </p>
+    <p style="margin-bottom: 4mm;">
+      这本橙皮书里的每一条，都是我和 Claude 一起
+      <span style="color: var(--accent-bright);">踩坑踩出来</span>的。
+      不是"AI 使用秘籍"，只是一个大学生的<span style="color: var(--accent-bright);">工作法</span>——
+      你挑能用的拿去。
+    </p>
+    <p style="color: var(--text-mute); font-style: italic;">
+      如果它让你少走了一小时弯路，<br>
+      那下次我再写一本，也就值了。
+    </p>
+  </div>
+
+  <!-- signature zone -->
+  <div style="
+    position: absolute; bottom: 62mm; right: 22mm;
+    text-align: right;
+  ">
+    <svg viewBox="0 0 200 80" style="width: 58mm; height: 22mm;">
+      <path
+        d="M 10 50 Q 20 20, 35 35 Q 50 55, 65 30 Q 78 10, 88 40 Q 98 60, 112 35 Q 128 10, 142 30 Q 152 42, 168 25 Q 180 18, 190 32"
+        stroke="var(--accent-bright)" stroke-width="2.2" fill="none"
+        stroke-linecap="round" stroke-linejoin="round"
+        style="filter: drop-shadow(0 0 2px rgba(240,152,107,0.3));"
+      />
+      <circle cx="192" cy="32" r="2" fill="var(--accent-bright)" />
+    </svg>
+    <div style="
+      font-family: var(--font-mono); font-size: 8pt;
+      color: var(--text-mute); letter-spacing: 0.22em;
+      margin-top: 3mm;
+    ">— CONI · 2026 · 04 · 19</div>
+  </div>
+
+  <!-- next edition teaser -->
+  <div style="
+    position: absolute; bottom: 22mm; left: 20mm; right: 20mm;
+    padding: 5mm 8mm;
+    background: var(--bg-card);
+    border: 0.5px solid var(--rule-strong);
+    border-radius: 2px;
+    display: flex; align-items: center; gap: 8mm;
+  ">
+    <div style="
+      font-family: var(--font-serif-en); font-style: italic;
+      font-size: 32pt; color: var(--accent); font-weight: 400;
+      line-height: 1;
+    ">→</div>
+    <div style="flex: 1;">
+      <div style="
+        font-family: var(--font-mono); font-size: 7.5pt;
+        color: var(--accent); letter-spacing: 0.22em;
+        margin-bottom: 1.5mm;
+      ">COMING IN v 2.0 · 下一版预告</div>
+      <div style="
+        font-family: var(--font-serif-cn); font-size: 10pt;
+        color: var(--text); line-height: 1.7;
+      ">
+        <span style="color: var(--paper);">多 agent 编队</span> ·
+        <span style="color: var(--paper);"> checkpoint 接力 </span> ·
+        <span style="color: var(--paper);"> 团队级 memory 共享 </span> ——
+        <span style="color: var(--text-mute); font-style: italic;">还在踩坑中。</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- bottom edition plate -->
+  <div style="
+    position: absolute; bottom: 10mm; left: 20mm; right: 20mm;
+    padding-top: 3mm; border-top: 0.5px solid var(--rule);
+    display: flex; justify-content: space-between;
+    font-family: var(--font-mono); font-size: 7.5pt;
+    color: var(--text-dim); letter-spacing: 0.18em;
+  ">
+    <div>© CONI · 2026</div>
+    <div style="color: var(--accent);">— END OF ORANGE BOOK —</div>
+    <div>v 1.0 · FIRST PRINT</div>
+  </div>
+</section>
+
+</body>
+</html>
