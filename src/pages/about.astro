@@ -5,12 +5,10 @@ import Pullquote from "../components/Pullquote.astro";
 
 // Sticky 目录
 const sections = [
-  { id: "what",    label: "Ⅰ · What this is",       label_zh: "这是什么" },
-  { id: "why",     label: "Ⅱ · Why ≥ 3000 字",      label_zh: "为什么是长文" },
-  { id: "two",     label: "Ⅲ · Two faces",          label_zh: "硬币两面" },
-  { id: "name",    label: "Ⅳ · About the name",     label_zh: "关于 Coni" },
-  { id: "author",  label: "Ⅴ · About the writer",   label_zh: "关于作者" },
-  { id: "colophon",label: "Ⅵ · Colophon",           label_zh: "凡例" },
+  { id: "who",     label: "Ⅰ · Who I am",          label_zh: "我是谁" },
+  { id: "doing",   label: "Ⅱ · What I'm doing",    label_zh: "我在做什么" },
+  { id: "think",   label: "Ⅲ · How I think",        label_zh: "我怎么想的" },
+  { id: "site",    label: "Ⅳ · This site",          label_zh: "这个站" },
 ];
 ---
 
@@ -49,230 +47,139 @@ const sections = [
         <header class="about-head">
           <Kicker text="about · 关于" />
           <h1 class="about-title">
-            An article <em>read twice</em>,<br />
-            kept once.
+            @coni
           </h1>
           <p class="about-lede cjk" data-lang="zh" lang="zh">
-            每一篇<em>文章</em>都被写两次：一次中文，一次英文——
-            不是翻译，是同一个想法在两种语言里各自降落一次。
+            正在用两种语言<em>重新学习</em>世界的人。
           </p>
           <p class="about-lede-en" data-lang="en" lang="en">
-            Each <em>article</em> is written twice — once in 中文, once in
-            English. Not a translation: the same thought, landing in another
-            tongue and growing slightly different roots.
+            Re-learning the world in <em>two languages</em>.
           </p>
         </header>
 
         <!-- Ⅰ -->
-        <section id="what" class="about-sec">
+        <section id="who" class="about-sec">
           <h2 class="sec-num">Ⅰ</h2>
           <h3 class="sec-h">
-            <span class="cjk" lang="zh">这是什么</span>
-            <span class="sec-h-en">What this is</span>
+            <span class="cjk" lang="zh">我是谁</span>
+            <span class="sec-h-en">Who I am</span>
           </h3>
 
           <div class="prose cjk" data-lang="zh" lang="zh">
             <p>
-              <strong>conilab</strong> 是一份个人笔记本。这里的<em>文章</em>
-              没有日更，没有热点——只发<em>三千字以上</em>、被认真打磨过的长文。
-              短想法另在 <a href="/notes">/notes</a>。
+              <strong>@coni</strong>，来自 <em>coin</em>——硬币翻个面，<code>c-o-i-n</code> 变成 <code>c-o-n-i</code>。
             </p>
             <p>
-              每篇文章都登记两次：一面中文，一面英文。两面都登记完，才算这枚硬币写完了。
+              硬币有两面，人也一样。一面<em>向内</em>：记录、阅读、写作、自我修正。一面<em>向外</em>：写代码、造工具、探索 AI、把想法变成能跑的东西。
+            </p>
+            <p>
+              不急着给自己贴标签。先做，做完再看自己变成了什么。
             </p>
           </div>
           <div class="prose" data-lang="en" lang="en">
             <p>
-              <strong>conilab</strong> is a personal notebook. Articles here
-              earn their place by being <em>≥ 3000 字</em> and worked through
-              with care — no daily posts, no trend-chasing.
-              Quick takes live in <a href="/notes">/notes</a>.
+              <strong>@coni</strong> — from <em>coin</em>, flipped: <code>c-o-i-n</code> becomes <code>c-o-n-i</code>.
             </p>
             <p>
-              Each article is registered twice — one face in 中文, one in English.
-              Both faces filed; only then is the coin considered written.
+              A coin has two faces, and so does a person. One turned <em>inward</em>: journaling, reading, writing, self-correction. One turned <em>outward</em>: coding, building tools, exploring AI, turning thoughts into things that run.
+            </p>
+            <p>
+              No rush to label myself. Do the work first — see what shape I become.
             </p>
           </div>
         </section>
 
         <!-- Ⅱ -->
-        <section id="why" class="about-sec">
+        <section id="doing" class="about-sec">
           <h2 class="sec-num">Ⅱ</h2>
           <h3 class="sec-h">
-            <span class="cjk" lang="zh">为什么是 ≥ 3000 字</span>
-            <span class="sec-h-en">Why ≥ 3000 字</span>
+            <span class="cjk" lang="zh">我在做什么</span>
+            <span class="sec-h-en">What I'm doing</span>
           </h3>
 
           <div class="prose cjk" data-lang="zh" lang="zh">
             <p>
-              短想法去别处。三千字是一道<em>诚意门槛</em>——它逼着我自己想清楚，
-              而不是写出一段刚好够发朋友圈的金句然后假装那就是结论。
+              运营——用户增长侧<em>实习</em>中。同时保持几条自己的线：
             </p>
-            <p>
-              不是越长越好。是写到三千字之前就该写完的话题，本来就没必要发。
-            </p>
+            <ul>
+              <li>Vibe coding：用 AI 把想法快速变成可用的产品</li>
+              <li>持续记录<em>超 365 天</em>，一天不断</li>
+              <li>练习写作，长文和小说都在写</li>
+              <li>定投 ing——相信时间比择时重要</li>
+            </ul>
           </div>
           <div class="prose" data-lang="en" lang="en">
             <p>
-              Shorter thoughts live elsewhere. The 3000-character bar is a
-              <em>friction threshold</em>. It forces me to actually think a
-              thing through, instead of crafting one quotable line and
-              pretending that's the conclusion.
+              Working in ops — <em>user growth</em> side, as an intern. Meanwhile keeping a few lines of my own:
+            </p>
+            <ul>
+              <li>Vibe coding — turning ideas into working products with AI</li>
+              <li>Journaling for <em>365+ days</em> straight, no breaks</li>
+              <li>Practicing writing — long-form essays and fiction</li>
+              <li>DCA investing — trusting time over timing</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- Ⅲ -->
+        <section id="think" class="about-sec">
+          <h2 class="sec-num">Ⅲ</h2>
+          <h3 class="sec-h">
+            <span class="cjk" lang="zh">我怎么想的</span>
+            <span class="sec-h-en">How I think</span>
+          </h3>
+
+          <div class="prose cjk" data-lang="zh" lang="zh">
+            <p>
+              核心信念只有一条：<strong>行动 &gt; 认知</strong>。
             </p>
             <p>
-              Length is not the goal. The point: any topic that closes itself
-              before 3000 字 didn't need to be published in the first place.
+              道理看再多，没有变成行动就是零。我不缺"知道"，缺的是"做到"——所以这个站存在的意义，
+              不是展示我懂什么，而是逼自己把想法<em>写完整</em>。写完整本身就是一种行动。
             </p>
+            <p>最近很喜欢的一句话——</p>
+          </div>
+          <div class="prose" data-lang="en" lang="en">
+            <p>
+              One core belief: <strong>action &gt; cognition</strong>.
+            </p>
+            <p>
+              No amount of knowing matters if it doesn't become doing. I don't lack insight — I lack <em>consistency</em>. So this site exists not to showcase what I understand, but to force myself to write a thought <em>all the way through</em>. Finishing is itself an act.
+            </p>
+            <p>A line I keep coming back to lately —</p>
           </div>
         </section>
 
         <Pullquote
-          zh="同一个想法只用母语写一遍——它还没完成。翻过来再写一遍，才是同一枚硬币的两面。"
-          en="A thought written only in its native tongue isn't finished. Written again from the other side, it becomes both faces of the same coin."
+          zh="你可以外包你的思考，但你不能外包你的理解。"
+          en="You can outsource your thinking, but you cannot outsource your understanding."
+          side="back"
         />
 
-        <!-- Ⅲ -->
-        <section id="two" class="about-sec">
-          <h2 class="sec-num">Ⅲ</h2>
-          <h3 class="sec-h">
-            <span class="cjk" lang="zh">硬币的两面</span>
-            <span class="sec-h-en">Two faces, one coin</span>
-          </h3>
-
-          <div class="prose cjk" data-lang="zh" lang="zh">
-            <p>
-              中英不是翻译关系，是同一个核被两种语言土壤分别长一遍——
-              落在中文里长出的形状，和落在英文里长出的形状，<em>会不一样</em>。
-              那不是翻译失误，是双面叙事本来就该这样。
-            </p>
-            <p>
-              所以读中文版，能读到一面；翻过来读英文版，能读到另一面。
-              两面都读，才看见这枚硬币的全貌。
-            </p>
-          </div>
-          <div class="prose" data-lang="en" lang="en">
-            <p>
-              The two languages are not a translation pair — they're the same
-              core, planted in two different language soils, growing
-              <em>slightly different</em> shapes. The differences are not
-              translation drift; they're the whole point.
-            </p>
-            <p>
-              Read the Chinese side and you see one face. Flip the coin, read
-              the English side, and you see the other. Read both — and you
-              actually see the whole coin.
-            </p>
-          </div>
-        </section>
-
         <!-- Ⅳ -->
-        <section id="name" class="about-sec">
+        <section id="site" class="about-sec">
           <h2 class="sec-num">Ⅳ</h2>
           <h3 class="sec-h">
-            <span class="cjk" lang="zh">关于"Coni"</span>
-            <span class="sec-h-en">About the name</span>
+            <span class="cjk" lang="zh">这个站</span>
+            <span class="sec-h-en">This site</span>
           </h3>
 
           <div class="prose cjk" data-lang="zh" lang="zh">
             <p>
-              <strong>Coni</strong> 来自 <em>coin</em>，硬币——把最后两个字母
-              <i lang="en">i</i> 和 <i lang="en">n</i> 调换位置就是 coni。
-              名字本身就是一次<em>翻面</em>动作：<code>c-o-i-n</code> 翻过来，<code>c-o-n-i</code>。
+              <strong>conilab</strong> = coni + lab。一份个人实验簿。
             </p>
             <p>
-              <strong>conilab</strong> = coni + lab。把硬币的双面叙事
-              做成一间小实验簿——所以章节用罗马数字 Ⅰ/Ⅱ/Ⅲ，所以图标是
-              同心双圆 ⊙，所以你现在看的这一页本身就是实验的一部分。
+              没有日更，没有热点，没有评论区。要回应这里的某个想法，去你自己的笔记本里写一遍。
             </p>
           </div>
           <div class="prose" data-lang="en" lang="en">
             <p>
-              <strong>Coni</strong> comes from <em>coin</em> — swap the last
-              two letters <i>i</i> and <i>n</i> and you get coni. The name
-              itself is a small <em>flip</em>: <code>c-o-i-n</code> turned
-              around becomes <code>c-o-n-i</code>.
+              <strong>conilab</strong> = coni + lab. A personal experiment book.
             </p>
             <p>
-              <strong>conilab</strong> = coni + lab. The two-faced coin,
-              treated as a small experiment book — hence the Roman numerals
-              Ⅰ/Ⅱ/Ⅲ for chapters, hence the concentric-circle ⊙ glyph,
-              hence this page itself being part of the experiment.
+              No daily posts, no trend-chasing, no comments. The way to respond to a thought here is to go write your own.
             </p>
           </div>
-        </section>
-
-        <!-- Ⅴ -->
-        <section id="author" class="about-sec">
-          <h2 class="sec-num">Ⅴ</h2>
-          <h3 class="sec-h">
-            <span class="cjk" lang="zh">关于作者</span>
-            <span class="sec-h-en">About the writer</span>
-          </h3>
-
-          <div class="prose cjk" data-lang="zh" lang="zh">
-            <p>
-              这里写下的，是一个网名：<strong>@coni</strong>。它来自 <em>coin</em>，硬币。
-            </p>
-            <p>
-              硬币有两面，人也一样：一面<em>向内</em>，记录阅读、写作、情绪和自我修正；
-              一面<em>向外</em>，探索 AI、工具、表达和创造的可能。
-            </p>
-          </div>
-          <div class="prose" data-lang="en" lang="en">
-            <p>
-              All you'll find here is a handle: <strong>@coni</strong>.
-              It comes from <em>coin</em> — a small object with two sides.
-            </p>
-            <p>
-              A person also has more than one side: one turned <em>inward</em>,
-              where reading, writing, emotions, and self-reflection happen;
-              another turned <em>outward</em>, where AI, tools, expression,
-              and creation begin.
-            </p>
-          </div>
-        </section>
-
-        <!-- Ⅵ -->
-        <section id="colophon" class="about-sec">
-          <h2 class="sec-num">Ⅵ</h2>
-          <h3 class="sec-h">
-            <span class="cjk" lang="zh">凡例</span>
-            <span class="sec-h-en">Colophon</span>
-          </h3>
-
-          <dl class="colophon-list">
-            <dt>Type</dt>
-            <dd>
-              <span class="cjk" lang="zh">英文：Source Serif 4 · Inter · JetBrains Mono</span><br />
-              <span class="cjk" lang="zh">中文：Source Han Serif SC（思源宋体）→ PingFang SC fallback</span>
-            </dd>
-
-            <dt>Color</dt>
-            <dd>
-              OKLCH only. <em>正面</em> — accent-front <code>oklch(0.42 0.14 240)</code>.
-              <em>反面</em> — accent-back <code>oklch(0.55 0.11 60)</code>.
-            </dd>
-
-            <dt>Stack</dt>
-            <dd>
-              Astro 6 · TypeScript strict · bun · Cloudflare Pages.
-              No React, no Tailwind. Plain CSS, native components.
-            </dd>
-
-            <dt>Source</dt>
-            <dd>
-              <a href="https://github.com/coni555" rel="me">github.com/coni555</a> ·
-              <a href="/articles/rss.xml">RSS</a> ·
-              <a href="/sitemap-index.xml">sitemap</a>
-            </dd>
-
-            <dt>Built quietly</dt>
-            <dd>
-              <span class="cjk" lang="zh">没有 newsletter，没有评论区，没有点赞按钮。要回应这里的某个想法，请去你自己的笔记本里写一遍。</span>
-              <br />
-              <em>No newsletter, no comments, no like button. The way to respond to a thought here is to go write your own.</em>
-            </dd>
-          </dl>
         </section>
       </article>
     </div>
@@ -490,45 +397,13 @@ const sections = [
     padding-top: 0;
   }
 
-  /* ─── COLOPHON LIST ─── */
-  .colophon-list {
-    display: grid;
-    grid-template-columns: 110px 1fr;
-    gap: var(--sp-14) var(--sp-22);
-    margin: 0;
-    font-family: var(--serif);
-    font-size: var(--fs-md);
+  /* ─── PROSE LIST ─── */
+  .prose ul {
+    padding-left: var(--sp-22);
+    margin: var(--sp-8) 0 var(--sp-14);
+  }
+  .prose li {
+    margin-bottom: var(--sp-6);
     line-height: var(--lh-relaxed);
-  }
-  .colophon-list dt {
-    font-family: var(--mono);
-    font-size: var(--fs-2xs);
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--ink-3);
-    padding-top: 0.2em;
-  }
-  .colophon-list dd {
-    margin: 0;
-    color: var(--ink-2);
-  }
-  .colophon-list code {
-    font-family: var(--mono);
-    font-size: 0.92em;
-    background: color-mix(in oklch, var(--ink) 5%, var(--paper));
-    padding: 0.1em 0.4em;
-    border-radius: 3px;
-  }
-  .colophon-list em {
-    font-style: italic;
-    color: var(--accent-back-ink);
-  }
-  .colophon-list a {
-    color: var(--accent-front-ink);
-    border-bottom: var(--sp-hairline) solid var(--accent-front);
-  }
-  @media (max-width: 720px) {
-    .colophon-list { grid-template-columns: 1fr; gap: var(--sp-4) 0; }
-    .colophon-list dt { padding-top: var(--sp-8); }
   }
 </style>
