@@ -43,8 +43,27 @@ const langEnMarker = /<!--\s*LANG:EN\s*-->/;
 const stripped = (body ?? "").replace(langZhMarker, "");
 const [zhRaw = "", enRaw = ""] = stripped.split(langEnMarker).map((s) => s.trim());
 
-const zhHtml = marked.parse(zhRaw, { async: false }) as string;
-const enHtml = marked.parse(enRaw, { async: false }) as string;
+const zhHtmlRaw = marked.parse(zhRaw, { async: false }) as string;
+const enHtmlRaw = marked.parse(enRaw, { async: false }) as string;
+
+interface TocItem { id: string; text: string; level: number }
+
+function processHeadings(html: string, prefix: string) {
+  const toc: TocItem[] = [];
+  let i = 0;
+  const out = html.replace(/<(h[23])([^>]*)>([\s\S]*?)<\/\1>/g, (_, tag, attrs, content) => {
+    const level = parseInt(tag[1]);
+    const text = content.replace(/<[^>]*>/g, "");
+    const id = `${prefix}-${++i}`;
+    toc.push({ id, text, level });
+    return `<${tag}${attrs} id="${id}">${content}</${tag}>`;
+  });
+  return { html: out, toc };
+}
+
+const { html: zhHtml, toc: zhToc } = processHeadings(zhHtmlRaw, "zh");
+const { html: enHtml, toc: enToc } = processHeadings(enHtmlRaw, "en");
+const hasToc = zhToc.length > 0 || enToc.length > 0;
 
 const dateStr = new Date(data.published_at).toISOString().slice(0, 10);
 const tagsStr = (data.tags ?? []).join(" · ");
@@ -69,6 +88,29 @@ const tagsStr = (data.tags ?? []).join(" · ");
         <p class="article-lede cjk" data-lang="zh" lang="zh">{data.lede_zh}</p>
         <p class="article-lede-en" data-lang="en" lang="en">{data.lede_en}</p>
       </header>
+
+      {hasToc && (
+        <nav class="toc" aria-label="Table of contents">
+          <div class="toc-inner">
+            <span class="toc-label">Contents</span>
+            <ol class="toc-list">
+              {zhToc.map((h) => (
+                <li class={`toc-item toc-h${h.level}`}>
+                  <a href={`#${h.id}`} class="toc-link" data-target={h.id}>{h.text}</a>
+                </li>
+              ))}
+              {enToc.length > 0 && (
+                <li class="toc-divider" aria-hidden="true">⊙</li>
+              )}
+              {enToc.map((h) => (
+                <li class={`toc-item toc-h${h.level}`}>
+                  <a href={`#${h.id}`} class="toc-link" data-target={h.id}>{h.text}</a>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </nav>
+      )}
 
       <section class="article-body" data-lang="zh" lang="zh-CN">
         <div class="prose cjk" set:html={zhHtml}></div>
@@ -109,7 +151,6 @@ const tagsStr = (data.tags ?? []).join(" · ");
   </article>
 
   <script>
-    // Reading progress bar — tracks scroll within <article>
     (() => {
       const article = document.querySelector("article.article");
       const bar = document.querySelector<HTMLElement>(".reading-progress-bar");
@@ -125,6 +166,47 @@ const tagsStr = (data.tags ?? []).join(" · ");
       update();
       window.addEventListener("scroll", update, { passive: true });
       window.addEventListener("resize", update);
+    })();
+
+    (() => {
+      const links = document.querySelectorAll<HTMLAnchorElement>(".toc-link");
+      if (!links.length) return;
+
+      const ids = Array.from(links).map((a) => a.dataset.target!);
+      const headings = ids
+        .map((id) => document.getElementById(id))
+        .filter(Boolean) as HTMLElement[];
+      if (!headings.length) return;
+
+      let active = "";
+      const mark = (id: string) => {
+        if (id === active) return;
+        active = id;
+        links.forEach((a) =>
+          a.classList.toggle("is-active", a.dataset.target === id),
+        );
+      };
+
+      const onScroll = () => {
+        const offset = 100;
+        let current = headings[0]?.id ?? "";
+        for (const h of headings) {
+          if (h.getBoundingClientRect().top < offset) current = h.id;
+          else break;
+        }
+        mark(current);
+      };
+      onScroll();
+      window.addEventListener("scroll", onScroll, { passive: true });
+
+      links.forEach((a) =>
+        a.addEventListener("click", (e) => {
+          e.preventDefault();
+          const el = document.getElementById(a.dataset.target!);
+          el?.scrollIntoView({ behavior: "smooth", block: "start" });
+          history.replaceState(null, "", `#${a.dataset.target}`);
+        }),
+      );
     })();
   </script>
 </Base>
@@ -150,6 +232,67 @@ const tagsStr = (data.tags ?? []).join(" · ");
   }
 
   .article { padding: var(--sp-44) 0 var(--sp-96); position: relative; }
+
+  /* ── TABLE OF CONTENTS ── */
+  .toc { display: none; }
+  @media (min-width: 1200px) {
+    .toc {
+      display: block;
+      position: absolute;
+      left: calc(50% + 35ch);
+      top: 0;
+      width: 190px;
+    }
+    .toc-inner {
+      position: sticky;
+      top: 80px;
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+    .toc-inner::-webkit-scrollbar { display: none; }
+    .toc-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      display: block;
+      margin-bottom: var(--sp-12);
+    }
+    .toc-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      border-left: var(--sp-hairline) solid var(--rule);
+    }
+    .toc-item { margin: 0; }
+    .toc-h3 { padding-left: var(--sp-12); }
+    .toc-link {
+      display: block;
+      padding: var(--sp-4) 0 var(--sp-4) var(--sp-14);
+      font-family: var(--sans);
+      font-size: 12px;
+      line-height: 1.4;
+      color: var(--ink-3);
+      border-left: 2px solid transparent;
+      margin-left: -1px;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .toc-link:hover { color: var(--ink); }
+    .toc-link.is-active {
+      color: var(--accent-front-ink);
+      border-left-color: var(--accent-front);
+    }
+    .toc-divider {
+      padding: var(--sp-8) 0 var(--sp-8) var(--sp-14);
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent-back);
+      letter-spacing: 0.14em;
+      list-style: none;
+    }
+  }
 
   /* 单语模式下隐藏翻面分隔（中英分页时不再有"另一面"概念）*/
   :global(html.show-zh) .article-flip,

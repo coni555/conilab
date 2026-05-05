@@ -1,0 +1,348 @@
+---
+import Base from "../layouts/Base.astro";
+import Kicker from "../components/Kicker.astro";
+
+interface Book {
+  title: string;
+  title_en?: string;
+  author: string;
+  review: string;
+  year?: number;
+}
+
+type Tier = {
+  label: string;
+  label_en: string;
+  books: Book[];
+};
+
+const tiers: Tier[] = [
+  {
+    label: "夯",
+    label_en: "S",
+    books: [
+      { title: "把时间当作朋友", author: "李笑来", review: "改变了我对「学习」这件事的理解", year: 2024 },
+      { title: "纳瓦尔宝典", title_en: "The Almanack of Naval Ravikant", author: "Eric Jorgenson", review: "财富和幸福的操作系统", year: 2024 },
+    ],
+  },
+  {
+    label: "顶级",
+    label_en: "A",
+    books: [
+      { title: "定投改变命运", author: "李笑来", review: "简单到不需要解释，难在你做不做", year: 2024 },
+      { title: "穷查理宝典", title_en: "Poor Charlie's Almanack", author: "Peter D. Kaufman", review: "多元思维模型的活教材", year: 2025 },
+    ],
+  },
+  {
+    label: "人上人",
+    label_en: "B",
+    books: [
+      { title: "认知觉醒", author: "周岭", review: "国产自助书里难得不水的", year: 2024 },
+    ],
+  },
+  {
+    label: "NPC",
+    label_en: "C",
+    books: [],
+  },
+  {
+    label: "拉完了",
+    label_en: "D",
+    books: [],
+  },
+];
+
+const totalBooks = tiers.reduce((n, t) => n + t.books.length, 0);
+---
+
+<Base
+  title="Books — conilab"
+  description="从夯到拉的读书锐评。A brutally honest tier list of everything I've read."
+>
+  <section class="books">
+    <div class="wrap">
+      <header class="books-head">
+        <Kicker text="books · 读过的书" accent />
+        <h1 class="books-title">
+          <span class="cjk" lang="zh">从夯到拉</span>
+        </h1>
+        <p class="books-lede" data-lang="en">
+          A brutally honest tier list.
+        </p>
+        <p class="books-count">{totalBooks} books ranked</p>
+      </header>
+
+      <div class="tier-list">
+        {tiers.map((tier) => (
+          <div class={`tier tier--${tier.label_en.toLowerCase()}`}>
+            <div class="tier-label">
+              <span class="tier-zh">{tier.label}</span>
+              <span class="tier-en">{tier.label_en}</span>
+            </div>
+            <div class="tier-books">
+              {tier.books.length > 0 ? (
+                tier.books.map((book) => (
+                  <div class="book-card">
+                    <div class="book-info">
+                      <span class="book-title cjk" lang="zh">{book.title}</span>
+                      {book.title_en && (
+                        <span class="book-title-en">{book.title_en}</span>
+                      )}
+                      <span class="book-author">{book.author}</span>
+                    </div>
+                    <p class="book-review cjk" lang="zh">{book.review}</p>
+                    {book.year && <span class="book-year">{book.year}</span>}
+                  </div>
+                ))
+              ) : (
+                <div class="tier-empty">—</div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <footer class="books-foot">
+        <p class="books-note cjk" lang="zh">
+          纯主观锐评，不构成推荐。一本书在哪个档取决于它对<em>我</em>的影响，不是它的客观质量。
+        </p>
+        <p class="books-note" data-lang="en">
+          Purely subjective. A book's tier reflects its impact on <em>me</em>, not its objective quality.
+        </p>
+      </footer>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .books {
+    padding: var(--sp-44) 0 var(--sp-96);
+  }
+
+  /* ── HEAD ── */
+  .books-head {
+    margin-bottom: var(--sp-44);
+    border-bottom: var(--sp-hairline) solid var(--rule);
+    padding-bottom: var(--sp-32);
+  }
+  .books-title {
+    font-family: var(--cjk-serif);
+    font-size: clamp(var(--fs-5xl), 4vw, 52px);
+    line-height: 1.1;
+    color: var(--ink);
+    font-weight: var(--fw-medium);
+    margin: 0 0 var(--sp-8);
+  }
+  .books-lede {
+    font-family: var(--serif);
+    font-size: var(--fs-lg);
+    font-style: italic;
+    font-weight: var(--fw-light);
+    color: var(--ink-3);
+    margin: 0 0 var(--sp-12);
+  }
+  .books-count {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 0;
+  }
+
+  /* ── TIER LIST ── */
+  .tier-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .tier {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    min-height: 72px;
+    border-bottom: var(--sp-hairline) solid var(--rule);
+  }
+  .tier:first-child {
+    border-top: var(--sp-hairline) solid var(--rule);
+  }
+
+  /* ── TIER LABELS (OKLCH warm→cool) ── */
+  .tier-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    border-right: var(--sp-hairline) solid var(--rule);
+    padding: var(--sp-12) var(--sp-8);
+  }
+  .tier-zh {
+    font-family: var(--cjk-serif);
+    font-size: var(--fs-xl);
+    font-weight: var(--fw-medium);
+    line-height: 1;
+  }
+  .tier-en {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.14em;
+    line-height: 1;
+  }
+
+  .tier--s .tier-label {
+    background: oklch(0.95 0.04 30);
+    color: oklch(0.40 0.16 25);
+  }
+  .tier--a .tier-label {
+    background: oklch(0.95 0.04 65);
+    color: oklch(0.40 0.12 55);
+  }
+  .tier--b .tier-label {
+    background: oklch(0.95 0.03 140);
+    color: oklch(0.38 0.10 140);
+  }
+  .tier--c .tier-label {
+    background: oklch(0.95 0.01 250);
+    color: var(--ink-3);
+  }
+  .tier--d .tier-label {
+    background: oklch(0.93 0.02 280);
+    color: oklch(0.42 0.10 280);
+  }
+
+  :global(html.dark) .tier--s .tier-label {
+    background: oklch(0.25 0.06 30);
+    color: oklch(0.78 0.14 25);
+  }
+  :global(html.dark) .tier--a .tier-label {
+    background: oklch(0.25 0.05 65);
+    color: oklch(0.78 0.11 55);
+  }
+  :global(html.dark) .tier--b .tier-label {
+    background: oklch(0.25 0.04 140);
+    color: oklch(0.75 0.09 140);
+  }
+  :global(html.dark) .tier--c .tier-label {
+    background: oklch(0.22 0.01 250);
+    color: var(--ink-3);
+  }
+  :global(html.dark) .tier--d .tier-label {
+    background: oklch(0.22 0.03 280);
+    color: oklch(0.70 0.08 280);
+  }
+
+  /* ── BOOKS ── */
+  .tier-books {
+    display: flex;
+    flex-wrap: wrap;
+    padding: var(--sp-12) var(--sp-18);
+    gap: var(--sp-12);
+    align-content: flex-start;
+  }
+
+  .book-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+    padding: var(--sp-10) var(--sp-14);
+    background: var(--paper-2);
+    border: var(--sp-hairline) solid var(--rule-soft);
+    max-width: 340px;
+    transition: border-color 0.15s;
+  }
+  .book-card:hover {
+    border-color: var(--accent-front);
+  }
+
+  .book-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .book-title {
+    font-family: var(--cjk-serif);
+    font-size: var(--fs-md);
+    font-weight: var(--fw-medium);
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .book-title-en {
+    font-family: var(--serif);
+    font-size: var(--fs-sm);
+    font-style: italic;
+    font-weight: var(--fw-light);
+    color: var(--ink-3);
+    line-height: 1.3;
+  }
+  .book-author {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.08em;
+    color: var(--ink-3);
+    margin-top: var(--sp-2);
+  }
+  .book-review {
+    font-family: var(--cjk-serif);
+    font-size: var(--fs-sm);
+    color: var(--ink-2);
+    line-height: var(--lh-prose);
+    margin: 0;
+    font-weight: var(--fw-light);
+  }
+  .book-year {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--ink-3);
+    align-self: flex-end;
+  }
+
+  .tier-empty {
+    color: var(--ink-3);
+    font-family: var(--mono);
+    font-size: var(--fs-sm);
+    display: flex;
+    align-items: center;
+    padding: var(--sp-8);
+  }
+
+  /* ── FOOTER ── */
+  .books-foot {
+    margin-top: var(--sp-44);
+    padding-top: var(--sp-22);
+    border-top: var(--sp-hairline) solid var(--rule);
+  }
+  .books-note {
+    font-family: var(--serif);
+    font-size: var(--fs-sm);
+    color: var(--ink-3);
+    font-style: italic;
+    font-weight: var(--fw-light);
+    line-height: var(--lh-prose);
+    margin: 0 0 var(--sp-4);
+  }
+  .books-note.cjk {
+    font-family: var(--cjk-serif);
+    font-style: normal;
+  }
+  .books-note.cjk em {
+    font-style: normal;
+    text-decoration: underline;
+    text-decoration-style: var(--cjk-em-line);
+    text-decoration-color: var(--accent-front);
+    text-decoration-thickness: var(--cjk-em-thickness);
+    text-underline-offset: var(--cjk-em-offset);
+  }
+  .books-note:not(.cjk) em {
+    color: var(--accent-back-ink);
+  }
+
+  @media (max-width: 600px) {
+    .tier {
+      grid-template-columns: 56px 1fr;
+    }
+    .tier-zh { font-size: var(--fs-lg); }
+    .book-card { max-width: 100%; }
+  }
+</style>
