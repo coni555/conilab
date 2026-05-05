@@ -4,7 +4,7 @@
 > 协作约束看 `CLAUDE.md`，视觉来源看 `~/.claude/projects/-Users-coni/memory/design-ref-literary-paper.md`。
 > conilab 自己的设计语言（脱离 lixiaolai）在下面"创新方向"段。
 
-## 当前状态：M2 部署完成 + 上线后第一轮文案/动效迭代
+## 当前状态：M5 /join 接 Supabase Auth 完成（magic link + OAuth）
 
 > **2026-04-25 部署阶段**
 >
@@ -164,7 +164,7 @@ M1 在 2026-04-25 这次对话基本完成。M2 优先级：
 - [x] /join 注册页 UI（2026-05-05 M4）：magic link 表单 + GitHub/Google OAuth 占位 + 成功态 ⊙ stamp 动画（纯前端 mock，待接后端）
 - [x] Masthead 加 ⊙ Join CTA（暖铜色，独立视觉层级）（2026-05-05 M4）
 - [x] 性能优化：4 处 transition: all → 显式属性（2026-05-05 M4）
-- [ ] /join 接后端：Supabase Auth magic link + OAuth（需 Astro hybrid + CF adapter）
+- [x] /join 接后端：Supabase Auth magic link + GitHub/Google OAuth（2026-05-05 M5）
 - [ ] JSON-LD 结构化数据（文章页 Article schema）
 - [ ] Resources 扩充（更多公开作品）
 
@@ -245,13 +245,42 @@ M1 在 2026-04-25 这次对话基本完成。M2 优先级：
 >
 > **性能**：4 处 `transition: all` → 显式属性（Footer / ChapterHead / Masthead ×2）
 
+## M5 — /join 接 Supabase Auth（2026-05-05）
+
+> **本次对话完成**：
+>
+> **Supabase Auth 后端接入**：
+> - Supabase 项目：`wkqjlltfxlxrntthxfpn`（免费 tier，50K MAU，无过期）
+> - `src/lib/supabase.ts`：客户端单例（`PUBLIC_SUPABASE_URL` + `PUBLIC_SUPABASE_ANON_KEY`）
+> - `src/pages/join.astro`：mock 替换为真实 `signInWithOtp` + `signInWithOAuth`（GitHub/Google）
+> - `src/pages/auth/callback.astro`：新建，处理 PKCE（`?code=`）和 implicit（`#access_token=`）两种回调流
+> - `.env` + `.env.example`：Supabase 凭证（已 gitignore）
+>
+> **OAuth 提供方**：
+> - GitHub OAuth App：`conilab-auth`（coni555 账号下）
+> - Google OAuth：GCP 项目 `conilab`，Client ID 配置完成
+> - 两者回调 URL 统一：`https://wkqjlltfxlxrntthxfpn.supabase.co/auth/v1/callback`
+>
+> **CF Pages 部署修复**：
+> - 移除 `@astrojs/cloudflare` adapter（不需要 SSR，全部走客户端 JS）
+> - 原因：adapter 把 HTML 输出到 `dist/client/` 导致 CF Pages 404
+> - CF Pages 环境变量通过 API 添加（`PUBLIC_SUPABASE_URL` + `PUBLIC_SUPABASE_ANON_KEY`）
+> - 线上验证通过：`https://conilab.cn/join/` 200 + JS bundle 正常加载
+>
+> **已知遗留**：
+> - Supabase 内置 SMTP 限制 4 封/小时（生产够用，注册高峰可能不够）
+> - Resend 自定义 SMTP 已配域名 `conilab.cn` 但账号暂时被 suspended（新账号风控），解封后可切到 `noreply@conilab.cn` 发件
+> - GCP 有一个重复的 OAuth Client（754897507346-hkcafdjg22vet7kj46c0ote2sk2v4sv1），可删
+>
+> **Commits**：`14fa014`（Supabase Auth 接入）→ `288f4ff`（移除 adapter）→ `d6dc26a`（清理依赖）
+
 ## 接力上下文
 
-M1 + M2 + M2.1 + M2.2 + M3 + M4 均完成。最近活跃方向（按优先级）：
-1. **/join 接后端** — 当前是纯前端 mock，需接 Supabase Auth（magic link + OAuth）。涉及 Astro 改 `output: 'hybrid'` + `@astrojs/cloudflare` adapter + CF Pages 重新配置。**建议起新对话**
-2. **/notes 真内容化** — 当前 `/notes` 是占位 empty state，写第一条短想前需建 `notes` content collection + schema + 单 note 模板 + 列表逻辑（参考 articles 同构）
-3. **第二篇文章** — 跑通 articles 列表 prev/next 实际效果 + Pullquote 在文章模板的引入
-4. **Resources 扩充** — 目前只有 Orange Book，后续可加更多公开作品
+M1 + M2 + M2.1 + M2.2 + M3 + M4 + M5 均完成。最近活跃方向（按优先级）：
+1. **/notes 真内容化** — 当前 `/notes` 是占位 empty state，写第一条短想前需建 `notes` content collection + schema + 单 note 模板 + 列表逻辑（参考 articles 同构）
+2. **第二篇文章** — 跑通 articles 列表 prev/next 实际效果 + Pullquote 在文章模板的引入
+3. **Resources 扩充** — 目前只有 Orange Book，后续可加更多公开作品
+4. **Resend SMTP 恢复** — 账号解封后在 Supabase Auth → SMTP Settings 切回 Resend（host: smtp.resend.com, port 465 SSL, user: resend, pass: API key, sender: noreply@conilab.cn）
 5. **ICP 备案 / 思源宋体子集化 / JSON-LD** — 见上方待办清单
 
 **当前页面清单（9 页）**：
