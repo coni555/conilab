@@ -42,14 +42,22 @@ const ogImage = image.startsWith("http") ? image : new URL(image, site).href;
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="alternate" type="application/rss+xml" title="conilab" href="/articles/rss.xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <!-- Pre-paint lang state: avoid flash of bilingual content before lang-switcher script runs.
-         Default = 'en' if no localStorage. Honors prior choice. -->
+    <!-- Pre-paint lang & theme state: avoid flash before switcher scripts run.
+         Lang default = 'en' / theme default = system preference -->
     <script is:inline>
       try {
-        var saved = localStorage.getItem("conilab-lang");
-        var mode = saved || "en";
-        if (mode === "zh") document.documentElement.classList.add("show-zh");
-        else if (mode === "en") document.documentElement.classList.add("show-en");
+        var savedLang = localStorage.getItem("conilab-lang");
+        var lang = savedLang || "en";
+        if (lang === "zh") document.documentElement.classList.add("show-zh");
+        else if (lang === "en") document.documentElement.classList.add("show-en");
+
+        var savedTheme = localStorage.getItem("conilab-theme");
+        var theme = savedTheme || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        if (theme === "dark") document.documentElement.classList.add("dark");
+        // Defer enabling color transitions until after first paint (avoids initial flash)
+        requestAnimationFrame(function () {
+          document.documentElement.classList.add("theme-ready");
+        });
       } catch (_) {}
     </script>
   </head>

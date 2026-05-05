@@ -151,12 +151,22 @@ M1 在 2026-04-25 这次对话基本完成。M2 优先级：
 - [x] /notes 占位页（2026-04-25 M2.1）：修 masthead `/notes` 404
 - [x] 默认语言 EN + hero/coin/水印动效（2026-04-25 M2.1）
 - [x] article-only 形容收回到 article scope（2026-04-25 M2.1）：home/footer/about 三处 notebook 误代指 article 机制的位置都已 reframe
-- [ ] ICP 备案：footer 里"备案号待添加"，备案下来后填（M2.1 已删 footer blurb，备案占位仍在 footer-bottom）
+- [x] SEO 补齐：OG 社交卡片 / canonical / robots.txt / twitter:card（2026-05-03 M3）
+- [x] 自定义 404 页面（2026-05-03 M3）
+- [x] Masthead 当前页导航高亮 aria-current（2026-05-03 M3）
+- [x] About 页重写为个人介绍（2026-05-03 M3）
+- [x] Resources 页 + Orange Book 上线（2026-05-03 M3）
+- [ ] ICP 备案：footer 里"备案号待添加"，备案下来后填
 - [ ] /notes 真内容化：当前是占位 empty state，建 `notes` content collection + 单 note 模板 + 列表逻辑（写第一条 note 前再做）
 - [ ] 第二篇文章：列表页 prev/next 实际效果 + Pullquote 在文章模板的使用
 - [ ] 思源宋体 web 子集化：cn-font-split 把中文字体降到 100KB 内
-- [ ] 暂未做 darkmode（先不做）
-- [ ] Pullquote 组件目前只有 about 页用，单篇文章模板可在第二篇文章时引入实际使用
+- [x] Dark mode 完整实现（2026-05-05 M4）：tokens.css `html.dark` + Masthead ⊙ DAY/NIGHT toggle + inline 预绘 + prefers-color-scheme 跟随
+- [x] /join 注册页 UI（2026-05-05 M4）：magic link 表单 + GitHub/Google OAuth 占位 + 成功态 ⊙ stamp 动画（纯前端 mock，待接后端）
+- [x] Masthead 加 ⊙ Join CTA（暖铜色，独立视觉层级）（2026-05-05 M4）
+- [x] 性能优化：4 处 transition: all → 显式属性（2026-05-05 M4）
+- [ ] /join 接后端：Supabase Auth magic link + OAuth（需 Astro hybrid + CF adapter）
+- [ ] JSON-LD 结构化数据（文章页 Article schema）
+- [ ] Resources 扩充（更多公开作品）
 
 ## 关键决策（敲定，不要再讨论）
 
@@ -188,11 +198,71 @@ M1 在 2026-04-25 这次对话基本完成。M2 优先级：
 - 保留：网名 `@coni`、域名 `conilab.cn`、GitHub `coni555`（公开网名 ID）
 - footer-bottom 描述："conilab.cn — a notebook with two faces"（无地理信息）
 
+## M3 — SEO 补齐 + About 重写 + Resources 页（2026-05-03）
+
+> **本次对话完成 3 个 commit**：
+>
+> **`db48a20` SEO & polish（Quick Wins 一次性补齐）**：
+> - `public/og-default.png`：1200×630 品牌 OG 图（⊙ motif + conilab 字样，纸色底）
+> - `src/layouts/Base.astro`：Props 扩展 `image?` / `url?`；新增 `canonical` / `og:image` / `og:url` / `og:locale` / `og:locale:alternate` / `twitter:card` / `twitter:title` / `twitter:description` / `twitter:image`
+> - `public/robots.txt`：允许爬虫 + sitemap 入口
+> - `src/pages/404.astro`：双语品牌风格 404 页（⊙ slash 变体 + "翻遍了没找到这一面"）
+> - `src/components/Masthead.astro`：导航当前页 `aria-current="page"` + accent-front 底线高亮
+> - 字体确认 fontsource v5 已默认 `font-display: swap`，无需改动
+>
+> **`fb802b3` About 页重写（项目说明书 → 个人介绍）**：
+> - 6 节项目描述 → 4 节个人自述：Ⅰ 我是谁 / Ⅱ 我在做什么 / Ⅲ 我怎么想的 / Ⅳ 这个站
+> - Pullquote 引用改为 "你可以外包你的思考，但你不能外包你的理解"
+> - Ⅱ 列出：运营用户增长实习 / vibe coding / 365+ 天持续记录 / 写作 / 定投
+> - Ⅲ 核心信念：行动 > 认知
+> - Ⅳ 压缩为一段简介 + "没有日更没有评论区"
+> - 删除 colophon-list CSS（不再需要），新增 prose ul/li 样式
+>
+> **`4b44f16` + `4d51075` Resources 页 + Orange Book**：
+> - 新增 `/resources` 路由，资源列表页（卡片式，tag + 日期 + 双语标题描述 + hover 效果）
+> - 首个资源：Claude Code 打磨手册（Orange Book），52K 自包含暗色 A4 HTML + memory-system-map.png
+> - Masthead 导航新增 Resources（Articles / Notes / Resources / About）
+
+## M4 — Dark Mode + /join 注册页 UI（2026-05-05）
+
+> **本次对话完成 1 个 commit**（dark mode + /join UI + perf 打包）：
+>
+> **Dark Mode 完整实现**：
+> - `src/styles/tokens.css`：`html.dark` 覆盖全部颜色 token（OKLCH 反转底色 0.985→0.18，accent 提 L 值保持识别度）
+> - `src/layouts/Base.astro`：inline 预绘脚本（尊重 `prefers-color-scheme`，避免 FOUC）+ `theme-ready` class defer 过渡
+> - `src/components/Masthead.astro`：⊙ 图标 + DAY/NIGHT pill 按钮（hover 翻转 Y 轴 180°，dark 时半旋暗示"翻面"）；跟随系统切换（用户未手选时）
+> - 主题切换仅 `color/bg/border/fill` 平滑过渡，`prefers-reduced-motion` 禁用过渡
+>
+> **/join 注册页 UI（纯前端 mock）**：
+> - `src/pages/join.astro`（新建）：Magic Link 表单（email + 名字选填 + ⊙ 提交按钮）
+> - GitHub / Google OAuth 占位（disabled + "soon" badge）
+> - 成功态：⊙ stamp 动画 + "查收一下邮箱" / "Check your inbox"
+> - 客户端邮箱格式校验 + mock 600ms 假请求
+> - Cadence/Privacy/Exit fine print + 已订阅用户 sign-in 入口
+> - 设计语言延续 conilab：OKLCH 双色 / italic light em / mono uppercase / 1px hairline / 票据感 2px accent-front 顶线
+>
+> **Masthead**：加 `⊙ Join` CTA（暖铜色，独立视觉层级）；nav 允许 flex-wrap 避免移动端溢出
+>
+> **性能**：4 处 `transition: all` → 显式属性（Footer / ChapterHead / Masthead ×2）
+
 ## 接力上下文
 
-M1 + M2 + M2.1 文案/动效迭代均完成（详见上方"当前状态"）。最近活跃方向（按优先级）：
-1. **/notes 真内容化** — 当前 `/notes` 是占位 empty state，写第一条短想前需建 `notes` content collection + schema + 单 note 模板 + 列表逻辑（参考 articles 同构）
-2. **第二篇文章** — 跑通 articles 列表 prev/next 实际效果 + Pullquote 在文章模板的引入
-3. **ICP 备案 / 思源宋体子集化** — 见上方待办清单
+M1 + M2 + M2.1 + M2.2 + M3 + M4 均完成。最近活跃方向（按优先级）：
+1. **/join 接后端** — 当前是纯前端 mock，需接 Supabase Auth（magic link + OAuth）。涉及 Astro 改 `output: 'hybrid'` + `@astrojs/cloudflare` adapter + CF Pages 重新配置。**建议起新对话**
+2. **/notes 真内容化** — 当前 `/notes` 是占位 empty state，写第一条短想前需建 `notes` content collection + schema + 单 note 模板 + 列表逻辑（参考 articles 同构）
+3. **第二篇文章** — 跑通 articles 列表 prev/next 实际效果 + Pullquote 在文章模板的引入
+4. **Resources 扩充** — 目前只有 Orange Book，后续可加更多公开作品
+5. **ICP 备案 / 思源宋体子集化 / JSON-LD** — 见上方待办清单
+
+**当前页面清单（9 页）**：
+- `/` — 首页（hero + chapters + registry）
+- `/articles` — 文章列表（almanac 年份分组）
+- `/articles/[slug]` — 单篇文章（双语 + reading progress）
+- `/notes` — 占位空页
+- `/resources` — 资源列表（Orange Book）
+- `/interests` — Interests 页
+- `/join` — 注册/订阅（magic link + OAuth 占位，**纯前端 mock**）
+- `/about` — 个人介绍（4 节自述）
+- `/404` — 品牌 404
 
 **会话卫生提醒**（2026-04-25 入血泪经验）：长会话累积 Retina 截图会触发 image dimension limit 反复爆。每个 milestone 完成（部署成功 / commit 推上）就 `/clear`，用本文件接力。详见 `CLAUDE.md` 的"会话卫生"章节。

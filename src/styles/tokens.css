@@ -156,4 +156,71 @@
 
   /* z-index 阶 */
   --z-popover: 10;
+
+  /* 主题切换平滑过渡（仅作用于颜色） */
+  color-scheme: light;
+}
+
+/* ──────────────────────────────────────────────────────
+ * Dark Mode（class-based，避免 prefers-color-scheme 强绑）
+ * 仅覆盖颜色 token；spacing/typography/动效全部沿用
+ * 设计取舍：
+ *   - paper 走 oklch(0.18~0.22 0.005 250) 蓝灰底，避免纯黑（保留纸感残影）
+ *   - ink 反转到 0.92，留 8% 余地不刺眼
+ *   - accent 提 L 值 + 微调 chroma，dark 上保持识别度
+ *   - rule 在 dark 下要更亮才看得见（0.30 起步）
+ * ────────────────────────────────────────────────────── */
+html.dark {
+  color-scheme: dark;
+
+  --paper:        oklch(0.180 0.006 250);   /* 主底，深蓝灰，不上纯黑 */
+  --paper-2:      oklch(0.220 0.006 250);   /* 卡片/aside 抬一档 */
+  --rule:         oklch(0.320 0.006 250);   /* hairline，dark 下要更亮 */
+  --rule-soft:    oklch(0.260 0.006 250);
+
+  --ink:          oklch(0.940 0.003 250);   /* 主字色，留 6% 余地不刺眼 */
+  --ink-2:        oklch(0.760 0.003 250);   /* 次字色 */
+  --ink-3:        oklch(0.560 0.003 250);   /* 灰字（kicker / breadcrumb）*/
+
+  /* 强调色：dark mode 提 L 值，chroma 微降避免过饱和 */
+  --accent-front:     oklch(0.74 0.13 240); /* 正面：浅蓝（原 0.42 → 0.74）*/
+  --accent-front-ink: oklch(0.82 0.11 240); /* em / 重点字色，更亮一档 */
+  --accent-back:      oklch(0.78 0.10  60); /* 反面：浅铜（原 0.55 → 0.78）*/
+  --accent-back-ink:  oklch(0.86 0.09  60);
+
+  --moss:         oklch(0.700 0.06  140);
+  --indigo:       oklch(0.680 0.09  260);
+
+  /* 状态色面板（dark 上要重做 bg，不能直接 color-mix paper）*/
+  --info-bg:      color-mix(in oklch, var(--accent-deep) 14%, var(--paper));
+  --info-rule:    color-mix(in oklch, var(--accent-deep) 40%, var(--rule));
+  --warn-ink:     oklch(0.82 0.12 75);
+  --warn-bg:      oklch(0.26 0.05 75);
+  --ok-ink:       oklch(0.78 0.10 155);
+  --ok-bg:        oklch(0.24 0.04 155);
+  --err-ink:      oklch(0.78 0.13 25);
+  --err-bg:       oklch(0.26 0.05 25);
+
+  /* 阴影：dark 下走 ink 反向（ink 已是浅色）会过亮，改用透明黑 */
+  --shadow-hair:  oklch(0 0 0 / 0.30);
+  --shadow-soft:  oklch(0 0 0 / 0.40);
+  --shadow-mid:   oklch(0 0 0 / 0.50);
+  --shadow-pop:   oklch(0 0 0 / 0.60);
+  --shadow-veil:  oklch(0 0 0 / 0.70);
+}
+
+/* 主题切换时的颜色平滑过渡（仅 color/bg/border，避免 transition: all 性能黑洞）*/
+html.theme-ready *,
+html.theme-ready *::before,
+html.theme-ready *::after {
+  transition:
+    background-color var(--dur-normal) ease,
+    border-color var(--dur-normal) ease,
+    color var(--dur-normal) ease,
+    fill var(--dur-normal) ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  html.theme-ready *,
+  html.theme-ready *::before,
+  html.theme-ready *::after { transition: none; }
 }

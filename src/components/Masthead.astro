@@ -22,6 +22,7 @@ const navItems = [
   { href: "/resources", label: "Resources" },
   { href: "/interests", label: "Interests" },
   { href: "/about", label: "About" },
+  { href: "/join", label: "Join", cta: true },
 ];
 const pathname = Astro.url.pathname;
 ---
@@ -34,20 +35,48 @@ const pathname = Astro.url.pathname;
 
     <nav class="primary" aria-label="Primary">
       <ul>
-        {navItems.map((it) => <li><a href={it.href} {...(pathname.startsWith(it.href) ? {"aria-current": "page"} : {})}>{it.label}</a></li>)}
+        {navItems.map((it) => (
+          <li class={it.cta ? "nav-cta" : undefined}>
+            <a
+              href={it.href}
+              {...(pathname.startsWith(it.href) ? {"aria-current": "page"} : {})}
+            >{it.label}</a>
+          </li>
+        ))}
       </ul>
     </nav>
 
-    <div class="lang-switcher" role="group" aria-label="Language">
-      <button data-lang="both" class="lang-btn">中 / EN</button>
-      <button data-lang="zh"   class="lang-btn">中</button>
-      <button data-lang="en"   class="lang-btn is-active" aria-pressed="true">EN</button>
+    <div class="utility">
+      <div class="lang-switcher" role="group" aria-label="Language">
+        <button data-lang="both" class="lang-btn">中 / EN</button>
+        <button data-lang="zh"   class="lang-btn">中</button>
+        <button data-lang="en"   class="lang-btn is-active" aria-pressed="true">EN</button>
+      </div>
+
+      <button
+        type="button"
+        class="theme-toggle"
+        aria-label="Toggle dark mode"
+        aria-pressed="false"
+        title="Flip to the other side"
+      >
+        <span class="theme-icon" aria-hidden="true">
+          <!-- 同心双圆 + 半圆遮罩：light 时 sun-half / dark 时 moon-half。
+               用 mask 实现"硬币翻面"暗示，对位 conilab motif -->
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="9" />
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 3 L12 21" stroke-dasharray="2 3" />
+          </svg>
+        </span>
+        <span class="theme-label">DAY</span>
+      </button>
     </div>
   </div>
 </header>
 
 <script>
-  // CSS-only 切换：根 class 控制 [data-lang] 显隐
+  // ── Lang switcher（CSS-only：根 class 控制 [data-lang] 显隐）
   const root = document.documentElement;
   const btns = document.querySelectorAll<HTMLButtonElement>(".lang-btn");
   const apply = (mode: string) => {
@@ -64,13 +93,36 @@ const pathname = Astro.url.pathname;
   btns.forEach((b) =>
     b.addEventListener("click", () => apply(b.dataset.lang || "both"))
   );
-  // 与 Base.astro 的 inline 预绘脚本一致：默认 'en'；尊重之前的选择
   try {
     const saved = localStorage.getItem("conilab-lang");
     apply(saved || "en");
   } catch {
     apply("en");
   }
+
+  // ── Theme toggle（class-based dark mode；预绘脚本在 Base.astro）
+  const themeBtn = document.querySelector<HTMLButtonElement>(".theme-toggle");
+  const themeLabel = themeBtn?.querySelector<HTMLSpanElement>(".theme-label");
+  const syncTheme = () => {
+    const isDark = root.classList.contains("dark");
+    themeBtn?.setAttribute("aria-pressed", String(isDark));
+    if (themeLabel) themeLabel.textContent = isDark ? "NIGHT" : "DAY";
+  };
+  syncTheme();
+  themeBtn?.addEventListener("click", () => {
+    root.classList.toggle("dark");
+    syncTheme();
+    try { localStorage.setItem("conilab-theme", root.classList.contains("dark") ? "dark" : "light"); } catch {}
+  });
+  // 跟随系统切换（仅当用户没手动选过）
+  try {
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    mq.addEventListener("change", (e) => {
+      if (localStorage.getItem("conilab-theme")) return;
+      root.classList.toggle("dark", e.matches);
+      syncTheme();
+    });
+  } catch {}
 </script>
 
 <style>
@@ -123,7 +175,31 @@ const pathname = Astro.url.pathname;
     color: var(--accent-deep-ink);
     border-bottom-color: var(--accent-deep);
   }
+  /* "Join" 用 ⊙ 前缀 + accent-back 暖铜，比普通 nav 多半口气，但不抢 hero */
+  nav.primary .nav-cta a {
+    color: var(--accent-back-ink);
+    padding-left: var(--sp-12);
+    position: relative;
+  }
+  nav.primary .nav-cta a::before {
+    content: "⊙";
+    position: absolute;
+    left: 0;
+    color: var(--accent-back);
+    font-size: 0.85em;
+    line-height: inherit;
+  }
+  nav.primary .nav-cta a:hover,
+  nav.primary .nav-cta a[aria-current="page"] {
+    color: var(--accent-back);
+    border-bottom-color: var(--accent-back);
+  }
 
+  .utility {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-10);
+  }
   .lang-switcher {
     display: flex;
     gap: var(--sp-4);
@@ -139,7 +215,7 @@ const pathname = Astro.url.pathname;
     border-radius: var(--rad-pill);
     cursor: pointer;
     text-transform: uppercase;
-    transition: all var(--dur-quick);
+    transition: color var(--dur-quick), background-color var(--dur-quick), border-color var(--dur-quick);
   }
   .lang-btn:hover { border-color: var(--ink-3); color: var(--ink); }
   .lang-btn.is-active {
@@ -148,9 +224,58 @@ const pathname = Astro.url.pathname;
     border-color: var(--ink);
   }
 
+  /* —— Theme toggle：硬币图标 + DAY/NIGHT 标签，与 lang-btn 同款 pill —— */
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-6);
+    border: var(--sp-hairline) solid var(--rule);
+    background: transparent;
+    color: var(--ink-3);
+    padding: var(--sp-4) var(--sp-10);
+    border-radius: var(--rad-pill);
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color var(--dur-quick), background-color var(--dur-quick), border-color var(--dur-quick);
+    padding-left: var(--sp-8);
+  }
+  .theme-toggle:hover {
+    border-color: var(--ink-3);
+    color: var(--ink);
+  }
+  .theme-icon {
+    display: inline-flex;
+    transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .theme-toggle:hover .theme-icon {
+    transform: rotateY(180deg);
+  }
+  /* dark mode 状态：图标半旋（暗示已"翻面"） */
+  :global(html.dark) .theme-icon {
+    transform: rotateY(180deg);
+    color: var(--accent-back);
+  }
+  :global(html.dark) .theme-toggle {
+    border-color: color-mix(in oklch, var(--accent-back) 35%, var(--rule));
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .theme-icon,
+    .theme-toggle:hover .theme-icon,
+    :global(html.dark) .theme-icon { transition: none; transform: none; }
+  }
+
   @media (max-width: 720px) {
     .masthead-row { flex-wrap: wrap; gap: var(--sp-10); }
     nav.primary { order: 3; flex-basis: 100%; }
-    nav.primary ul { gap: var(--sp-18); justify-content: flex-start; }
+    nav.primary ul {
+      gap: var(--sp-14) var(--sp-18);
+      justify-content: flex-start;
+      flex-wrap: wrap;     /* 6 项导航在 < 400px 时允许换行 */
+    }
+    .theme-label { display: none; }
+    .theme-toggle { padding: var(--sp-4) var(--sp-8); }
   }
 </style>

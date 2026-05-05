@@ -1,0 +1,589 @@
+---
+import Base from "../layouts/Base.astro";
+import Kicker from "../components/Kicker.astro";
+import CoinGlyph from "../components/CoinGlyph.astro";
+
+const title = "Join — conilab";
+const description =
+  "When the next ≥3000-字 piece lands. Both sides. One email per piece, no tracking.";
+---
+
+<Base title={title} description={description}>
+  <section class="join">
+    <div class="wrap">
+      <!-- ============================================================
+           Header — kicker + bilingual pitch
+           ============================================================ -->
+      <header class="join-head">
+        <Kicker text="Join · 加入" accent />
+
+        <div class="join-pitch">
+          <h1 class="join-title cjk" lang="zh" data-lang="zh">
+            下一篇<em>落地</em>时<br />
+            通知你<em>两面</em>。
+          </h1>
+          <h1 class="join-title" data-lang="en">
+            When the next piece <em>lands</em>,<br />
+            we'll send you <em>both sides</em>.
+          </h1>
+        </div>
+
+        <p class="join-sub cjk" lang="zh" data-lang="zh">
+          一篇<em>三千字以上</em>，中文一面，英文一面。
+          一封 email，没有追踪，随时退订。
+        </p>
+        <p class="join-sub" data-lang="en">
+          One <em>≥3000-字</em> piece per email — Chinese on one side,
+          English on the other. No tracking, unsubscribe anytime.
+        </p>
+      </header>
+
+      <!-- ============================================================
+           Form card — magic link (primary)
+           ============================================================ -->
+      <div class="join-card" data-state="idle">
+        <div class="card-head">
+          <CoinGlyph variant="ring" />
+          <span class="card-head-tag">Magic link · 邮箱直登</span>
+          <CoinGlyph variant="ring" />
+        </div>
+
+        <form class="join-form" novalidate>
+          <label class="field">
+            <span class="field-label">
+              <span data-lang="zh">邮箱</span>
+              <span data-lang="en">Email</span>
+            </span>
+            <input
+              type="email"
+              name="email"
+              required
+              autocomplete="email"
+              placeholder="you@example.com"
+              spellcheck="false"
+              autocapitalize="off"
+            />
+          </label>
+
+          <label class="field field--optional">
+            <span class="field-label">
+              <span data-lang="zh">名字 <em class="optional-tag">· 选填</em></span>
+              <span data-lang="en">Name <em class="optional-tag">· optional</em></span>
+            </span>
+            <input
+              type="text"
+              name="name"
+              autocomplete="given-name"
+              placeholder="@coni"
+              maxlength="40"
+            />
+          </label>
+
+          <button type="submit" class="join-btn">
+            <span class="btn-glyph" aria-hidden="true">
+              <CoinGlyph variant="dot" size="1.05em" />
+            </span>
+            <span data-lang="zh">寄出 Magic Link</span>
+            <span data-lang="en">Send the magic link</span>
+            <span class="btn-arrow" aria-hidden="true">→</span>
+          </button>
+
+          <p class="form-meta">
+            <span data-lang="zh">没有密码。一次一信，点击链接即登入。</span>
+            <span data-lang="en">No password. Click the link in your inbox to sign in.</span>
+          </p>
+        </form>
+
+        <!-- Success state（提交后展示，CSS 由 [data-state] 控制） -->
+        <div class="card-success" role="status" aria-live="polite">
+          <div class="success-mark" aria-hidden="true">
+            <CoinGlyph variant="stamp" size="2em" />
+          </div>
+          <p class="success-msg cjk" lang="zh" data-lang="zh">
+            <em>查收一下邮箱</em>。我们寄了一条链接，点开就完成。
+          </p>
+          <p class="success-msg" data-lang="en">
+            <em>Check your inbox.</em> We sent a link — click it to finish.
+          </p>
+          <button type="button" class="success-back">
+            <span data-lang="zh">← 回到表单</span>
+            <span data-lang="en">← Back to form</span>
+          </button>
+        </div>
+
+        <!-- Divider with OR -->
+        <div class="card-or" aria-hidden="true">
+          <span class="or-line"></span>
+          <span class="or-text">or · 或</span>
+          <span class="or-line"></span>
+        </div>
+
+        <!-- OAuth options（视觉占位，后端接上之前不可点）-->
+        <div class="oauth-list">
+          <button type="button" class="oauth-btn" disabled aria-disabled="true" data-provider="github">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+              <path d="M12 .3a12 12 0 0 0-3.79 23.4c.6.1.83-.26.83-.58v-2c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.08-.72.08-.72 1.2.08 1.83 1.24 1.83 1.24 1.07 1.83 2.81 1.3 3.5.99.1-.78.42-1.3.76-1.6-2.66-.3-5.47-1.33-5.47-5.93 0-1.31.46-2.38 1.23-3.22-.12-.3-.54-1.52.12-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.3-1.55 3.3-1.23 3.3-1.23.66 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.62-5.49 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.58A12 12 0 0 0 12 .3"/>
+            </svg>
+            <span data-lang="zh">用 GitHub 继续</span>
+            <span data-lang="en">Continue with GitHub</span>
+            <span class="oauth-soon">soon</span>
+          </button>
+
+          <button type="button" class="oauth-btn" disabled aria-disabled="true" data-provider="google">
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+              <path d="M22.5 12.27c0-.79-.07-1.54-.2-2.27H12v4.51h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.22-4.74 3.22-8.32z" fill="#4285f4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z" fill="#34a853"/>
+              <path d="M5.84 14.1A6.6 6.6 0 0 1 5.5 12c0-.73.13-1.43.34-2.1V7.07H2.18A11 11 0 0 0 1 12c0 1.78.43 3.46 1.18 4.93l3.66-2.83z" fill="#fbbc05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.83C6.71 7.31 9.14 5.38 12 5.38z" fill="#ea4335"/>
+            </svg>
+            <span data-lang="zh">用 Google 继续</span>
+            <span data-lang="en">Continue with Google</span>
+            <span class="oauth-soon">soon</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ============================================================
+           Fine print + already-member link
+           ============================================================ -->
+      <footer class="join-foot">
+        <dl class="join-meta">
+          <dt>Cadence</dt>
+          <dd><span data-lang="zh">约两周一篇</span><span data-lang="en">~1 piece / fortnight</span></dd>
+
+          <dt>Privacy</dt>
+          <dd><span data-lang="zh">不追踪、不卖、不广告</span><span data-lang="en">no tracking, no selling, no ads</span></dd>
+
+          <dt>Exit</dt>
+          <dd><span data-lang="zh">每封邮件底部都有退订</span><span data-lang="en">unsubscribe link at the bottom of every email</span></dd>
+        </dl>
+
+        <p class="join-already">
+          <span data-lang="zh">已经订阅了？</span>
+          <span data-lang="en">Already on the list?</span>
+          <a href="#" class="signin-link">
+            <span data-lang="zh">直接登录 →</span>
+            <span data-lang="en">Sign in instead →</span>
+          </a>
+        </p>
+      </footer>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // —— Mock submit handler（后端接 Supabase 之前的 placeholder）——
+  // 仅做客户端 email 格式校验 + 切换到 success state，
+  // 真正的 magic link 寄信逻辑等接后端时替换。
+  const card = document.querySelector<HTMLDivElement>(".join-card");
+  const form = document.querySelector<HTMLFormElement>(".join-form");
+  const back = document.querySelector<HTMLButtonElement>(".success-back");
+  const emailInput = form?.querySelector<HTMLInputElement>('input[name="email"]');
+
+  const setState = (state: "idle" | "loading" | "success" | "error") => {
+    card?.setAttribute("data-state", state);
+  };
+
+  form?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (!emailInput) return;
+    const email = emailInput.value.trim();
+    const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (!ok) {
+      emailInput.setAttribute("aria-invalid", "true");
+      emailInput.focus();
+      return;
+    }
+    emailInput.removeAttribute("aria-invalid");
+    setState("loading");
+    // 假装请求 600ms 让用户看到状态切换
+    setTimeout(() => setState("success"), 600);
+  });
+
+  back?.addEventListener("click", () => {
+    setState("idle");
+    emailInput?.focus();
+  });
+</script>
+
+<style>
+  /* ─── PAGE ─── */
+  .join {
+    padding: var(--sp-48) 0 var(--sp-96);
+    position: relative;
+  }
+
+  /* ─── HEAD ─── */
+  .join-head {
+    max-width: 60ch;
+    margin: 0 auto var(--sp-44);
+    text-align: center;
+    display: grid;
+    gap: var(--sp-24);
+  }
+  .join-head :global(.kicker) {
+    justify-self: center;
+  }
+  .join-pitch {
+    display: grid;
+    gap: var(--sp-12);
+  }
+  .join-title {
+    font-family: var(--serif);
+    font-weight: var(--fw-normal);
+    font-size: clamp(var(--fs-7xl), 5vw, var(--fs-hero));
+    line-height: 1.05;
+    letter-spacing: -0.018em;
+    margin: 0;
+    color: var(--ink);
+    font-variation-settings: "opsz" 56;
+  }
+  .join-title[data-lang="zh"] { font-family: var(--cjk-serif); }
+  .join-title :global(em) {
+    font-weight: var(--fw-light);
+    font-style: italic;
+    color: var(--accent-front-ink);
+  }
+  .join-title[data-lang="zh"] :global(em) {
+    /* CJK em 走全局 dotted 蓝下划线（不 italic）*/
+    font-style: normal;
+    color: inherit;
+    text-decoration: underline dotted var(--accent-front);
+    text-decoration-thickness: var(--cjk-em-thickness);
+    text-underline-offset: var(--cjk-em-offset);
+  }
+  .join-title[data-lang="en"] :global(em) {
+    color: var(--accent-back-ink);
+  }
+  .join-sub {
+    font-family: var(--serif);
+    font-size: var(--fs-xl);
+    line-height: var(--lh-relaxed);
+    color: var(--ink-2);
+    margin: 0;
+    font-weight: var(--fw-light);
+  }
+  .join-sub[data-lang="zh"] { font-family: var(--cjk-serif); }
+  .join-sub[data-lang="en"] {
+    font-style: italic;
+    color: var(--ink-3);
+    font-size: var(--fs-lg);
+  }
+  .join-sub :global(em) {
+    color: var(--accent-front-ink);
+    font-style: italic;
+  }
+  .join-sub[data-lang="zh"] :global(em) {
+    font-style: normal;
+    color: inherit;
+    text-decoration: underline dotted var(--accent-front);
+    text-decoration-thickness: var(--cjk-em-thickness);
+    text-underline-offset: var(--cjk-em-offset);
+  }
+
+  /* ─── CARD ─── */
+  .join-card {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: var(--sp-32) var(--sp-32) var(--sp-28);
+    background: var(--paper-2);
+    border: var(--sp-hairline) solid var(--rule);
+    border-radius: var(--rad-md);
+    position: relative;
+  }
+  /* 卡片顶部细线（"票据"感）*/
+  .join-card::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: var(--sp-24);
+    right: var(--sp-24);
+    height: 2px;
+    background: var(--accent-front);
+  }
+
+  .card-head {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-12);
+    margin-bottom: var(--sp-22);
+    color: var(--ink-3);
+  }
+  .card-head-tag {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  /* ─── FORM ─── */
+  .join-form {
+    display: grid;
+    gap: var(--sp-16);
+  }
+  .field {
+    display: grid;
+    gap: var(--sp-6);
+  }
+  .field-label {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-6);
+  }
+  .optional-tag {
+    font-style: italic;
+    color: var(--accent-back);
+    font-weight: var(--fw-light);
+    text-transform: lowercase;
+    letter-spacing: 0;
+    font-family: var(--serif);
+  }
+  .field input {
+    appearance: none;
+    background: var(--paper);
+    border: var(--sp-hairline) solid var(--rule);
+    border-radius: var(--rad-sm);
+    padding: var(--sp-12) var(--sp-14);
+    font-family: var(--serif);
+    font-size: var(--fs-xl);
+    color: var(--ink);
+    line-height: 1.3;
+    transition: border-color var(--dur-quick), background-color var(--dur-quick), box-shadow var(--dur-quick);
+  }
+  .field input::placeholder {
+    color: var(--ink-3);
+    font-style: italic;
+    font-weight: var(--fw-light);
+  }
+  .field input:focus {
+    outline: none;
+    border-color: var(--accent-front);
+    box-shadow: 0 0 0 3px color-mix(in oklch, var(--accent-front) 18%, transparent);
+  }
+  .field input[aria-invalid="true"] {
+    border-color: var(--err-ink);
+    box-shadow: 0 0 0 3px color-mix(in oklch, var(--err-ink) 14%, transparent);
+  }
+
+  .join-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-10);
+    background: var(--ink);
+    color: var(--paper);
+    border: var(--sp-hairline) solid var(--ink);
+    border-radius: var(--rad-pill);
+    padding: var(--sp-13) var(--sp-22);
+    font-family: var(--sans);
+    font-size: var(--fs-base);
+    font-weight: var(--fw-medium);
+    cursor: pointer;
+    margin-top: var(--sp-8);
+    transition: background-color var(--dur-quick), color var(--dur-quick), transform var(--dur-quick);
+  }
+  .join-btn:hover {
+    background: var(--accent-front);
+    border-color: var(--accent-front);
+  }
+  .join-btn:active { transform: translateY(1px); }
+  .btn-glyph {
+    display: inline-flex;
+    color: var(--paper);
+  }
+  .btn-arrow {
+    transition: transform var(--dur-quick);
+  }
+  .join-btn:hover .btn-arrow { transform: translateX(3px); }
+
+  .form-meta {
+    font-family: var(--serif);
+    font-size: var(--fs-md);
+    color: var(--ink-3);
+    margin: var(--sp-4) 0 0;
+    text-align: center;
+    font-style: italic;
+  }
+
+  /* ─── SUCCESS STATE ─── */
+  .card-success {
+    display: none;
+    text-align: center;
+    padding: var(--sp-22) 0 var(--sp-12);
+  }
+  .join-card[data-state="loading"] .join-form { opacity: 0.55; pointer-events: none; }
+  .join-card[data-state="success"] .join-form,
+  .join-card[data-state="success"] .card-or,
+  .join-card[data-state="success"] .oauth-list { display: none; }
+  .join-card[data-state="success"] .card-success { display: grid; gap: var(--sp-14); justify-items: center; }
+  .success-mark {
+    color: var(--accent-back);
+    animation: stamp-in 600ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  @keyframes stamp-in {
+    from { opacity: 0; transform: scale(0.6) rotate(-15deg); }
+    to   { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+  .success-msg {
+    font-family: var(--serif);
+    font-size: var(--fs-xl);
+    color: var(--ink);
+    line-height: var(--lh-relaxed);
+    max-width: 36ch;
+    margin: 0;
+  }
+  .success-msg[data-lang="zh"] { font-family: var(--cjk-serif); }
+  .success-msg[data-lang="en"] {
+    color: var(--ink-2);
+    font-style: italic;
+    font-size: var(--fs-lg);
+  }
+  .success-msg :global(em) { color: var(--accent-front-ink); }
+  .success-msg[data-lang="zh"] :global(em) {
+    font-style: normal;
+    color: inherit;
+    text-decoration: underline dotted var(--accent-front);
+    text-decoration-thickness: var(--cjk-em-thickness);
+    text-underline-offset: var(--cjk-em-offset);
+  }
+  .success-back {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    padding: var(--sp-6) var(--sp-10);
+    transition: color var(--dur-quick);
+  }
+  .success-back:hover { color: var(--accent-front-ink); }
+
+  /* ─── OR DIVIDER ─── */
+  .card-or {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-12);
+    margin: var(--sp-22) 0 var(--sp-18);
+  }
+  .or-line {
+    flex: 1;
+    height: var(--sp-hairline);
+    background: var(--rule);
+  }
+  .or-text {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  /* ─── OAUTH ─── */
+  .oauth-list {
+    display: grid;
+    gap: var(--sp-10);
+  }
+  .oauth-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-10);
+    background: var(--paper);
+    border: var(--sp-hairline) solid var(--rule);
+    border-radius: var(--rad-pill);
+    padding: var(--sp-10) var(--sp-16);
+    font-family: var(--sans);
+    font-size: var(--fs-md);
+    color: var(--ink-2);
+    cursor: pointer;
+    transition: border-color var(--dur-quick), color var(--dur-quick), background-color var(--dur-quick);
+    position: relative;
+  }
+  .oauth-btn:hover:not([disabled]) {
+    border-color: var(--ink-3);
+    color: var(--ink);
+  }
+  .oauth-btn[disabled] {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+  .oauth-soon {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: var(--fs-9);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-back);
+    border: var(--sp-hairline) solid color-mix(in oklch, var(--accent-back) 50%, var(--rule));
+    padding: 2px var(--sp-6);
+    border-radius: var(--rad-pill);
+  }
+
+  /* ─── FOOTER META ─── */
+  .join-foot {
+    max-width: 480px;
+    margin: var(--sp-32) auto 0;
+    display: grid;
+    gap: var(--sp-22);
+  }
+  .join-meta {
+    font-family: var(--mono);
+    font-size: var(--fs-sm);
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: var(--sp-6) var(--sp-18);
+    margin: 0;
+    padding: var(--sp-18) 0 0;
+    border-top: var(--sp-hairline) dashed var(--rule);
+  }
+  .join-meta dt {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-3);
+  }
+  .join-meta dd {
+    margin: 0;
+    color: var(--ink-2);
+    font-family: var(--sans);
+    font-size: var(--fs-md);
+  }
+
+  .join-already {
+    text-align: center;
+    font-family: var(--sans);
+    font-size: var(--fs-md);
+    color: var(--ink-3);
+    margin: 0;
+    padding-top: var(--sp-10);
+  }
+  .signin-link {
+    color: var(--accent-front-ink);
+    border-bottom: var(--sp-hairline) solid color-mix(in oklch, var(--accent-front) 50%, var(--rule));
+    margin-left: var(--sp-6);
+    transition: color var(--dur-quick), border-color var(--dur-quick);
+  }
+  .signin-link:hover {
+    color: var(--accent-front);
+    border-bottom-color: var(--accent-front);
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 640px) {
+    .join-card { padding: var(--sp-22) var(--sp-20) var(--sp-22); }
+    .join-meta { grid-template-columns: 1fr; gap: var(--sp-2); }
+    .join-meta dt { padding-top: var(--sp-8); }
+  }
+
+  /* —— Single-language modes：在 zh-only / en-only 时清理 fallback 混排 —— */
+  :global(html.show-zh) .join-title[data-lang="en"],
+  :global(html.show-zh) .join-sub[data-lang="en"] { display: none; }
+  :global(html.show-en) .join-title[data-lang="zh"],
+  :global(html.show-en) .join-sub[data-lang="zh"] { display: none; }
+</style>
