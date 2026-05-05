@@ -95,7 +95,7 @@ const tagsStr = (data.tags ?? []).join(" · ");
             <span class="toc-label">Contents</span>
             <ol class="toc-list">
               {zhToc.map((h) => (
-                <li class={`toc-item toc-h${h.level}`}>
+                <li class={`toc-item toc-h${h.level}`} data-lang="zh">
                   <a href={`#${h.id}`} class="toc-link" data-target={h.id}>{h.text}</a>
                 </li>
               ))}
@@ -103,7 +103,7 @@ const tagsStr = (data.tags ?? []).join(" · ");
                 <li class="toc-divider" aria-hidden="true">⊙</li>
               )}
               {enToc.map((h) => (
-                <li class={`toc-item toc-h${h.level}`}>
+                <li class={`toc-item toc-h${h.level}`} data-lang="en">
                   <a href={`#${h.id}`} class="toc-link" data-target={h.id}>{h.text}</a>
                 </li>
               ))}
@@ -294,9 +294,17 @@ const tagsStr = (data.tags ?? []).join(" · ");
     }
   }
 
-  /* 单语模式下隐藏翻面分隔（中英分页时不再有"另一面"概念）*/
+  /* 单语模式下隐藏翻面分隔 + 对应 TOC 条目 */
   :global(html.show-zh) .article-flip,
   :global(html.show-en) .article-flip { display: none; }
+  :global(html.show-zh) .toc-item[data-lang="en"],
+  :global(html.show-zh) .toc-divider,
+  :global(html.show-en) .toc-item[data-lang="zh"],
+  :global(html.show-en) .toc-divider { display: none; }
+
+  /* heading 跳转偏移（补偿 sticky masthead） */
+  .prose :global(h2[id]),
+  .prose :global(h3[id]) { scroll-margin-top: 80px; }
 
   /* ─── HEAD ─── */
   .article-head {
