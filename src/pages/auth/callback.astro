@@ -1,0 +1,69 @@
+---
+import Base from "../../layouts/Base.astro";
+---
+
+<Base title="Verifying — conilab" description="Completing sign-in...">
+  <section class="callback">
+    <div class="wrap">
+      <p class="callback-msg" id="status">Verifying...</p>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { supabase } from "../../lib/supabase";
+
+  async function handleCallback() {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const accessToken = hashParams.get("access_token");
+
+    // PKCE flow: code in query params
+    if (code) {
+      const { error } = await supabase.auth.exchangeCodeForSession(code);
+      window.location.href = error ? "/join?error=auth_failed" : "/join?success=true";
+      return;
+    }
+
+    // Implicit flow: tokens in URL hash fragment
+    if (accessToken) {
+      const refreshToken = hashParams.get("refresh_token") ?? "";
+      const { error } = await supabase.auth.setSession({
+        access_token: accessToken,
+        refresh_token: refreshToken,
+      });
+      window.location.href = error ? "/join?error=auth_failed" : "/join?success=true";
+      return;
+    }
+
+    // Supabase client auto-detects hash on init — wait for auth state
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_IN") {
+        subscription.unsubscribe();
+        window.location.href = "/join?success=true";
+      }
+    });
+
+    // Fallback timeout
+    setTimeout(() => {
+      subscription.unsubscribe();
+      window.location.href = "/join?error=missing_code";
+    }, 5000);
+  }
+
+  handleCallback();
+</script>
+
+<style>
+  .callback {
+    padding: var(--sp-96) 0;
+    text-align: center;
+  }
+  .callback-msg {
+    font-family: var(--mono);
+    font-size: var(--fs-md);
+    letter-spacing: 0.08em;
+    color: var(--ink-3);
+  }
+</style>

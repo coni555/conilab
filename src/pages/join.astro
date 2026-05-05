@@ -42,6 +42,7 @@ const description =
            Form card — magic link (primary)
            ============================================================ -->
       <div class="join-card" data-state="idle">
+        <p class="form-error" id="form-error" hidden role="alert"></p>
         <div class="card-head">
           <CoinGlyph variant="ring" />
           <span class="card-head-tag">Magic link · 邮箱直登</span>
@@ -118,18 +119,17 @@ const description =
           <span class="or-line"></span>
         </div>
 
-        <!-- OAuth options（视觉占位，后端接上之前不可点）-->
+        <!-- OAuth options -->
         <div class="oauth-list">
-          <button type="button" class="oauth-btn" disabled aria-disabled="true" data-provider="github">
+          <button type="button" class="oauth-btn" data-provider="github">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
               <path d="M12 .3a12 12 0 0 0-3.79 23.4c.6.1.83-.26.83-.58v-2c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.08-.72.08-.72 1.2.08 1.83 1.24 1.83 1.24 1.07 1.83 2.81 1.3 3.5.99.1-.78.42-1.3.76-1.6-2.66-.3-5.47-1.33-5.47-5.93 0-1.31.46-2.38 1.23-3.22-.12-.3-.54-1.52.12-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.3-1.55 3.3-1.23 3.3-1.23.66 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.62-5.49 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.58A12 12 0 0 0 12 .3"/>
             </svg>
             <span data-lang="zh">用 GitHub 继续</span>
             <span data-lang="en">Continue with GitHub</span>
-            <span class="oauth-soon">soon</span>
           </button>
 
-          <button type="button" class="oauth-btn" disabled aria-disabled="true" data-provider="google">
+          <button type="button" class="oauth-btn" data-provider="google">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
               <path d="M22.5 12.27c0-.79-.07-1.54-.2-2.27H12v4.51h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.22-4.74 3.22-8.32z" fill="#4285f4"/>
               <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z" fill="#34a853"/>
@@ -138,7 +138,6 @@ const description =
             </svg>
             <span data-lang="zh">用 Google 继续</span>
             <span data-lang="en">Continue with Google</span>
-            <span class="oauth-soon">soon</span>
           </button>
         </div>
       </div>
@@ -161,9 +160,9 @@ const description =
         <p class="join-already">
           <span data-lang="zh">已经订阅了？</span>
           <span data-lang="en">Already on the list?</span>
-          <a href="#" class="signin-link">
-            <span data-lang="zh">直接登录 →</span>
-            <span data-lang="en">Sign in instead →</span>
+          <a href="/join" class="signin-link">
+            <span data-lang="zh">用同一邮箱再走一次 magic link →</span>
+            <span data-lang="en">Use the same email above →</span>
           </a>
         </p>
       </footer>
@@ -172,19 +171,37 @@ const description =
 </Base>
 
 <script>
-  // —— Mock submit handler（后端接 Supabase 之前的 placeholder）——
-  // 仅做客户端 email 格式校验 + 切换到 success state，
-  // 真正的 magic link 寄信逻辑等接后端时替换。
+  import { supabase } from "../lib/supabase";
+
   const card = document.querySelector<HTMLDivElement>(".join-card");
   const form = document.querySelector<HTMLFormElement>(".join-form");
   const back = document.querySelector<HTMLButtonElement>(".success-back");
   const emailInput = form?.querySelector<HTMLInputElement>('input[name="email"]');
+  const errorEl = document.getElementById("form-error");
+  const oauthBtns = document.querySelectorAll<HTMLButtonElement>(".oauth-btn");
 
   const setState = (state: "idle" | "loading" | "success" | "error") => {
     card?.setAttribute("data-state", state);
   };
 
-  form?.addEventListener("submit", (e) => {
+  const showError = (msg: string) => {
+    if (errorEl) {
+      errorEl.textContent = msg;
+      errorEl.hidden = false;
+    }
+    setState("error");
+  };
+
+  // Handle URL params from callback redirect
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("success") === "true") {
+    setState("success");
+  } else if (params.get("error")) {
+    showError("Sign-in failed. Please try again.");
+  }
+
+  // Magic link form submit
+  form?.addEventListener("submit", async (e) => {
     e.preventDefault();
     if (!emailInput) return;
     const email = emailInput.value.trim();
@@ -195,14 +212,47 @@ const description =
       return;
     }
     emailInput.removeAttribute("aria-invalid");
+    if (errorEl) errorEl.hidden = true;
     setState("loading");
-    // 假装请求 600ms 让用户看到状态切换
-    setTimeout(() => setState("success"), 600);
+
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+
+    if (error) {
+      showError(error.message);
+      return;
+    }
+
+    setState("success");
+  });
+
+  // OAuth buttons
+  oauthBtns.forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const provider = btn.dataset.provider as "github" | "google";
+      if (!provider) return;
+
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+
+      if (error) showError(error.message);
+    });
   });
 
   back?.addEventListener("click", () => {
     setState("idle");
+    if (errorEl) errorEl.hidden = true;
     emailInput?.focus();
+    // Clean URL params
+    window.history.replaceState({}, "", "/join");
   });
 </script>
 
@@ -301,6 +351,20 @@ const description =
     height: 2px;
     background: var(--accent-front);
   }
+
+  .form-error {
+    font-family: var(--sans);
+    font-size: var(--fs-md);
+    color: var(--err-ink);
+    background: color-mix(in oklch, var(--err-ink) 8%, var(--paper));
+    border: var(--sp-hairline) solid color-mix(in oklch, var(--err-ink) 30%, var(--rule));
+    border-radius: var(--rad-sm);
+    padding: var(--sp-10) var(--sp-14);
+    margin: 0 0 var(--sp-16);
+    text-align: center;
+  }
+  .form-error[hidden] { display: none; }
+  .join-card[data-state="error"] .join-form { opacity: 1; pointer-events: auto; }
 
   .card-head {
     display: flex;
@@ -506,24 +570,9 @@ const description =
     transition: border-color var(--dur-quick), color var(--dur-quick), background-color var(--dur-quick);
     position: relative;
   }
-  .oauth-btn:hover:not([disabled]) {
+  .oauth-btn:hover {
     border-color: var(--ink-3);
     color: var(--ink);
-  }
-  .oauth-btn[disabled] {
-    cursor: not-allowed;
-    opacity: 0.7;
-  }
-  .oauth-soon {
-    margin-left: auto;
-    font-family: var(--mono);
-    font-size: var(--fs-9);
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--accent-back);
-    border: var(--sp-hairline) solid color-mix(in oklch, var(--accent-back) 50%, var(--rule));
-    padding: 2px var(--sp-6);
-    border-radius: var(--rad-pill);
   }
 
   /* ─── FOOTER META ─── */
