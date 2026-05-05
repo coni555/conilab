@@ -74,8 +74,28 @@ const colophonEntries = [
         </div>
       </div>
 
-      <!-- 水印叠底（借自 design-ref-editorial 招式：装饰性大字叠在内容后面）-->
-      <div class="hero-watermark" aria-hidden="true">⊙</div>
+      <!-- Seed of Life 水印（⊙ motif 的几何延伸）-->
+      <svg class="hero-watermark" aria-hidden="true" viewBox="-260 -260 520 520" xmlns="http://www.w3.org/2000/svg">
+        <g fill="none" stroke="currentColor" stroke-width="0.8">
+          <circle cx="0" cy="0" r="240" stroke-width="0.5" opacity="0.5" />
+          <circle cx="0" cy="0" r="120" />
+          <circle cx="120" cy="0" r="120" />
+          <circle cx="60" cy="103.92" r="120" />
+          <circle cx="-60" cy="103.92" r="120" />
+          <circle cx="-120" cy="0" r="120" />
+          <circle cx="-60" cy="-103.92" r="120" />
+          <circle cx="60" cy="-103.92" r="120" />
+        </g>
+        <g fill="currentColor" opacity="0.4">
+          <circle cx="0" cy="0" r="2.5" />
+          <circle cx="120" cy="0" r="1.5" />
+          <circle cx="60" cy="103.92" r="1.5" />
+          <circle cx="-60" cy="103.92" r="1.5" />
+          <circle cx="-120" cy="0" r="1.5" />
+          <circle cx="-60" cy="-103.92" r="1.5" />
+          <circle cx="60" cy="-103.92" r="1.5" />
+        </g>
+      </svg>
     </div>
   </section>
 
@@ -358,19 +378,17 @@ const colophonEntries = [
     color: var(--ink-3);
   }
 
-  /* 水印叠底（design-ref-editorial 招式：装饰大字垫底）*/
+  /* Seed of Life 水印（⊙ motif 的几何延伸）*/
   .hero-watermark {
     position: absolute;
-    right: -2vw;
-    bottom: -8vw;
-    font-size: clamp(280px, 38vw, 540px);
-    line-height: 0.85;
-    color: color-mix(in oklch, var(--accent-front) 5%, var(--paper));
+    right: -4vw;
+    bottom: -6vw;
+    width: clamp(320px, 42vw, 600px);
+    height: clamp(320px, 42vw, 600px);
+    color: color-mix(in oklch, var(--accent-back) 10%, var(--paper));
     user-select: none;
     pointer-events: none;
     z-index: 0;
-    font-weight: 200;
-    /* 慢速旋转：240s/圈，几乎察觉不到的 living quality */
     transform-origin: center;
     animation: watermark-drift 240s linear infinite;
   }
