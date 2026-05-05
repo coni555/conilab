@@ -7,6 +7,7 @@ interface Book {
   title_en?: string;
   author: string;
   review: string;
+  cover?: string;
   year?: number;
 }
 
@@ -21,6 +22,7 @@ const tiers: Tier[] = [
     label: "夯",
     label_en: "S",
     books: [
+      { title: "长大就是边走边选", author: "李尚龙", review: "开启了我阅读的兴趣", cover: "/covers/growing-up-choosing.jpg", year: 2024 },
       { title: "把时间当作朋友", author: "李笑来", review: "改变了我对「学习」这件事的理解", year: 2024 },
       { title: "纳瓦尔宝典", title_en: "The Almanack of Naval Ravikant", author: "Eric Jorgenson", review: "财富和幸福的操作系统", year: 2024 },
     ],
@@ -82,16 +84,21 @@ const totalBooks = tiers.reduce((n, t) => n + t.books.length, 0);
             <div class="tier-books">
               {tier.books.length > 0 ? (
                 tier.books.map((book) => (
-                  <div class="book-card">
-                    <div class="book-info">
-                      <span class="book-title cjk" lang="zh">{book.title}</span>
-                      {book.title_en && (
-                        <span class="book-title-en">{book.title_en}</span>
-                      )}
-                      <span class="book-author">{book.author}</span>
+                  <div class={`book-card ${book.cover ? "has-cover" : ""}`}>
+                    {book.cover && (
+                      <img class="book-cover" src={book.cover} alt={book.title} loading="lazy" />
+                    )}
+                    <div class="book-body">
+                      <div class="book-info">
+                        <span class="book-title cjk" lang="zh">{book.title}</span>
+                        {book.title_en && (
+                          <span class="book-title-en">{book.title_en}</span>
+                        )}
+                        <span class="book-author">{book.author}</span>
+                      </div>
+                      <p class="book-review cjk" lang="zh">{book.review}</p>
+                      {book.year && <span class="book-year">{book.year}</span>}
                     </div>
-                    <p class="book-review cjk" lang="zh">{book.review}</p>
-                    {book.year && <span class="book-year">{book.year}</span>}
                   </div>
                 ))
               ) : (
@@ -250,6 +257,24 @@ const totalBooks = tiers.reduce((n, t) => n + t.books.length, 0);
     border: var(--sp-hairline) solid var(--rule-soft);
     max-width: 340px;
     transition: border-color 0.15s;
+  }
+  .book-card.has-cover {
+    flex-direction: row;
+    gap: var(--sp-12);
+    max-width: 380px;
+  }
+  .book-cover {
+    width: 56px;
+    height: auto;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: var(--sp-hairline) solid var(--rule-soft);
+  }
+  .book-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+    min-width: 0;
   }
   .book-card:hover {
     border-color: var(--accent-front);
