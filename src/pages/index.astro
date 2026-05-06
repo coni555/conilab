@@ -396,6 +396,9 @@ const colophonEntries = [
     from { transform: rotate(0deg); }
     to   { transform: rotate(360deg); }
   }
+  :global(html.dark) .hero-watermark {
+    color: color-mix(in oklch, var(--accent-back) 18%, var(--paper));
+  }
   @media (prefers-reduced-motion: reduce) {
     .hero-watermark { animation: none; }
   }
