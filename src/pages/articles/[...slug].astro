@@ -65,9 +65,8 @@ const { html: zhHtml, toc: zhToc } = processHeadings(zhHtmlRaw, "zh");
 const { html: enHtml, toc: enToc } = processHeadings(enHtmlRaw, "en");
 const hasToc = zhToc.length > 0 || enToc.length > 0;
 
-// Word count & reading time
-const zhCharCount = (zhRaw.match(/[一-鿿㐀-䶿＀-￯　-〿]/g) || []).length;
-const enWordCount = enRaw.split(/\s+/).filter((w) => w.replace(/[#*_`\[\]()!>\-|~]/g, "").length > 0).length;
+// Word count & reading time — strip HTML tags, count all visible chars
+const zhCharCount = (zhHtmlRaw.replace(/<[^>]*>/g, "").replace(/\s+/g, "")).length;
 const readMinutes = Math.max(Math.ceil(zhCharCount / 400), 1);
 
 const dateStr = new Date(data.published_at).toISOString().slice(0, 10);

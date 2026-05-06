@@ -1,6 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import { getCollection } from "astro:content";
+import { marked } from "marked";
 import Kicker from "../../components/Kicker.astro";
 
 const all = await getCollection("articles");
@@ -31,10 +32,11 @@ const fmtDate = (d: Date | string) => {
 const slugOf = (a: (typeof articles)[number]) =>
   a.data.slug ?? a.id.replace(/\.(md|mdx)$/, "");
 
-// Word count helper
+// Word count helper — strip markdown→HTML→tags, count all visible chars (matches detail page logic)
 const countZhChars = (body: string) => {
   const zhPart = body.replace(/<!--\s*LANG:ZH\s*-->/g, "").split(/<!--\s*LANG:EN\s*-->/)[0] || "";
-  return (zhPart.match(/[一-鿿㐀-䶿＀-￯　-〿]/g) || []).length;
+  const html = marked.parse(zhPart, { async: false }) as string;
+  return html.replace(/<[^>]*>/g, "").replace(/\s+/g, "").length;
 };
 const readMin = (chars: number) => Math.max(Math.ceil(chars / 400), 1);
 ---
