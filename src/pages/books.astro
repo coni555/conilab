@@ -25,6 +25,15 @@ const tiers: Tier[] = [
       { title: "长大就是边走边选", author: "李尚龙", review: "开启了我阅读的兴趣", cover: "/covers/growing-up-choosing.jpg", year: 2024 },
       { title: "把时间当作朋友", author: "李笑来", review: "改变了我对「学习」这件事的理解", year: 2024 },
       { title: "纳瓦尔宝典", title_en: "The Almanack of Naval Ravikant", author: "Eric Jorgenson", review: "财富和幸福的操作系统", year: 2024 },
+      { title: "认知觉醒", author: "周岭", review: "正如书名，开启认知改变的原动力", year: 2025 },
+      { title: "认知驱动", author: "周岭", review: "觉醒之后的下一步，从认知到行动的闭环", year: 2025 },
+      { title: "福格行为模型", title_en: "Tiny Habits", author: "BJ Fogg", review: "从底层破解执行力，B=MAP 拆解一切行动", year: 2025 },
+      { title: "Just Keep Buying", author: "Nick Maggiulli", review: "丰富了我的理财观，坚定持续买入的信念", year: 2025 },
+      { title: "The Wealth Ladder", author: "Nick Maggiulli", review: "构建完整的财富增长路径，和 JKB 互补", year: 2025 },
+      { title: "奥尔特曼传", author: "赵鑫", review: "了解世界 AI 发展历程的一本好书", year: 2025 },
+      { title: "专注的真相", author: "李笑来", review: "注意力才是你最贵的资产，比时间还贵", year: 2025 },
+      { title: "财富的真相", author: "李笑来", review: "把赚钱这件事拆到你能执行的粒度", year: 2025 },
+      { title: "Thinking in Bets", author: "Annie Duke", review: "用概率思维做决定，增强面对不确定性的信心", year: 2025 },
     ],
   },
   {
@@ -33,19 +42,30 @@ const tiers: Tier[] = [
     books: [
       { title: "定投改变命运", author: "李笑来", review: "简单到不需要解释，难在你做不做", year: 2024 },
       { title: "穷查理宝典", title_en: "Poor Charlie's Almanack", author: "Peter D. Kaufman", review: "多元思维模型的活教材", year: 2025 },
+      { title: "我在100天内自学英文翻转人生", author: "张同完", review: "看完后才有了无字幕看《Notting Hill》的勇气", year: 2025 },
+      { title: "深度工作", title_en: "Deep Work", author: "Cal Newport", review: "开拓了我对注意力的认知", year: 2025 },
+      { title: "底层逻辑", author: "刘润", review: "透过生活中的各种现象，带你看本质逻辑", year: 2025 },
+      { title: "人性博弈", author: "卫蓝", review: "思维认知的补充，理解人性中的博弈法则", year: 2025 },
+      { title: "内在的探索", title_en: "The Unfolding Now", author: "A.H. Almaas", review: "很哲学很不好理解，但「坑洞理论」值回票价", year: 2025 },
+      { title: "清晰思考", title_en: "Clear Thinking", author: "Shane Parrish", review: "四个默认值框架，实用的决策工具", year: 2025 },
+      { title: "让时间陪你慢慢变富", author: "李笑来", review: "更加坚定定投的信念", year: 2025 },
     ],
   },
   {
     label: "人上人",
     label_en: "B",
     books: [
-      { title: "认知觉醒", author: "周岭", review: "国产自助书里难得不水的", year: 2024 },
+      { title: "认知突围", author: "蔡垒磊", review: "和浪前的一些理念互补，拓宽认知边界", year: 2025 },
+      { title: "年轻人会用的AI写作", author: "李尚龙", review: "一些实用的 AI 使用建议", year: 2025 },
+      { title: "思考的真相", author: "李笑来", review: "李笑来真相系列收尾，思维层面的补全", year: 2025 },
     ],
   },
   {
     label: "NPC",
     label_en: "C",
-    books: [],
+    books: [
+      { title: "How to Make Your Brain Your Best Friend", author: "Deepak Chopra", review: "慰藉心灵的读物，当时需要这份温暖", year: 2025 },
+    ],
   },
   {
     label: "拉完了",
@@ -70,6 +90,9 @@ const totalBooks = tiers.reduce((n, t) => n + t.books.length, 0);
         </h1>
         <p class="books-lede" data-lang="en">
           A brutally honest tier list.
+        </p>
+        <p class="books-note-top cjk" lang="zh">
+          只列出读过且记忆深刻的书，不是全部阅读记录。
         </p>
         <p class="books-count">{totalBooks} books ranked</p>
       </header>
@@ -146,6 +169,13 @@ const totalBooks = tiers.reduce((n, t) => n + t.books.length, 0);
     font-style: italic;
     font-weight: var(--fw-light);
     color: var(--ink-3);
+    margin: 0 0 var(--sp-12);
+  }
+  .books-note-top {
+    font-family: var(--cjk-serif);
+    font-size: var(--fs-sm);
+    color: var(--ink-3);
+    font-weight: var(--fw-light);
     margin: 0 0 var(--sp-12);
   }
   .books-count {
