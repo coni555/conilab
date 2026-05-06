@@ -3,14 +3,23 @@ import Base from "../../layouts/Base.astro";
 import Kicker from "../../components/Kicker.astro";
 import CoinGlyph from "../../components/CoinGlyph.astro";
 
-const resources = [
+const works = [
   {
     title_zh: "Claude Code 打磨手册",
     title_en: "Orange Book",
     desc_zh: "从零开始用 Claude Code 构建 agent 的实战手册。暗色 A4 长图，可打印。",
     desc_en: "A hands-on handbook for building agents with Claude Code. Dark A4 long-scroll, printable.",
-    href: "/resources/orange-book.html",
+    href: "/works/orange-book.html",
     tag: "handbook",
+    date: "2026",
+  },
+  {
+    title_zh: "自推站",
+    title_en: "Oshi Shrine",
+    desc_zh: "展示我喜欢的动漫角色。",
+    desc_en: "Characters that stuck with me.",
+    href: "https://zitui.conilab.cn",
+    tag: "oshi",
     date: "2026",
   },
 ];
@@ -33,9 +42,9 @@ const resources = [
       </header>
 
       <ul class="resource-list">
-        {resources.map((r) => (
+        {works.map((r) => (
           <li class="resource-entry">
-            <a href={r.href} target="_blank" rel="noopener" class="resource-link">
+            <a href={r.href} target={r.href.startsWith("http") ? "_blank" : undefined} rel={r.href.startsWith("http") ? "noopener" : undefined} class="resource-link">
               <div class="resource-meta">
                 <span class="resource-tag">{r.tag}</span>
                 <span class="resource-date">{r.date}</span>
