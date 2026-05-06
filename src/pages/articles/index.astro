@@ -30,6 +30,13 @@ const fmtDate = (d: Date | string) => {
 };
 const slugOf = (a: (typeof articles)[number]) =>
   a.data.slug ?? a.id.replace(/\.(md|mdx)$/, "");
+
+// Word count helper
+const countZhChars = (body: string) => {
+  const zhPart = body.replace(/<!--\s*LANG:ZH\s*-->/g, "").split(/<!--\s*LANG:EN\s*-->/)[0] || "";
+  return (zhPart.match(/[一-鿿㐀-䶿＀-￯　-〿]/g) || []).length;
+};
+const readMin = (chars: number) => Math.max(Math.ceil(chars / 400), 1);
 ---
 
 <Base
@@ -88,6 +95,12 @@ const slugOf = (a: (typeof articles)[number]) =>
                       </span>
                       <span class="entry-tags">
                         {(a.data.tags ?? []).slice(0, 3).join(" · ")}
+                        {a.body && (() => {
+                          const chars = countZhChars(a.body);
+                          return chars > 0 ? (
+                            <span class="entry-reading">{chars} 字 · ~{readMin(chars)} min</span>
+                          ) : null;
+                        })()}
                       </span>
                       <span class="entry-arrow" aria-hidden="true">→</span>
                     </a>
@@ -309,6 +322,15 @@ const slugOf = (a: (typeof articles)[number]) =>
     .entry-tags { text-align: left; }
   }
 
+  .entry-reading {
+    display: block;
+    margin-top: var(--sp-4);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--ink-3);
+    opacity: 0.7;
+  }
   .entry-arrow {
     font-family: var(--serif);
     font-size: var(--fs-xl);

@@ -65,6 +65,11 @@ const { html: zhHtml, toc: zhToc } = processHeadings(zhHtmlRaw, "zh");
 const { html: enHtml, toc: enToc } = processHeadings(enHtmlRaw, "en");
 const hasToc = zhToc.length > 0 || enToc.length > 0;
 
+// Word count & reading time
+const zhCharCount = (zhRaw.match(/[一-鿿㐀-䶿＀-￯　-〿]/g) || []).length;
+const enWordCount = enRaw.split(/\s+/).filter((w) => w.replace(/[#*_`\[\]()!>\-|~]/g, "").length > 0).length;
+const readMinutes = Math.max(Math.ceil(zhCharCount / 400), 1);
+
 const dateStr = new Date(data.published_at).toISOString().slice(0, 10);
 const tagsStr = (data.tags ?? []).join(" · ");
 ---
@@ -82,6 +87,10 @@ const tagsStr = (data.tags ?? []).join(" · ");
           <time datetime={dateStr}>{dateStr}</time>
           {tagsStr && <span class="dot">·</span>}
           {tagsStr && <span class="tags">{tagsStr}</span>}
+          <span class="dot">·</span>
+          <span class="wc">{zhCharCount} 字</span>
+          <span class="dot">·</span>
+          <span class="rt">~{readMinutes} min</span>
         </div>
         <h1 class="article-title cjk" data-lang="zh" lang="zh">{data.title_zh}</h1>
         <h2 class="article-title-en" data-lang="en" lang="en">{data.title_en}</h2>
