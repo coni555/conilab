@@ -1,0 +1,221 @@
+---
+import Base from "../layouts/Base.astro";
+import Kicker from "../components/Kicker.astro";
+
+interface Milestone {
+  date: string;
+  text: string;
+}
+
+const milestones: Milestone[] = [
+  { date: "2024 · 暑假", text: "IP+浪前双重课程，首次开启认知进化" },
+  { date: "2024.8.28", text: "充值 GPT Plus 会员，正式接触 AI 领域" },
+  { date: "2024.11.6", text: "发布公众号第一篇文章——《AI为啥没懂你，教你几招轻松提升回答质量》" },
+  { date: "2024.12.9", text: "1km 体测成绩从雷打不动的 4min30s 突破到 4min10s" },
+  { date: "2024.12.26", text: "老友记第一季收尾，首次担任运营小组长并获得超级组长称号" },
+  { date: "2025.1.1", text: "跟随舍友爬一坤山，一天步数突破 3w7" },
+  { date: "2025.1.14", text: "运营学院完结，初步建立对运营的整体认知" },
+  { date: "2025.3.8", text: "第一次独立一人参与大型活动并完成预约入住酒店流程" },
+  { date: "2025.3.12", text: "开始每日记录（情绪/反思/小确幸），是我好习惯的一个巨大转折点" },
+  { date: "2025.4.8", text: "第一次全程不走路跑完 5 公里，配速 5’47" },
+  { date: "2025.5.5", text: "出版「AI+阅读」个人实操指南" },
+  { date: "2025.5.19", text: "1km 体测再突破，成绩 3min57s" },
+  { date: "2025.6.19", text: "首次尝试无字幕观影《Notting Hill》，成为我最爱的爱情电影" },
+  { date: "2025.07 — 08", text: "地瓜群以及浪前运营实习：从 0 到 1 做活动策划，首次主持会议和直播等" },
+  { date: "2025.10.10", text: "阅读 Nick 佬的两本投资书籍，理财观重新塑造" },
+  { date: "2025.12.5", text: "B站 Lv6 达成" },
+  { date: "2025.12.22", text: "了结一段恋爱关系，在亲密关系中成长" },
+  { date: "2026.3.7", text: "体验付费 Claude Code，开启 Agent 体验" },
+  { date: "2026.3.11", text: "MacBook 到手，身份叙事切换，最有性价比的一笔自我投资" },
+  { date: "2026.03 — 04", text: "线上策划两段运营活动，成功投入实践" },
+  { date: "2026.4.20", text: "发布 Claude Code 实操手册，第一次尝试产品售卖，被市场肯定" },
+  { date: "2026.4.21", text: "3000 字前阶段复盘，无 AI 使用" },
+  { date: "2026.05", text: "构建个人网站 conilab.cn" },
+];
+---
+
+<Base
+  title="Milestones — conilab"
+  description="从高中毕业开始的成长里程碑。Growth milestones since graduation."
+>
+  <section class="milestones">
+    <div class="wrap">
+      <header class="ms-head">
+        <Kicker text="milestones · 里程碑" accent />
+        <h1 class="ms-title">
+          <span class="cjk" lang="zh">一路向上</span>
+        </h1>
+        <p class="ms-lede" data-lang="en">
+          Every step counts.
+        </p>
+        <p class="ms-count">{milestones.length} milestones logged</p>
+      </header>
+
+      <ol class="timeline">
+        {milestones.map((m, i) => (
+          <li class="tl-item">
+            <span class="tl-dot" aria-hidden="true" />
+            <span class="tl-date">{m.date}</span>
+            <p class="tl-text cjk" lang="zh">{m.text}</p>
+          </li>
+        ))}
+      </ol>
+
+      <footer class="ms-foot">
+        <p class="ms-note cjk" lang="zh">
+          从高中毕业算起，记录每一个让我不一样的瞬间。
+        </p>
+        <p class="ms-note" data-lang="en">
+          Logging every moment that made me different, starting from graduation.
+        </p>
+      </footer>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .milestones {
+    padding: var(--sp-44) 0 var(--sp-96);
+  }
+
+  /* ── HEAD ── */
+  .ms-head {
+    margin-bottom: var(--sp-44);
+    border-bottom: var(--sp-hairline) solid var(--rule);
+    padding-bottom: var(--sp-32);
+  }
+  .ms-title {
+    font-family: var(--cjk-serif);
+    font-size: clamp(var(--fs-5xl), 4vw, 52px);
+    line-height: 1.1;
+    color: var(--ink);
+    font-weight: var(--fw-medium);
+    margin: 0 0 var(--sp-8);
+  }
+  .ms-lede {
+    font-family: var(--serif);
+    font-size: var(--fs-lg);
+    font-style: italic;
+    font-weight: var(--fw-light);
+    color: var(--ink-3);
+    margin: 0 0 var(--sp-12);
+  }
+  .ms-count {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 0;
+  }
+
+  /* ── TIMELINE ── */
+  .timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+  }
+  /* 主轴线 */
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 7px;
+    top: 0;
+    bottom: 0;
+    width: var(--sp-hairline);
+    background: var(--rule);
+  }
+
+  .tl-item {
+    position: relative;
+    padding-left: 36px;
+    padding-bottom: var(--sp-32);
+  }
+  .tl-item:last-child {
+    padding-bottom: 0;
+  }
+
+  /* ⊙ 节点 */
+  .tl-dot {
+    position: absolute;
+    left: 0;
+    top: 2px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: var(--sp-hairline) solid var(--accent-back);
+    background: var(--paper);
+    z-index: 1;
+  }
+  .tl-dot::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent-back);
+  }
+
+  .tl-date {
+    display: block;
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.1em;
+    color: var(--accent-back);
+    margin-bottom: var(--sp-4);
+    font-weight: var(--fw-medium);
+  }
+
+  .tl-text {
+    font-family: var(--cjk-serif);
+    font-size: var(--fs-md);
+    line-height: var(--lh-prose);
+    color: var(--ink);
+    margin: 0;
+    font-weight: var(--fw-light);
+  }
+
+  /* hover 高亮 */
+  .tl-item:hover .tl-dot {
+    border-color: var(--accent-front);
+  }
+  .tl-item:hover .tl-dot::after {
+    background: var(--accent-front);
+  }
+  .tl-item:hover .tl-date {
+    color: var(--accent-front);
+  }
+
+  /* ── FOOTER ── */
+  .ms-foot {
+    margin-top: var(--sp-44);
+    padding-top: var(--sp-22);
+    border-top: var(--sp-hairline) solid var(--rule);
+  }
+  .ms-note {
+    font-family: var(--serif);
+    font-size: var(--fs-sm);
+    color: var(--ink-3);
+    font-style: italic;
+    font-weight: var(--fw-light);
+    line-height: var(--lh-prose);
+    margin: 0 0 var(--sp-4);
+  }
+  .ms-note.cjk {
+    font-family: var(--cjk-serif);
+    font-style: normal;
+  }
+
+  @media (max-width: 600px) {
+    .tl-item {
+      padding-left: 28px;
+    }
+    .timeline::before {
+      left: 6px;
+    }
+  }
+</style>
