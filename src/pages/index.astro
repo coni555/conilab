@@ -15,12 +15,23 @@ const articles = all
       new Date(a.data.published_at).getTime(),
   );
 
+const allNotes = await getCollection("notes");
+const notes = allNotes
+  .filter((n) => !n.data.draft)
+  .sort(
+    (a, b) =>
+      new Date(b.data.published_at).getTime() -
+      new Date(a.data.published_at).getTime(),
+  );
+
 const fmtDate = (d: Date | string) => {
   const dt = new Date(d);
   return `${dt.getFullYear()}.${String(dt.getMonth() + 1).padStart(2, "0")}.${String(dt.getDate()).padStart(2, "0")}`;
 };
 const slugOf = (a: (typeof articles)[number]) =>
   a.data.slug ?? a.id.replace(/\.(md|mdx)$/, "");
+const noteSlugOf = (n: (typeof notes)[number]) =>
+  n.data.slug ?? n.id.replace(/\.(md|mdx)$/, "");
 
 const colophonEntries = [
   { label: "Reading",  value: "《上行》" },
@@ -155,21 +166,47 @@ const colophonEntries = [
         The margins — <em>quick takes, kept brief</em>
       </ChapterHead>
 
-      <div class="placeholder">
-        <Kicker text="no notes yet · 暂无短想" accent />
-        <div class="bilingual">
-          <p data-lang="zh" class="cjk">
-            这里以后会是<em>三言两语</em>就能说完的短想——书摘、
-            灵感闪过、一句话观察。一面归长文，一面归短想，
-            这边现在还空着。
-          </p>
-          <p data-lang="en">
-            This is where <em>quick notes</em> will land — book marginalia,
-            half-thoughts, one-line observations. One face for essays;
-            the other, this. Empty for now.
-          </p>
+      {notes.length === 0 ? (
+        <div class="placeholder">
+          <Kicker text="no notes yet · 暂无短想" accent />
+          <div class="bilingual">
+            <p data-lang="zh" class="cjk">
+              这里以后会是<em>三言两语</em>就能说完的短想——书摘、
+              灵感闪过、一句话观察。一面归长文，一面归短想，
+              这边现在还空着。
+            </p>
+            <p data-lang="en">
+              This is where <em>quick notes</em> will land — book marginalia,
+              half-thoughts, one-line observations. One face for essays;
+              the other, this. Empty for now.
+            </p>
+          </div>
         </div>
-      </div>
+      ) : (
+        <ol class="recent recent--notes">
+          {notes.slice(0, 5).map((n) => (
+            <li class="recent-item">
+              <a class="recent-link" href={`/notes/${noteSlugOf(n)}/`}>
+                <span class="recent-date">{fmtDate(n.data.published_at)}</span>
+                <span class="recent-titles">
+                  {n.data.title_zh && (
+                    <span class="recent-title-zh cjk" lang="zh">{n.data.title_zh}</span>
+                  )}
+                  {n.data.title_en && (
+                    <span class="recent-title-en">{n.data.title_en}</span>
+                  )}
+                </span>
+                <span class="recent-arrow" aria-hidden="true">→</span>
+              </a>
+            </li>
+          ))}
+          <li class="recent-all">
+            <a href="/notes/" class="recent-all-link recent-all-link--notes">
+              View all {notes.length} entr{notes.length === 1 ? "y" : "ies"} <span aria-hidden="true">→</span>
+            </a>
+          </li>
+        </ol>
+      )}
     </div>
   </section>
 
