@@ -1,0 +1,1002 @@
+---
+import Base from "../layouts/Base.astro";
+import Kicker from "../components/Kicker.astro";
+import CoinGlyph from "../components/CoinGlyph.astro";
+---
+
+<Base
+  title="Body Lab — conilab"
+  description="身体实验记录 · Tracking physical growth as a long-running experiment."
+>
+  <!-- ═══ HERO ═══ -->
+  <section class="body-hero">
+    <div class="wrap">
+      <Kicker text="body lab · 身体实验" accent />
+
+      <div class="hero-row">
+        <div class="hero-text">
+          <h1 class="hero-title">
+            <span class="cjk" lang="zh">把身体当实验来做</span>
+          </h1>
+          <p class="hero-lede" data-lang="en">
+            Tracking physical growth as a long-running experiment.
+          </p>
+          <p class="hero-lede cjk" data-lang="zh" lang="zh">
+            不看一天的波动，看长期的成长曲线。
+          </p>
+        </div>
+
+        <div class="hero-stats">
+          <dl class="stat-grid">
+            <div class="stat-cell stat-cell--level">
+              <dt>Level</dt>
+              <dd class="stat-value stat-value--big" data-stat="level">—</dd>
+            </div>
+            <div class="stat-cell">
+              <dt>Stage</dt>
+              <dd class="stat-value" data-stat="stage">—</dd>
+            </div>
+            <div class="stat-cell">
+              <dt>Overall</dt>
+              <dd class="stat-value" data-stat="score">—</dd>
+            </div>
+            <div class="stat-cell">
+              <dt>Tests</dt>
+              <dd class="stat-value" data-stat="tests">—</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+
+      <div class="hero-auth" id="js-auth"></div>
+    </div>
+  </section>
+
+  <!-- ═══ RECORD (auth-gated) ═══ -->
+  <section class="chapter record-chapter" id="js-record" hidden>
+    <div class="wrap">
+      <div class="chapter-head chapter-head--back">
+        <div class="chapter-num">
+          <span class="bar" aria-hidden="true"></span>
+          <CoinGlyph variant="ring" />
+          <span class="num">✦</span>
+          <span class="dot" aria-hidden="true">·</span>
+          <span class="label">RECORD</span>
+        </div>
+        <h2 class="chapter-title">Log today's <em>session</em></h2>
+      </div>
+
+      <div class="record-tabs">
+        <button class="record-tab active" data-tab="training">训练 Training</button>
+        <button class="record-tab" data-tab="test">测试 Test</button>
+      </div>
+
+      <form class="record-form" id="js-form-training">
+        <fieldset class="form-group">
+          <legend class="form-legend">指标 Metrics</legend>
+          <div class="form-grid" id="js-training-metrics"></div>
+        </fieldset>
+        <fieldset class="form-group">
+          <legend class="form-legend">恢复 Recovery</legend>
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="f-sleep">睡眠 <span class="field-en">Sleep</span></label>
+              <div class="input-wrap">
+                <input type="number" id="f-sleep" name="sleepHours" min="0" max="24" step="0.5" required />
+                <span class="input-unit">h</span>
+              </div>
+            </div>
+            <div class="form-field">
+              <label for="f-sore">酸痛 <span class="field-en">Soreness</span></label>
+              <div class="input-wrap">
+                <input type="number" id="f-sore" name="soreness" min="1" max="5" step="1" required />
+                <span class="input-unit">/ 5</span>
+              </div>
+            </div>
+            <div class="form-field">
+              <label for="f-fatigue">疲劳 <span class="field-en">Fatigue</span></label>
+              <div class="input-wrap">
+                <input type="number" id="f-fatigue" name="fatigue" min="1" max="10" step="1" required />
+                <span class="input-unit">/ 10</span>
+              </div>
+            </div>
+            <div class="form-field">
+              <label for="f-feeling">完成感 <span class="field-en">Feeling</span></label>
+              <select id="f-feeling" name="feeling" required>
+                <option value="">—</option>
+                <option value="easy">轻松 Easy</option>
+                <option value="steady">稳定 Steady</option>
+                <option value="hard">吃力 Hard</option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
+        <div class="form-actions">
+          <button type="submit" class="form-submit">提交训练 Submit</button>
+          <span class="form-feedback" id="js-fb-train"></span>
+        </div>
+      </form>
+
+      <form class="record-form" id="js-form-test" hidden>
+        <fieldset class="form-group">
+          <legend class="form-legend">成绩 Results</legend>
+          <div class="form-grid" id="js-test-metrics"></div>
+        </fieldset>
+        <fieldset class="form-group">
+          <legend class="form-legend">新目标 New Targets</legend>
+          <div class="form-grid" id="js-test-targets"></div>
+        </fieldset>
+        <div class="form-actions">
+          <button type="submit" class="form-submit">提交测试 Submit</button>
+          <span class="form-feedback" id="js-fb-test"></span>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ═══ CHAPTER Ⅰ · ABILITIES ═══ -->
+  <section class="chapter" id="abilities">
+    <div class="wrap">
+      <div class="chapter-head chapter-head--front">
+        <div class="chapter-num">
+          <span class="bar" aria-hidden="true"></span>
+          <CoinGlyph variant="ring" />
+          <span class="num">Ⅰ</span>
+          <span class="dot" aria-hidden="true">·</span>
+          <span class="label">ABILITIES</span>
+        </div>
+        <h2 class="chapter-title">Five dimensions, <em>one body</em></h2>
+      </div>
+
+      <div class="abilities-grid">
+        <div class="radar-wrap" id="js-radar"></div>
+        <div class="ability-bars" id="js-bars"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CHAPTER Ⅱ · LOG ═══ -->
+  <section class="chapter" id="log">
+    <div class="wrap">
+      <div class="chapter-head chapter-head--back">
+        <div class="chapter-num">
+          <span class="bar" aria-hidden="true"></span>
+          <CoinGlyph variant="ring" />
+          <span class="num">Ⅱ</span>
+          <span class="dot" aria-hidden="true">·</span>
+          <span class="label">LOG</span>
+        </div>
+        <h2 class="chapter-title">Recent <em>entries</em></h2>
+      </div>
+
+      <ol class="log-list" id="js-log"></ol>
+    </div>
+  </section>
+</Base>
+
+<script>
+const METRICS = [
+  { key: "highKnees", label: "高抬腿", unit: "秒", ability: "耐力", en: "Endurance" },
+  { key: "pushups",   label: "俯卧撑", unit: "次", ability: "力量", en: "Strength" },
+  { key: "plank",     label: "平板支撑", unit: "秒", ability: "核心", en: "Core" },
+  { key: "squats",    label: "深蹲",   unit: "次", ability: "下肢", en: "Lower" },
+  { key: "balance",   label: "单脚站立", unit: "秒", ability: "平衡", en: "Balance" },
+];
+
+const STAGES = [
+  { stage: 1, en: "Nascent" },
+  { stage: 2, en: "Growing" },
+  { stage: 3, en: "Defined" },
+  { stage: 4, en: "Built" },
+  { stage: 5, en: "Athletic" },
+];
+
+const $ = (s: string) => document.querySelector(s) as HTMLElement | null;
+const TOKEN_KEY = "body_token";
+
+function getStage(level: number) {
+  return Math.max(1, Math.min(5, Math.floor((level - 1) / 2) + 1));
+}
+function calcScore(cur: number, target: number) {
+  if (!target || target <= 0) return 0;
+  return Math.max(0, Math.min(100, Math.round((cur / target) * 100)));
+}
+function fmt(v: number) { return Number.isInteger(v) ? String(v) : v.toFixed(1); }
+function fmtDate(ts: string) { return (ts.split(" ")[0] ?? ts).replaceAll("-", "."); }
+function fmtTime(ts: string) { return ts.split(" ")[1] ?? ""; }
+
+// ── Auth ──────────────────────────────────────────────
+function initAuth() {
+  const bar = $("#js-auth")!;
+  const token = localStorage.getItem(TOKEN_KEY);
+
+  if (token) {
+    bar.innerHTML = `
+      <span class="auth-status">✦ 已认证</span>
+      <button class="auth-btn" id="js-logout">退出</button>`;
+    $("#js-logout")!.onclick = () => { localStorage.removeItem(TOKEN_KEY); initAuth(); };
+    $("#js-record")!.hidden = false;
+  } else {
+    bar.innerHTML = `
+      <button class="auth-btn" id="js-unlock">✦ 记录 Record</button>
+      <form class="auth-inline" id="js-auth-form" hidden>
+        <input type="password" class="auth-input" placeholder="Token" autocomplete="off" />
+        <button type="submit" class="auth-btn">确认</button>
+      </form>`;
+    $("#js-record")!.hidden = true;
+    $("#js-unlock")!.onclick = () => {
+      $("#js-unlock")!.hidden = true;
+      const form = $("#js-auth-form")!;
+      form.hidden = false;
+      form.querySelector("input")!.focus();
+    };
+    ($("#js-auth-form") as HTMLFormElement).onsubmit = (e) => {
+      e.preventDefault();
+      const v = (e.target as HTMLFormElement).querySelector("input")!.value.trim();
+      if (v) { localStorage.setItem(TOKEN_KEY, v); initAuth(); createFormInputs(); }
+    };
+  }
+}
+
+// ── Data ──────────────────────────────────────────────
+async function loadData() {
+  try {
+    const res = await fetch("/api/body");
+    const data = await res.json();
+    renderHero(data);
+    renderAbilities(data);
+    renderLog(data);
+    prefillTargets(data.targets ?? {});
+  } catch (err) {
+    console.error("body-lab: fetch failed", err);
+  }
+}
+
+// ── Render: Hero ─────────────────────────────────────
+function renderHero(data: any) {
+  const level = data.level ?? 1;
+  const stageInfo = STAGES[getStage(level) - 1];
+  $('[data-stat="level"]')!.textContent = `Lv${level}`;
+  $('[data-stat="stage"]')!.textContent = stageInfo.en;
+  $('[data-stat="score"]')!.textContent = `${data.avgScore ?? 0}%`;
+  $('[data-stat="tests"]')!.textContent = String(data.testLog?.length ?? 0);
+}
+
+// ── Render: Abilities ────────────────────────────────
+function renderAbilities(data: any) {
+  const targets = data.targets ?? {};
+  const best = data.bestMetrics ?? {};
+  const abilities = METRICS.map((m) => ({
+    ...m,
+    best: best[m.key] ?? 0,
+    target: targets[m.key] ?? 1,
+    score: calcScore(best[m.key] ?? 0, targets[m.key] ?? 1),
+  }));
+
+  const cx = 100, cy = 100, R = 72;
+  const angles = abilities.map((_, i) => (Math.PI * 2 * i) / abilities.length - Math.PI / 2);
+  const pt = (a: number, r: number) => `${cx + Math.cos(a) * R * r},${cy + Math.sin(a) * R * r}`;
+
+  const grid = [0.25, 0.5, 0.75, 1.0].map((r) =>
+    `<polygon points="${angles.map((a) => pt(a, r)).join(" ")}" fill="none" stroke="var(--rule)" stroke-width="0.6"/>`
+  ).join("");
+  const axes = angles.map((a) =>
+    `<line x1="${cx}" y1="${cy}" x2="${cx + Math.cos(a) * R}" y2="${cy + Math.sin(a) * R}" stroke="var(--rule)" stroke-width="0.5"/>`
+  ).join("");
+  const poly = angles.map((a, i) => pt(a, abilities[i].score / 100)).join(" ");
+  const labels = abilities.map((ab, i) => {
+    const lx = cx + Math.cos(angles[i]) * (R + 18);
+    const ly = cy + Math.sin(angles[i]) * (R + 18);
+    return `<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="central" class="radar-label">${ab.en}</text>`;
+  }).join("");
+
+  $("#js-radar")!.innerHTML = `<svg class="radar-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    ${grid}${axes}
+    <polygon points="${poly}" fill="color-mix(in oklch, var(--accent-front) 15%, transparent)" stroke="var(--accent-front)" stroke-width="1.5"/>
+    ${labels}
+  </svg>`;
+
+  $("#js-bars")!.innerHTML = abilities.map((ab) => `
+    <div class="ab-row">
+      <div class="ab-header">
+        <span class="ab-name">
+          <span class="ab-name-zh cjk" lang="zh">${ab.ability}</span>
+          <span class="ab-name-en">${ab.en}</span>
+        </span>
+        <span class="ab-pct">${ab.score}%</span>
+      </div>
+      <div class="ab-track"><div class="ab-fill" style="width:${ab.score}%"></div></div>
+      <div class="ab-meta">
+        <span>最佳 ${fmt(ab.best)}${ab.unit}</span>
+        <span class="ab-sep">·</span>
+        <span>目标 ${fmt(ab.target)}${ab.unit}</span>
+      </div>
+    </div>`).join("");
+}
+
+// ── Render: Log ──────────────────────────────────────
+function renderLog(data: any) {
+  type Act = { timestamp: string; type: "training" | "test"; metrics: string; detail: string };
+  const acts: Act[] = [];
+
+  (data.trainingLog ?? []).forEach((e: any) => {
+    const m = e.metrics ?? {};
+    const metricsLine = METRICS.map((def) => `${def.label} ${fmt(m[def.key] ?? 0)}${def.unit}`).join(" · ");
+    const r = e.recovery ?? {};
+    const detail = `睡眠 ${fmt(r.sleepHours ?? 0)}h · 疲劳 ${r.fatigue ?? "?"}/10 · ${r.completionFeeling ?? "—"}`;
+    acts.push({ timestamp: e.timestamp, type: "training", metrics: metricsLine, detail });
+  });
+  (data.testLog ?? []).forEach((e: any) => {
+    const m = e.metrics ?? {};
+    const metricsLine = METRICS.map((def) => `${def.label} ${fmt(m[def.key] ?? 0)}${def.unit}`).join(" · ");
+    const t = e.targets ?? {};
+    const detail = METRICS.map((def) => `目标 ${fmt(t[def.key] ?? 0)}${def.unit}`).join(" · ");
+    acts.push({ timestamp: e.timestamp, type: "test", metrics: metricsLine, detail });
+  });
+
+  acts.sort((a, b) => (b.timestamp > a.timestamp ? 1 : -1));
+  const recent = acts.slice(0, 10);
+
+  $("#js-log")!.innerHTML = recent.length
+    ? recent.map((a) => `
+        <li class="log-entry">
+          <div class="log-head">
+            <span class="log-date">${fmtDate(a.timestamp)}</span>
+            <span class="log-time">${fmtTime(a.timestamp)}</span>
+            <span class="log-tag log-tag--${a.type}">${a.type === "training" ? "训练" : "测试"}</span>
+          </div>
+          <div class="log-body">
+            <span class="log-metrics">${a.metrics}</span>
+            <span class="log-detail">${a.detail}</span>
+          </div>
+        </li>`).join("")
+    : `<li class="log-empty">暂无记录 No entries yet</li>`;
+}
+
+// ── Forms ────────────────────────────────────────────
+function createFormInputs() {
+  const mkField = (prefix: string, m: typeof METRICS[0]) => `
+    <div class="form-field">
+      <label for="${prefix}-${m.key}">${m.label} <span class="field-en">${m.en}</span></label>
+      <div class="input-wrap">
+        <input type="number" id="${prefix}-${m.key}" name="${m.key}" min="0" step="1" required />
+        <span class="input-unit">${m.unit}</span>
+      </div>
+    </div>`;
+
+  const mkTarget = (m: typeof METRICS[0]) => `
+    <div class="form-field">
+      <label for="tg-${m.key}">${m.label} <span class="field-en">target</span></label>
+      <div class="input-wrap">
+        <input type="number" id="tg-${m.key}" name="target_${m.key}" min="1" step="1" required />
+        <span class="input-unit">${m.unit}</span>
+      </div>
+    </div>`;
+
+  $("#js-training-metrics")!.innerHTML = METRICS.map((m) => mkField("ft", m)).join("");
+  $("#js-test-metrics")!.innerHTML = METRICS.map((m) => mkField("tt", m)).join("");
+  $("#js-test-targets")!.innerHTML = METRICS.map(mkTarget).join("");
+}
+
+function prefillTargets(targets: Record<string, number>) {
+  for (const m of METRICS) {
+    const el = document.getElementById(`tg-${m.key}`) as HTMLInputElement | null;
+    if (el && targets[m.key]) el.value = String(targets[m.key]);
+  }
+}
+
+// ── Tabs ─────────────────────────────────────────────
+function initTabs() {
+  document.querySelectorAll(".record-tab").forEach((tab) => {
+    (tab as HTMLElement).onclick = () => {
+      document.querySelectorAll(".record-tab").forEach((t) => t.classList.remove("active"));
+      tab.classList.add("active");
+      const which = (tab as HTMLElement).dataset.tab;
+      $("#js-form-training")!.hidden = which !== "training";
+      $("#js-form-test")!.hidden = which !== "test";
+    };
+  });
+}
+
+// ── Submit ───────────────────────────────────────────
+function initSubmit() {
+  ($("#js-form-training") as HTMLFormElement).onsubmit = async (e) => {
+    e.preventDefault();
+    const fb = $("#js-fb-train")!;
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (!token) { fb.textContent = "未认证"; return; }
+
+    const metrics: Record<string, number> = {};
+    for (const m of METRICS) metrics[m.key] = Number((document.getElementById(`ft-${m.key}`) as HTMLInputElement).value);
+    const recovery = {
+      sleepHours: Number(($("#f-sleep") as HTMLInputElement).value),
+      soreness:   Number(($("#f-sore") as HTMLInputElement).value),
+      fatigue:    Number(($("#f-fatigue") as HTMLInputElement).value),
+      completionFeeling: ($("#f-feeling") as HTMLSelectElement).value,
+    };
+
+    fb.textContent = "提交中…";
+    fb.className = "form-feedback";
+    try {
+      const res = await fetch("/api/body/training", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ metrics, recovery }),
+      });
+      const result = await res.json();
+      if (res.ok) {
+        fb.textContent = "✓ 已记录";
+        fb.className = "form-feedback ok";
+        (e.target as HTMLFormElement).reset();
+        await loadData();
+        document.getElementById("log")?.scrollIntoView({ behavior: "smooth" });
+      } else {
+        fb.textContent = result.error ?? "提交失败";
+        fb.className = "form-feedback err";
+      }
+    } catch {
+      fb.textContent = "网络错误";
+      fb.className = "form-feedback err";
+    }
+  };
+
+  ($("#js-form-test") as HTMLFormElement).onsubmit = async (e) => {
+    e.preventDefault();
+    const fb = $("#js-fb-test")!;
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (!token) { fb.textContent = "未认证"; return; }
+
+    const metrics: Record<string, number> = {};
+    const targets: Record<string, number> = {};
+    for (const m of METRICS) {
+      metrics[m.key] = Number((document.getElementById(`tt-${m.key}`) as HTMLInputElement).value);
+      targets[m.key] = Number((document.getElementById(`tg-${m.key}`) as HTMLInputElement).value);
+    }
+
+    fb.textContent = "提交中…";
+    fb.className = "form-feedback";
+    try {
+      const res = await fetch("/api/body/test", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ metrics, targets }),
+      });
+      const result = await res.json();
+      if (res.ok) {
+        fb.textContent = `✓ Lv${result.level} · ${result.newRecords} 项新纪录`;
+        fb.className = "form-feedback ok";
+        (e.target as HTMLFormElement).reset();
+        await loadData();
+        document.getElementById("log")?.scrollIntoView({ behavior: "smooth" });
+      } else {
+        fb.textContent = result.error ?? "提交失败";
+        fb.className = "form-feedback err";
+      }
+    } catch {
+      fb.textContent = "网络错误";
+      fb.className = "form-feedback err";
+    }
+  };
+}
+
+// ── Init ─────────────────────────────────────────────
+initAuth();
+createFormInputs();
+initTabs();
+initSubmit();
+loadData();
+</script>
+
+<style>
+  /* ─── HERO ─── */
+  .body-hero {
+    padding: var(--sp-44) 0 var(--sp-48);
+    border-bottom: var(--sp-hairline) solid var(--rule);
+  }
+
+  .hero-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--sp-48);
+    align-items: end;
+    margin-top: var(--sp-18);
+  }
+  @media (max-width: 720px) {
+    .hero-row {
+      grid-template-columns: 1fr;
+      gap: var(--sp-28);
+    }
+  }
+
+  .hero-title {
+    font-family: var(--cjk-serif);
+    font-size: clamp(var(--fs-7xl), 4.5vw, var(--fs-9xl));
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-snug);
+    margin: var(--sp-14) 0 var(--sp-10);
+    color: var(--ink);
+  }
+  .hero-lede {
+    font-family: var(--serif);
+    font-size: var(--fs-lg);
+    color: var(--ink-3);
+    margin: 0 0 var(--sp-4);
+    font-weight: var(--fw-light);
+    line-height: var(--lh-relaxed);
+  }
+  .hero-lede.cjk {
+    font-family: var(--cjk-serif);
+    color: var(--ink-2);
+    font-style: normal;
+  }
+  .hero-lede[data-lang="en"] {
+    font-style: italic;
+  }
+
+  /* ── Stat Grid ── */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-hairline);
+    background: var(--rule);
+    border: var(--sp-hairline) solid var(--rule);
+    min-width: 200px;
+    margin: 0;
+  }
+  @media (max-width: 720px) {
+    .stat-grid {
+      grid-template-columns: repeat(4, 1fr);
+      min-width: 0;
+    }
+  }
+
+  .stat-cell {
+    background: var(--paper);
+    padding: var(--sp-14) var(--sp-18);
+    text-align: center;
+  }
+  .stat-cell dt {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: var(--sp-4);
+  }
+  .stat-value {
+    font-family: var(--mono);
+    font-size: var(--fs-xl);
+    color: var(--ink);
+    font-weight: var(--fw-medium);
+    margin: 0;
+  }
+  .stat-value--big {
+    font-size: var(--fs-3xl);
+    color: var(--accent-front);
+  }
+
+  /* ── Auth Bar ── */
+  .hero-auth {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-12);
+    margin-top: var(--sp-18);
+    padding-top: var(--sp-14);
+    border-top: var(--sp-hairline) dashed var(--rule-soft);
+  }
+  .auth-status {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.1em;
+    color: var(--accent-back);
+  }
+  .auth-btn {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.1em;
+    color: var(--ink-3);
+    background: none;
+    border: var(--sp-hairline) solid var(--rule);
+    padding: var(--sp-4) var(--sp-12);
+    border-radius: var(--rad-pill);
+    cursor: pointer;
+    transition: color var(--dur-quick), border-color var(--dur-quick);
+  }
+  .auth-btn:hover {
+    color: var(--accent-back);
+    border-color: var(--accent-back);
+  }
+  .auth-inline {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-8);
+  }
+  .auth-input {
+    font-family: var(--mono);
+    font-size: var(--fs-sm);
+    color: var(--ink);
+    background: var(--paper);
+    border: var(--sp-hairline) solid var(--rule);
+    padding: var(--sp-4) var(--sp-10);
+    width: 140px;
+    outline: none;
+  }
+  .auth-input:focus {
+    border-color: var(--accent-back);
+  }
+
+  /* ─── CHAPTER (shared) ─── */
+  .chapter {
+    padding: var(--sp-32) 0;
+  }
+  .chapter-head {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: var(--sp-10);
+    padding: var(--sp-48) 0 var(--sp-26);
+    border-bottom: var(--sp-hairline) solid var(--rule);
+    margin-bottom: var(--sp-32);
+  }
+  .chapter-num {
+    font-family: var(--mono);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: var(--sp-8);
+  }
+  .chapter-num .bar {
+    width: var(--sp-40);
+    height: var(--sp-hairline);
+  }
+  .chapter-num .num {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: var(--fw-light);
+    font-size: var(--fs-md);
+    letter-spacing: 0;
+  }
+  .chapter-num .dot { opacity: 0.5; }
+
+  .chapter-head--front .chapter-num { color: var(--accent-front); }
+  .chapter-head--front .chapter-num .bar { background: var(--accent-front); }
+  .chapter-head--back .chapter-num { color: var(--accent-back); }
+  .chapter-head--back .chapter-num .bar { background: var(--accent-back); }
+
+  .chapter-title {
+    font-family: var(--serif);
+    font-weight: var(--fw-normal);
+    font-size: var(--fs-7xl);
+    letter-spacing: -0.015em;
+    line-height: var(--lh-title-loose);
+    margin: 0;
+  }
+  .chapter-title :global(em) {
+    font-style: italic;
+    font-weight: var(--fw-light);
+    color: var(--ink-2);
+  }
+  @media (max-width: 720px) {
+    .chapter-title { font-size: var(--fs-5xl); }
+  }
+
+  /* ─── RECORD SECTION ─── */
+  .record-chapter {
+    border-bottom: var(--sp-hairline) solid var(--rule);
+  }
+  .record-tabs {
+    display: flex;
+    gap: var(--sp-hairline);
+    margin-bottom: var(--sp-32);
+  }
+  .record-tab {
+    font-family: var(--mono);
+    font-size: var(--fs-sm);
+    letter-spacing: 0.08em;
+    padding: var(--sp-10) var(--sp-24);
+    background: none;
+    border: var(--sp-hairline) solid var(--rule);
+    color: var(--ink-3);
+    cursor: pointer;
+    transition: color var(--dur-quick), border-color var(--dur-quick);
+  }
+  .record-tab:hover {
+    color: var(--ink-2);
+    border-color: var(--ink-3);
+  }
+  .record-tab.active {
+    color: var(--accent-back);
+    border-color: var(--accent-back);
+  }
+
+  .record-form {
+    max-width: 640px;
+  }
+  .form-group {
+    border: none;
+    padding: 0;
+    margin: 0 0 var(--sp-28);
+  }
+  .form-legend {
+    font-family: var(--mono);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    padding: 0;
+    margin-bottom: var(--sp-18);
+  }
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: var(--sp-18) var(--sp-24);
+  }
+  .form-field label {
+    display: block;
+    font-family: var(--cjk-serif);
+    font-size: var(--fs-sm);
+    color: var(--ink-2);
+    margin-bottom: var(--sp-6);
+  }
+  .field-en {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-left: var(--sp-4);
+  }
+  .input-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-6);
+    border-bottom: var(--sp-hairline) solid var(--rule);
+    padding-bottom: var(--sp-4);
+    transition: border-color var(--dur-quick);
+  }
+  .input-wrap:focus-within {
+    border-color: var(--accent-back);
+  }
+  .input-wrap input {
+    font-family: var(--mono);
+    font-size: var(--fs-xl);
+    color: var(--ink);
+    background: none;
+    border: none;
+    outline: none;
+    width: 100%;
+    padding: var(--sp-4) 0;
+    -moz-appearance: textfield;
+  }
+  .input-wrap input::-webkit-inner-spin-button,
+  .input-wrap input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .input-unit {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    color: var(--ink-3);
+    letter-spacing: 0.06em;
+    flex-shrink: 0;
+  }
+  .form-field select {
+    font-family: var(--mono);
+    font-size: var(--fs-lg);
+    color: var(--ink);
+    background: var(--paper);
+    border: none;
+    border-bottom: var(--sp-hairline) solid var(--rule);
+    outline: none;
+    padding: var(--sp-6) 0;
+    width: 100%;
+    cursor: pointer;
+    transition: border-color var(--dur-quick);
+  }
+  .form-field select:focus {
+    border-color: var(--accent-back);
+  }
+
+  .form-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-18);
+    padding-top: var(--sp-8);
+  }
+  .form-submit {
+    font-family: var(--mono);
+    font-size: var(--fs-sm);
+    letter-spacing: 0.1em;
+    padding: var(--sp-12) var(--sp-32);
+    background: var(--accent-back);
+    color: var(--paper);
+    border: none;
+    border-radius: var(--rad-pill);
+    cursor: pointer;
+    transition: opacity var(--dur-quick);
+  }
+  .form-submit:hover { opacity: 0.85; }
+  .form-submit:active { opacity: 0.7; }
+
+  .form-feedback {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.08em;
+    color: var(--ink-3);
+    transition: color var(--dur-quick);
+  }
+  .form-feedback.ok { color: var(--ok-ink); }
+  .form-feedback.err { color: var(--err-ink); }
+
+  @media (max-width: 720px) {
+    .form-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .form-submit { width: 100%; }
+    .form-actions { flex-direction: column; align-items: stretch; }
+    .form-feedback { text-align: center; }
+  }
+
+  /* ─── ABILITIES GRID ─── */
+  .abilities-grid {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: var(--sp-48);
+    align-items: start;
+  }
+  @media (max-width: 720px) {
+    .abilities-grid {
+      grid-template-columns: 1fr;
+      gap: var(--sp-32);
+    }
+  }
+
+  .radar-wrap {
+    position: sticky;
+    top: 80px;
+  }
+  .radar-wrap :global(.radar-svg) {
+    width: 100%;
+    max-width: 240px;
+  }
+  .radar-wrap :global(.radar-label) {
+    font-family: var(--mono);
+    font-size: 9px;
+    fill: var(--ink-3);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .ability-bars {
+    display: grid;
+    gap: var(--sp-24);
+  }
+  .ability-bars :global(.ab-row) {
+    display: grid;
+    gap: var(--sp-6);
+  }
+  .ability-bars :global(.ab-header) {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .ability-bars :global(.ab-name) {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-8);
+  }
+  .ability-bars :global(.ab-name-zh) {
+    font-family: var(--cjk-serif);
+    font-size: var(--fs-xl);
+    font-weight: var(--fw-medium);
+    color: var(--ink);
+  }
+  .ability-bars :global(.ab-name-en) {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .ability-bars :global(.ab-pct) {
+    font-family: var(--mono);
+    font-size: var(--fs-lg);
+    color: var(--accent-front);
+    font-weight: var(--fw-medium);
+  }
+  .ability-bars :global(.ab-track) {
+    height: 3px;
+    background: var(--rule);
+    overflow: hidden;
+  }
+  .ability-bars :global(.ab-fill) {
+    height: 100%;
+    background: var(--accent-front);
+    transition: width 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .ability-bars :global(.ab-meta) {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    color: var(--ink-3);
+    letter-spacing: 0.06em;
+    display: flex;
+    gap: var(--sp-6);
+  }
+  .ability-bars :global(.ab-sep) { opacity: 0.4; }
+
+  /* ─── LOG ─── */
+  .log-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .log-list :global(.log-entry) {
+    display: grid;
+    gap: var(--sp-8);
+    padding: var(--sp-18) 0;
+    border-bottom: var(--sp-hairline) solid var(--rule);
+  }
+  .log-list :global(.log-entry:last-child) { border-bottom: none; }
+  .log-list :global(.log-head) {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-12);
+  }
+  .log-list :global(.log-date) {
+    font-family: var(--mono);
+    font-size: var(--fs-sm);
+    color: var(--ink-3);
+    letter-spacing: 0.04em;
+  }
+  .log-list :global(.log-time) {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    color: var(--ink-3);
+    opacity: 0.7;
+  }
+  .log-list :global(.log-tag) {
+    font-family: var(--mono);
+    font-size: var(--fs-9);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: var(--sp-2) var(--sp-8);
+    border-radius: var(--rad-pill);
+    border: var(--sp-hairline) solid;
+    width: fit-content;
+  }
+  .log-list :global(.log-tag--training) {
+    color: var(--accent-front);
+    border-color: var(--accent-front);
+  }
+  .log-list :global(.log-tag--test) {
+    color: var(--accent-back);
+    border-color: var(--accent-back);
+  }
+  .log-list :global(.log-body) {
+    display: grid;
+    gap: var(--sp-4);
+  }
+  .log-list :global(.log-metrics) {
+    font-family: var(--cjk-serif);
+    font-size: var(--fs-sm);
+    color: var(--ink);
+    line-height: var(--lh-relaxed);
+  }
+  .log-list :global(.log-detail) {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    color: var(--ink-3);
+    letter-spacing: 0.04em;
+  }
+  .log-list :global(.log-empty) {
+    font-family: var(--mono);
+    font-size: var(--fs-sm);
+    color: var(--ink-3);
+    padding: var(--sp-14) 0;
+  }
+
+  @media (max-width: 720px) {
+    .log-list :global(.log-time) { display: none; }
+  }
+</style>
