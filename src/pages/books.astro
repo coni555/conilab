@@ -19,6 +19,13 @@ type Tier = {
 
 const tiers: Tier[] = [
   {
+    label: "神",
+    label_en: "SSS",
+    books: [
+      { title: "精英日课", author: "万维钢", review: "无论第5还是第6季，只能说神", cover: "/covers/elite-daily.jpg", year: 2025 },
+    ],
+  },
+  {
     label: "夯",
     label_en: "S",
     books: [
@@ -238,6 +245,10 @@ const totalBooks = tiers.reduce((n, t) => n + t.books.length, 0);
     line-height: 1;
   }
 
+  .tier--sss .tier-label {
+    background: oklch(0.92 0.08 85);
+    color: oklch(0.35 0.14 75);
+  }
   .tier--s .tier-label {
     background: oklch(0.95 0.04 30);
     color: oklch(0.40 0.16 25);
@@ -259,6 +270,10 @@ const totalBooks = tiers.reduce((n, t) => n + t.books.length, 0);
     color: oklch(0.42 0.10 280);
   }
 
+  :global(html.dark) .tier--sss .tier-label {
+    background: oklch(0.22 0.08 85);
+    color: oklch(0.82 0.12 75);
+  }
   :global(html.dark) .tier--s .tier-label {
     background: oklch(0.25 0.06 30);
     color: oklch(0.78 0.14 25);
