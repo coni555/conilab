@@ -31,4 +31,19 @@ const articles = defineCollection({
   }),
 });
 
-export const collections = { articles };
+const notes = defineCollection({
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./content/notes" }),
+  schema: z.object({
+    slug: z.string().optional(),
+    title_zh: z.string().optional(),
+    title_en: z.string().optional(),
+    published_at: z.coerce.date(),
+    tags: z.array(z.string()).default([]),
+    draft: z.boolean().default(false),
+  }).refine(
+    (d) => d.title_zh || d.title_en,
+    { message: "At least one of title_zh or title_en is required" },
+  ),
+});
+
+export const collections = { articles, notes };

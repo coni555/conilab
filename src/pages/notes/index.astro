@@ -1,9 +1,25 @@
 ---
 import Base from "../../layouts/Base.astro";
+import { getCollection } from "astro:content";
 import Kicker from "../../components/Kicker.astro";
 
-// notes 集合暂未建立——本页先做占位，避免 masthead nav 404。
-// 真有 notes 之后，把 placeholder 块替换成与 articles/index.astro 同构的列表即可。
+const all = await getCollection("notes");
+const notes = all
+  .filter((n) => !n.data.draft)
+  .sort(
+    (a, b) =>
+      new Date(b.data.published_at).getTime() -
+      new Date(a.data.published_at).getTime(),
+  );
+
+const fmtDate = (d: Date | string) => {
+  const dt = new Date(d);
+  const m = String(dt.getMonth() + 1).padStart(2, "0");
+  const day = String(dt.getDate()).padStart(2, "0");
+  return `${dt.getFullYear()}.${m}.${day}`;
+};
+const slugOf = (n: (typeof notes)[number]) =>
+  n.data.slug ?? n.id.replace(/\.(md|mdx)$/, "");
 ---
 
 <Base
@@ -25,16 +41,41 @@ import Kicker from "../../components/Kicker.astro";
           half-thoughts, one-line observations.
         </p>
         <dl class="almanac-meta">
+          <dt>Total</dt><dd>{notes.length} entr{notes.length === 1 ? "y" : "ies"}</dd>
           <dt>Length</dt><dd>brief — by design</dd>
           <dt>Cadence</dt><dd>whenever something lands</dd>
           <dt>Languages</dt><dd>whichever it lands in</dd>
         </dl>
       </header>
 
-      <div class="empty">
-        <p data-lang="zh" class="cjk">还没有登记任何短想。这里现在还空着。</p>
-        <p data-lang="en">No notes yet. This face of the coin is still empty.</p>
-      </div>
+      {notes.length === 0 ? (
+        <div class="empty">
+          <p data-lang="zh" class="cjk">还没有登记任何短想。这里现在还空着。</p>
+          <p data-lang="en">No notes yet. This face of the coin is still empty.</p>
+        </div>
+      ) : (
+        <ol class="entries">
+          {notes.map((n) => (
+            <li class="entry">
+              <a class="entry-link" href={`/notes/${slugOf(n)}/`}>
+                <span class="entry-date">{fmtDate(n.data.published_at)}</span>
+                <span class="entry-titles">
+                  {n.data.title_zh && (
+                    <span class="entry-title-zh cjk" lang="zh">{n.data.title_zh}</span>
+                  )}
+                  {n.data.title_en && (
+                    <span class="entry-title-en">{n.data.title_en}</span>
+                  )}
+                </span>
+                <span class="entry-tags">
+                  {(n.data.tags ?? []).slice(0, 3).join(" · ")}
+                </span>
+                <span class="entry-arrow" aria-hidden="true">→</span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      )}
     </div>
   </section>
 </Base>
@@ -114,6 +155,98 @@ import Kicker from "../../components/Kicker.astro";
     color: var(--ink-2);
     font-family: var(--sans);
     font-size: var(--fs-md);
+  }
+
+  /* ── ENTRY LIST ── */
+  .entries {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .entry {
+    border-bottom: var(--sp-hairline) solid var(--rule);
+  }
+  .entry:last-child { border-bottom: none; }
+
+  .entry-link {
+    display: grid;
+    grid-template-columns: 110px 1fr 160px 40px;
+    align-items: baseline;
+    gap: var(--sp-22);
+    padding: var(--sp-22) 0;
+    color: var(--ink);
+    transition: background var(--dur-quick);
+  }
+  .entry-link:hover {
+    background: color-mix(in oklch, var(--accent-back) 4%, transparent);
+  }
+  .entry-link:hover .entry-arrow {
+    transform: translateX(4px);
+    color: var(--accent-back);
+  }
+
+  @media (max-width: 720px) {
+    .entry-link {
+      grid-template-columns: max-content 1fr max-content;
+      grid-template-areas:
+        "date tags arrow"
+        "title title title";
+      row-gap: var(--sp-8);
+      padding: var(--sp-18) 0;
+    }
+    .entry-date  { grid-area: date; }
+    .entry-titles { grid-area: title; }
+    .entry-tags  { grid-area: tags; }
+    .entry-arrow { grid-area: arrow; }
+  }
+
+  .entry-date {
+    font-family: var(--mono);
+    font-size: var(--fs-sm);
+    color: var(--ink-3);
+    letter-spacing: 0.04em;
+  }
+
+  .entry-titles {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    min-width: 0;
+  }
+  .entry-title-zh {
+    font-family: var(--cjk-serif);
+    font-size: var(--fs-xl);
+    line-height: 1.3;
+    color: var(--ink);
+    font-weight: var(--fw-medium);
+  }
+  .entry-title-en {
+    font-family: var(--serif);
+    font-size: var(--fs-md);
+    line-height: 1.3;
+    color: var(--ink-3);
+    font-style: italic;
+    font-weight: var(--fw-light);
+  }
+
+  .entry-tags {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    text-align: right;
+  }
+  @media (max-width: 720px) {
+    .entry-tags { text-align: left; }
+  }
+
+  .entry-arrow {
+    font-family: var(--serif);
+    font-size: var(--fs-xl);
+    color: var(--ink-3);
+    text-align: right;
+    transition: transform var(--dur-quick), color var(--dur-quick);
   }
 
   .empty {

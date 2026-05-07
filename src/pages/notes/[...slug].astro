@@ -1,0 +1,209 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getCollection } from "astro:content";
+import { marked } from "marked";
+
+export async function getStaticPaths() {
+  const all = await getCollection("notes");
+  const notes = all
+    .filter((n) => !n.data.draft)
+    .sort(
+      (a, b) =>
+        new Date(b.data.published_at).getTime() -
+        new Date(a.data.published_at).getTime(),
+    );
+  const slugOf = (n: (typeof notes)[number]) =>
+    n.data.slug ?? n.id.replace(/\.(md|mdx)$/, "");
+
+  return notes.map((n) => ({
+    params: { slug: slugOf(n) },
+    props: { note: n },
+  }));
+}
+
+const { note } = Astro.props;
+const { data, body } = note;
+
+const langZhMarker = /<!--\s*LANG:ZH\s*-->/g;
+const langEnMarker = /<!--\s*LANG:EN\s*-->/;
+const stripped = (body ?? "").replace(langZhMarker, "");
+const parts = stripped.split(langEnMarker).map((s) => s.trim());
+const zhRaw = parts[0] ?? "";
+const enRaw = parts[1] ?? "";
+
+const zhHtml = zhRaw ? (marked.parse(zhRaw, { async: false }) as string) : "";
+const enHtml = enRaw ? (marked.parse(enRaw, { async: false }) as string) : "";
+const hasBoth = !!zhHtml && !!enHtml;
+
+const dateStr = new Date(data.published_at).toISOString().slice(0, 10);
+const title = data.title_zh ?? data.title_en ?? "Note";
+const titleEn = data.title_en ?? "";
+const description = data.title_en ?? data.title_zh ?? "";
+---
+
+<Base
+  title={`${title} — conilab`}
+  description={description}
+>
+  <article class="note">
+    <div class="wrap">
+      <header class="note-head">
+        <div class="note-meta">
+          <time datetime={dateStr}>{dateStr}</time>
+          {(data.tags ?? []).length > 0 && <span class="dot">·</span>}
+          {(data.tags ?? []).length > 0 && (
+            <span class="tags">{(data.tags ?? []).join(" · ")}</span>
+          )}
+        </div>
+        {data.title_zh && (
+          <h1 class="note-title cjk" data-lang="zh" lang="zh">{data.title_zh}</h1>
+        )}
+        {titleEn && (
+          <h2 class="note-title-en" data-lang="en" lang="en">{titleEn}</h2>
+        )}
+      </header>
+
+      {zhHtml && (
+        <section class="note-body" data-lang="zh" lang="zh-CN">
+          <div class="prose cjk" set:html={zhHtml}></div>
+        </section>
+      )}
+
+      {hasBoth && (
+        <div class="note-flip" aria-hidden="true">
+          <span class="flip-rule"></span>
+          <span class="flip-text">⊙ &nbsp; TURN IT OVER &nbsp; ⊙</span>
+          <span class="flip-rule"></span>
+        </div>
+      )}
+
+      {enHtml && (
+        <section class="note-body" data-lang="en" lang="en">
+          <div class="prose" set:html={enHtml}></div>
+        </section>
+      )}
+
+      <footer class="note-foot">
+        <a class="back-link" href="/notes/">← Back to notes</a>
+      </footer>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .note { padding: var(--sp-44) 0 var(--sp-96); }
+
+  :global(html.show-zh) .note-flip,
+  :global(html.show-en) .note-flip { display: none; }
+
+  .note-head {
+    border-bottom: var(--sp-hairline) solid var(--rule);
+    padding-bottom: var(--sp-32);
+    margin: 0 auto var(--sp-44);
+    max-width: 64ch;
+  }
+  .note-meta {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: var(--sp-22);
+    display: flex;
+    gap: var(--sp-10);
+    flex-wrap: wrap;
+  }
+  .note-meta .tags { color: var(--accent-back); }
+  .note-title {
+    font-family: var(--cjk-serif);
+    font-size: clamp(var(--fs-4xl), 3.5vw, 42px);
+    line-height: 1.15;
+    margin: 0 0 var(--sp-12);
+    color: var(--accent-front-ink);
+    font-weight: var(--fw-medium);
+    letter-spacing: -0.01em;
+  }
+  .note-title-en {
+    font-family: var(--serif);
+    font-size: var(--fs-2xl);
+    line-height: 1.25;
+    color: var(--accent-back-ink);
+    font-style: italic;
+    font-weight: var(--fw-light);
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  .note-body { max-width: 64ch; margin: 0 auto; }
+
+  .note-flip {
+    max-width: 64ch;
+    margin: var(--sp-44) auto;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: var(--sp-18);
+  }
+  .flip-rule {
+    height: var(--sp-hairline);
+    background: var(--rule);
+  }
+  .flip-text {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.16em;
+    color: var(--accent-back);
+    white-space: nowrap;
+  }
+
+  /* ─── PROSE ─── */
+  .prose {
+    font-family: var(--serif);
+    font-size: var(--fs-lg);
+    line-height: var(--lh-prose);
+    color: var(--ink);
+  }
+  .prose.cjk { font-family: var(--cjk-serif); }
+
+  .prose :global(p) { margin: 0 0 var(--sp-18); }
+  .prose :global(strong) { color: var(--ink); font-weight: var(--fw-medium); }
+
+  .prose :global(em) {
+    font-style: italic;
+    color: var(--accent-back-ink);
+    font-weight: var(--fw-light);
+  }
+  .prose.cjk :global(em) {
+    font-style: normal;
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-style: var(--cjk-em-line);
+    text-decoration-color: var(--accent-front);
+    text-decoration-thickness: var(--cjk-em-thickness);
+    text-underline-offset: var(--cjk-em-offset);
+  }
+
+  .prose :global(blockquote) {
+    border-left: 2px solid var(--accent-back);
+    padding-left: var(--sp-18);
+    color: var(--ink-2);
+    font-style: italic;
+    margin: var(--sp-22) 0;
+  }
+
+  /* ─── FOOTER ─── */
+  .note-foot {
+    max-width: 64ch;
+    margin: var(--sp-44) auto 0;
+    padding-top: var(--sp-22);
+    border-top: var(--sp-hairline) solid var(--rule);
+  }
+  .back-link {
+    font-family: var(--mono);
+    font-size: var(--fs-sm);
+    color: var(--ink-3);
+    letter-spacing: 0.04em;
+    transition: color var(--dur-quick);
+  }
+  .back-link:hover { color: var(--accent-front-ink); }
+</style>
