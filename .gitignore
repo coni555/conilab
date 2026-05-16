@@ -25,3 +25,9 @@ pnpm-debug.log*
 
 # claude code local config
 .claude/
+
+# wrangler local state
+.wrangler/
+
+# personal data snapshots (not consumed at build time)
+src/data/
