@@ -1,5 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
+import ReadingTrack from "../../components/ReadingTrack.astro";
 import { getCollection } from "astro:content";
 import { marked } from "marked";
 
@@ -39,6 +40,7 @@ const dateStr = new Date(data.published_at).toISOString().slice(0, 10);
 const title = data.title_zh ?? data.title_en ?? "Note";
 const titleEn = data.title_en ?? "";
 const description = data.title_en ?? data.title_zh ?? "";
+const currentSlug = data.slug ?? note.id.replace(/\.(md|mdx)$/, "");
 ---
 
 <Base
@@ -61,6 +63,14 @@ const description = data.title_en ?? data.title_zh ?? "";
         {titleEn && (
           <h2 class="note-title-en" data-lang="en" lang="en">{titleEn}</h2>
         )}
+        <div class="note-actions">
+          <ReadingTrack
+            slug={currentSlug}
+            kind="note"
+            titleZh={data.title_zh ?? ""}
+            titleEn={titleEn}
+          />
+        </div>
       </header>
 
       {zhHtml && (
@@ -101,6 +111,11 @@ const description = data.title_en ?? data.title_zh ?? "";
     padding-bottom: var(--sp-32);
     margin: 0 auto var(--sp-44);
     max-width: 64ch;
+  }
+  .note-actions {
+    margin-top: var(--sp-18);
+    display: flex;
+    gap: var(--sp-10);
   }
   .note-meta {
     font-family: var(--mono);

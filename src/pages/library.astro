@@ -1,0 +1,389 @@
+---
+/**
+ * /library — 阅读历史 + 书签
+ *
+ * 数据源：localStorage["conilab-reading-v1"]
+ * 渲染：客户端 JS 读取 + 模板字符串拼接 innerHTML（匹配项目既有 vanilla JS 模式）
+ * 两栏：HISTORY（按 last_visited 倒序）/ BOOKMARKS（按 added_at 倒序）
+ */
+import Base from "../layouts/Base.astro";
+---
+
+<Base
+  title="Library · 我的阅读 — conilab"
+  description="Reading history and bookmarks, kept locally in your browser."
+>
+  <div class="library wrap">
+    <header class="library-head">
+      <div class="library-meta">
+        <span class="kicker">⊙ &nbsp; LIBRARY · 本地浏览器</span>
+      </div>
+      <h1 class="library-title cjk" data-lang="zh" lang="zh">
+        翻过的页·<em>留下的痕</em>
+      </h1>
+      <h2 class="library-title-en" data-lang="en" lang="en">
+        Pages turned · <em>marks left</em>
+      </h2>
+      <p class="library-lede cjk" data-lang="zh" lang="zh">
+        阅读历史与书签都只存在你这台设备的浏览器里。换设备、清缓存就没了——这是有意的克制。
+      </p>
+      <p class="library-lede-en" data-lang="en" lang="en">
+        Your reading history and bookmarks live only in this browser. Switch devices or clear cache and they're gone — intentionally minimal.
+      </p>
+    </header>
+
+    <section class="library-section" id="section-bookmarks">
+      <div class="section-head">
+        <span class="section-label">⊙ &nbsp; BOOKMARKS</span>
+        <button
+          type="button"
+          class="clear-btn"
+          data-target="bookmarks"
+          aria-label="Clear bookmarks"
+        >Clear</button>
+      </div>
+      <ol class="entry-list" id="list-bookmarks"></ol>
+      <p class="empty-note" id="empty-bookmarks">
+        <span data-lang="zh" lang="zh">还没有书签。文章页右上角 <span class="inline-mark">⊙ MARK</span> 即可收藏。</span>
+        <span data-lang="en" lang="en">No bookmarks yet. Hit <span class="inline-mark">⊙ MARK</span> on any article to save it.</span>
+      </p>
+    </section>
+
+    <section class="library-section" id="section-history">
+      <div class="section-head">
+        <span class="section-label">⊙ &nbsp; HISTORY</span>
+        <button
+          type="button"
+          class="clear-btn"
+          data-target="history"
+          aria-label="Clear history"
+        >Clear</button>
+      </div>
+      <ol class="entry-list" id="list-history"></ol>
+      <p class="empty-note" id="empty-history">
+        <span data-lang="zh" lang="zh">还没有阅读记录。在文章页停留 15 秒或下滑 10% 才会计入。</span>
+        <span data-lang="en" lang="en">No reading yet. An entry counts after 15s on the page or scrolling past 10%.</span>
+      </p>
+    </section>
+  </div>
+
+  <script>
+    (() => {
+      const SCHEMA_KEY = "conilab-reading-v1";
+
+      type Entry = {
+        kind: "article" | "note";
+        title_zh: string;
+        title_en: string;
+        first_visited?: string;
+        last_visited?: string;
+        visits?: number;
+        progress?: number;
+        added_at?: string;
+      };
+      type State = {
+        history: Record<string, Entry>;
+        bookmarks: Record<string, Entry>;
+      };
+
+      const empty = (): State => ({ history: {}, bookmarks: {} });
+      const read = (): State => {
+        try {
+          const raw = localStorage.getItem(SCHEMA_KEY);
+          if (!raw) return empty();
+          const parsed = JSON.parse(raw);
+          return {
+            history: parsed?.history && typeof parsed.history === "object" ? parsed.history : {},
+            bookmarks: parsed?.bookmarks && typeof parsed.bookmarks === "object" ? parsed.bookmarks : {},
+          };
+        } catch {
+          return empty();
+        }
+      };
+      const write = (s: State) => {
+        try { localStorage.setItem(SCHEMA_KEY, JSON.stringify(s)); } catch {}
+      };
+
+      const escapeHtml = (s: string) =>
+        s.replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;");
+
+      const fmtDate = (iso?: string) => {
+        if (!iso) return "";
+        try {
+          const d = new Date(iso);
+          // ISO YYYY-MM-DD
+          return d.toISOString().slice(0, 10);
+        } catch { return ""; }
+      };
+
+      const hrefFor = (slug: string, kind: string) =>
+        kind === "note" ? `/notes/${slug}/` : `/articles/${slug}/`;
+
+      const renderEntry = (slug: string, e: Entry, mode: "history" | "bookmarks"): string => {
+        const href = hrefFor(slug, e.kind);
+        const zh = escapeHtml(e.title_zh || "");
+        const en = escapeHtml(e.title_en || "");
+        const dateStr = mode === "bookmarks" ? fmtDate(e.added_at) : fmtDate(e.last_visited);
+        const kindLabel = e.kind === "note" ? "NOTE" : "ARTICLE";
+        const progress = mode === "history" && typeof e.progress === "number" && e.progress > 0
+          ? `<span class="entry-progress">${Math.round(e.progress * 100)}%</span>`
+          : "";
+        const visits = mode === "history" && e.visits && e.visits > 1
+          ? `<span class="entry-visits">×${e.visits}</span>`
+          : "";
+        return `
+          <li class="entry">
+            <a class="entry-link" href="${href}">
+              <div class="entry-meta">
+                <span class="entry-kind">${kindLabel}</span>
+                <span class="entry-dot">·</span>
+                <time>${dateStr}</time>
+                ${progress ? `<span class="entry-dot">·</span>${progress}` : ""}
+                ${visits ? `<span class="entry-dot">·</span>${visits}` : ""}
+              </div>
+              ${zh ? `<div class="entry-title-zh cjk" lang="zh">${zh}</div>` : ""}
+              ${en ? `<div class="entry-title-en" lang="en">${en}</div>` : ""}
+            </a>
+            <button type="button" class="entry-remove" data-mode="${mode}" data-slug="${escapeHtml(slug)}" aria-label="Remove">×</button>
+          </li>
+        `;
+      };
+
+      const render = () => {
+        const s = read();
+
+        // BOOKMARKS — by added_at desc
+        const bms = Object.entries(s.bookmarks)
+          .sort(([, a], [, b]) => (b.added_at || "").localeCompare(a.added_at || ""));
+        const bmList = document.getElementById("list-bookmarks");
+        const bmEmpty = document.getElementById("empty-bookmarks");
+        if (bmList && bmEmpty) {
+          if (bms.length === 0) {
+            bmList.innerHTML = "";
+            bmEmpty.style.display = "";
+          } else {
+            bmList.innerHTML = bms.map(([slug, e]) => renderEntry(slug, e, "bookmarks")).join("");
+            bmEmpty.style.display = "none";
+          }
+        }
+
+        // HISTORY — by last_visited desc
+        const hs = Object.entries(s.history)
+          .sort(([, a], [, b]) => (b.last_visited || "").localeCompare(a.last_visited || ""));
+        const hList = document.getElementById("list-history");
+        const hEmpty = document.getElementById("empty-history");
+        if (hList && hEmpty) {
+          if (hs.length === 0) {
+            hList.innerHTML = "";
+            hEmpty.style.display = "";
+          } else {
+            hList.innerHTML = hs.map(([slug, e]) => renderEntry(slug, e, "history")).join("");
+            hEmpty.style.display = "none";
+          }
+        }
+      };
+
+      // 单条移除
+      document.addEventListener("click", (ev) => {
+        const t = ev.target as HTMLElement;
+        if (!t) return;
+        if (t.classList.contains("entry-remove")) {
+          ev.preventDefault();
+          const mode = t.dataset.mode as "history" | "bookmarks";
+          const slug = t.dataset.slug!;
+          const s = read();
+          if (s[mode][slug]) {
+            delete s[mode][slug];
+            write(s);
+            render();
+          }
+        }
+      });
+
+      // 整组清空
+      document.querySelectorAll<HTMLButtonElement>(".clear-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const target = btn.dataset.target as "history" | "bookmarks";
+          const label = target === "history" ? "阅读历史" : "书签";
+          if (!confirm(`确定清空所有${label}？此操作不可撤销。`)) return;
+          const s = read();
+          s[target] = {};
+          write(s);
+          render();
+        });
+      });
+
+      render();
+    })();
+  </script>
+</Base>
+
+<style>
+  .library { padding: var(--sp-44) 0 var(--sp-96); }
+
+  .library-head {
+    border-bottom: var(--sp-hairline) solid var(--rule);
+    padding-bottom: var(--sp-32);
+    margin: 0 auto var(--sp-44);
+    max-width: 64ch;
+  }
+  .library-meta {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: var(--sp-22);
+  }
+  .library-title {
+    font-family: var(--cjk-serif);
+    font-size: clamp(var(--fs-5xl), 4vw, 48px);
+    line-height: 1.1;
+    margin: 0 0 var(--sp-10);
+    color: var(--accent-front-ink);
+    font-weight: var(--fw-medium);
+    letter-spacing: -0.01em;
+  }
+  .library-title-en {
+    font-family: var(--serif);
+    font-size: var(--fs-3xl);
+    line-height: 1.22;
+    color: var(--accent-back-ink);
+    font-style: italic;
+    font-weight: var(--fw-light);
+    margin: 0 0 var(--sp-22);
+  }
+  .library-lede {
+    font-family: var(--cjk-serif);
+    font-size: var(--fs-lg);
+    line-height: var(--lh-prose);
+    color: var(--ink-2);
+    margin: 0 0 var(--sp-10);
+    font-weight: var(--fw-light);
+  }
+  .library-lede-en {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: var(--fs-md);
+    line-height: var(--lh-relaxed);
+    color: var(--ink-3);
+    margin: 0;
+    font-weight: var(--fw-light);
+  }
+
+  .library-section {
+    max-width: 64ch;
+    margin: 0 auto var(--sp-72);
+  }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-bottom: var(--sp-hairline) solid var(--rule);
+    padding-bottom: var(--sp-10);
+    margin-bottom: var(--sp-18);
+  }
+  .section-label {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .clear-btn {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    background: transparent;
+    border: none;
+    padding: var(--sp-4) var(--sp-6);
+    cursor: pointer;
+    transition: color var(--dur-quick);
+  }
+  .clear-btn:hover { color: var(--accent-back); }
+
+  .entry-list { list-style: none; padding: 0; margin: 0; }
+  .entry {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--sp-12);
+    align-items: start;
+    padding: var(--sp-18) 0;
+    border-bottom: var(--sp-hairline) solid var(--rule);
+  }
+  .entry:last-child { border-bottom: none; }
+
+  .entry-link {
+    color: var(--ink);
+    border-bottom: none;
+    display: block;
+  }
+  .entry-meta {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: var(--sp-6);
+    display: flex;
+    gap: var(--sp-8);
+    flex-wrap: wrap;
+    align-items: baseline;
+  }
+  .entry-dot { color: var(--ink-3); opacity: 0.5; }
+  .entry-kind { color: var(--accent-back); }
+  .entry-progress { color: var(--accent-front-ink); }
+  .entry-visits { color: var(--ink-3); }
+  .entry-title-zh {
+    font-family: var(--cjk-serif);
+    font-size: var(--fs-xl);
+    line-height: 1.3;
+    color: var(--ink);
+    margin: 0;
+  }
+  .entry-title-en {
+    font-family: var(--serif);
+    font-size: var(--fs-md);
+    line-height: 1.3;
+    color: var(--ink-3);
+    font-style: italic;
+    margin: var(--sp-2) 0 0;
+  }
+  .entry-link:hover .entry-title-zh,
+  .entry-link:hover .entry-title-en { color: var(--accent-front-ink); }
+
+  .entry-remove {
+    font-family: var(--mono);
+    font-size: var(--fs-md);
+    color: var(--ink-3);
+    background: transparent;
+    border: none;
+    padding: var(--sp-4) var(--sp-8);
+    cursor: pointer;
+    line-height: 1;
+    transition: color var(--dur-quick);
+  }
+  .entry-remove:hover { color: var(--accent-back); }
+
+  .empty-note {
+    font-family: var(--cjk-serif);
+    font-size: var(--fs-md);
+    color: var(--ink-3);
+    line-height: var(--lh-prose);
+    margin: 0;
+    font-weight: var(--fw-light);
+    font-style: italic;
+  }
+  .inline-mark {
+    font-family: var(--mono);
+    font-style: normal;
+    color: var(--accent-back);
+    letter-spacing: 0.12em;
+  }
+</style>
+</Base>

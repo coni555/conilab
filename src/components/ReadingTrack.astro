@@ -1,0 +1,216 @@
+---
+/**
+ * ReadingTrack — 阅读历史/书签打点组件
+ *
+ * 渲染：⊙ MARK / ⊙ MARKED 切换按钮（mono uppercase + hairline + accent-back 铜色）
+ * 行为：
+ *   - 访问阈值：滚动 > 10% 或停留 > 15s 记一次 history
+ *   - 进度持久化：仅在 visibilitychange / pagehide 时写入（避免 60×/sec 写入）
+ *   - localStorage key: `conilab-reading-v1`（带版本，便于日后迁移）
+ *   - 全部 try/catch，quota/损坏 fail-safe 不影响页面
+ */
+interface Props {
+  slug: string;
+  kind: "article" | "note";
+  titleZh?: string;
+  titleEn?: string;
+}
+const { slug, kind, titleZh = "", titleEn = "" } = Astro.props;
+---
+
+<button
+  type="button"
+  class="bookmark-btn"
+  data-slug={slug}
+  data-kind={kind}
+  data-title-zh={titleZh}
+  data-title-en={titleEn}
+  aria-pressed="false"
+  aria-label="Toggle bookmark"
+>
+  <span class="bookmark-mark" aria-hidden="true">⊙</span>
+  <span class="bookmark-label">MARK</span>
+</button>
+
+<script>
+  (() => {
+    const SCHEMA_KEY = "conilab-reading-v1";
+    const btn = document.querySelector<HTMLButtonElement>(".bookmark-btn");
+    if (!btn) return;
+
+    const slug = btn.dataset.slug || "";
+    const kind = (btn.dataset.kind || "article") as "article" | "note";
+    const titleZh = btn.dataset.titleZh || "";
+    const titleEn = btn.dataset.titleEn || "";
+    const labelEl = btn.querySelector<HTMLSpanElement>(".bookmark-label");
+
+    type Entry = {
+      kind: "article" | "note";
+      title_zh: string;
+      title_en: string;
+      first_visited?: string;
+      last_visited?: string;
+      visits?: number;
+      progress?: number;
+      added_at?: string;
+    };
+    type State = {
+      history: Record<string, Entry>;
+      bookmarks: Record<string, Entry>;
+    };
+
+    const empty = (): State => ({ history: {}, bookmarks: {} });
+
+    const read = (): State => {
+      try {
+        const raw = localStorage.getItem(SCHEMA_KEY);
+        if (!raw) return empty();
+        const parsed = JSON.parse(raw);
+        return {
+          history: (parsed && typeof parsed.history === "object") ? parsed.history : {},
+          bookmarks: (parsed && typeof parsed.bookmarks === "object") ? parsed.bookmarks : {},
+        };
+      } catch {
+        return empty();
+      }
+    };
+
+    const write = (s: State): void => {
+      try {
+        localStorage.setItem(SCHEMA_KEY, JSON.stringify(s));
+      } catch {
+        // quota / privacy mode: silent fail
+      }
+    };
+
+    // ── BOOKMARK ──────────────────────────────────────────
+    const refreshBtn = () => {
+      const s = read();
+      const marked = !!s.bookmarks[slug];
+      btn.classList.toggle("is-marked", marked);
+      btn.setAttribute("aria-pressed", String(marked));
+      if (labelEl) labelEl.textContent = marked ? "MARKED" : "MARK";
+    };
+    refreshBtn();
+
+    btn.addEventListener("click", () => {
+      const s = read();
+      if (s.bookmarks[slug]) {
+        delete s.bookmarks[slug];
+      } else {
+        s.bookmarks[slug] = {
+          kind,
+          title_zh: titleZh,
+          title_en: titleEn,
+          added_at: new Date().toISOString(),
+        };
+      }
+      write(s);
+      refreshBtn();
+    });
+
+    // ── HISTORY (qualified visit: scroll > 10% OR stay > 15s) ─
+    const articleEl = document.querySelector<HTMLElement>("article.article, article.note");
+
+    const computeRatio = (): number => {
+      if (!articleEl) return 0;
+      const rect = articleEl.getBoundingClientRect();
+      const total = rect.height - window.innerHeight;
+      const scrolled = -rect.top;
+      return Math.max(0, Math.min(1, scrolled / Math.max(1, total)));
+    };
+
+    let recorded = false;
+    const recordVisit = () => {
+      if (recorded) return;
+      recorded = true;
+      const s = read();
+      const now = new Date().toISOString();
+      const prev = s.history[slug];
+      s.history[slug] = {
+        kind,
+        title_zh: titleZh,
+        title_en: titleEn,
+        first_visited: prev?.first_visited || now,
+        last_visited: now,
+        visits: (prev?.visits || 0) + 1,
+        progress: prev?.progress || 0,
+      };
+      write(s);
+    };
+
+    // 15s 停留 → 记一次
+    const stayTimer = window.setTimeout(recordVisit, 15000);
+
+    // 滚动 > 10% → 立刻记一次
+    const onScroll = () => {
+      if (recorded) {
+        window.removeEventListener("scroll", onScroll);
+        return;
+      }
+      if (computeRatio() > 0.1) {
+        window.clearTimeout(stayTimer);
+        recordVisit();
+        window.removeEventListener("scroll", onScroll);
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    // ── PROGRESS PERSIST (only on hide / unload, throttled) ──
+    const persistProgress = () => {
+      if (!recorded) return;
+      const s = read();
+      const entry = s.history[slug];
+      if (!entry) return;
+      const ratio = computeRatio();
+      entry.progress = Math.max(entry.progress || 0, ratio);
+      entry.last_visited = new Date().toISOString();
+      write(s);
+    };
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") persistProgress();
+    });
+    window.addEventListener("pagehide", persistProgress);
+  })();
+</script>
+
+<style>
+  .bookmark-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-6);
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    background: transparent;
+    border: var(--sp-hairline) solid var(--rule);
+    border-radius: var(--rad-pill);
+    padding: var(--sp-4) var(--sp-12);
+    cursor: pointer;
+    transition:
+      color var(--dur-quick),
+      border-color var(--dur-quick);
+  }
+  .bookmark-btn:hover {
+    color: var(--accent-back-ink);
+    border-color: var(--accent-back);
+  }
+  .bookmark-mark {
+    font-size: 0.95em;
+    color: var(--ink-3);
+    transition: color var(--dur-quick);
+  }
+  .bookmark-btn:hover .bookmark-mark {
+    color: var(--accent-back);
+  }
+  .bookmark-btn.is-marked {
+    color: var(--accent-back-ink);
+    border-color: var(--accent-back);
+  }
+  .bookmark-btn.is-marked .bookmark-mark {
+    color: var(--accent-back);
+  }
+</style>

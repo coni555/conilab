@@ -1,5 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
+import ReadingTrack from "../../components/ReadingTrack.astro";
 import { getCollection } from "astro:content";
 import { marked } from "marked";
 
@@ -71,6 +72,7 @@ const readMinutes = Math.max(Math.ceil(zhCharCount / 400), 1);
 
 const dateStr = new Date(data.published_at).toISOString().slice(0, 10);
 const tagsStr = (data.tags ?? []).join(" · ");
+const currentSlug = data.slug ?? article.id.replace(/\.(md|mdx)$/, "");
 ---
 
 <Base
@@ -95,6 +97,14 @@ const tagsStr = (data.tags ?? []).join(" · ");
         <h2 class="article-title-en" data-lang="en" lang="en">{data.title_en}</h2>
         <p class="article-lede cjk" data-lang="zh" lang="zh">{data.lede_zh}</p>
         <p class="article-lede-en" data-lang="en" lang="en">{data.lede_en}</p>
+        <div class="article-actions">
+          <ReadingTrack
+            slug={currentSlug}
+            kind="article"
+            titleZh={data.title_zh}
+            titleEn={data.title_en}
+          />
+        </div>
       </header>
 
       {hasToc && (
@@ -333,6 +343,13 @@ const tagsStr = (data.tags ?? []).join(" · ");
     flex-wrap: wrap;
   }
   .article-meta .tags { color: var(--accent-back); }
+
+  .article-actions {
+    margin-top: var(--sp-22);
+    display: flex;
+    gap: var(--sp-10);
+  }
+
   .article-title {
     font-family: var(--cjk-serif);
     font-size: clamp(var(--fs-6xl), 4.4vw, 56px);
