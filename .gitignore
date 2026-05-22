@@ -31,3 +31,7 @@ pnpm-debug.log*
 
 # personal data snapshots (not consumed at build time)
 src/data/
+
+# internal collaboration docs (private, contain identity-sensitive context)
+AGENTS.md
+HANDOFF.md
