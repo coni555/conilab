@@ -184,7 +184,7 @@ const colophonEntries = [
         </div>
       ) : (
         <ol class="recent recent--notes">
-          {notes.slice(0, 5).map((n) => (
+          {notes.slice(0, 3).map((n) => (
             <li class="recent-item">
               <a class="recent-link" href={`/notes/${noteSlugOf(n)}/`}>
                 <span class="recent-date">{fmtDate(n.data.published_at)}</span>
