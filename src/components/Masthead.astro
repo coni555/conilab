@@ -136,9 +136,10 @@ const moreIsActive = moreNav.some((it) => pathname.startsWith(it.href));
   const root = document.documentElement;
   const btns = document.querySelectorAll<HTMLButtonElement>(".lang-btn");
   const apply = (mode: string) => {
-    root.classList.remove("show-zh", "show-en");
+    root.classList.remove("show-zh", "show-en", "show-both");
     if (mode === "zh") root.classList.add("show-zh");
-    if (mode === "en") root.classList.add("show-en");
+    else if (mode === "en") root.classList.add("show-en");
+    else root.classList.add("show-both");
     btns.forEach((b) => {
       const on = b.dataset.lang === mode;
       b.classList.toggle("is-active", on);

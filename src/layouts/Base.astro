@@ -50,6 +50,7 @@ const ogImage = image.startsWith("http") ? image : new URL(image, site).href;
         var lang = savedLang || "en";
         if (lang === "zh") document.documentElement.classList.add("show-zh");
         else if (lang === "en") document.documentElement.classList.add("show-en");
+        else document.documentElement.classList.add("show-both");
 
         var savedTheme = localStorage.getItem("conilab-theme");
         var theme = savedTheme || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");

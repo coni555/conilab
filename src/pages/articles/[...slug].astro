@@ -65,6 +65,8 @@ function processHeadings(html: string, prefix: string) {
 const { html: zhHtml, toc: zhToc } = processHeadings(zhHtmlRaw, "zh");
 const { html: enHtml, toc: enToc } = processHeadings(enHtmlRaw, "en");
 const hasToc = zhToc.length > 0 || enToc.length > 0;
+// 双语模式下左右分列只在两段 body 都有内容时启用（单语文章不分列）
+const isBilingual = zhRaw.length > 0 && enRaw.length > 0;
 
 // Word count & reading time — strip HTML tags, count all visible chars
 const zhCharCount = (zhHtmlRaw.replace(/<[^>]*>/g, "").replace(/\s+/g, "")).length;
@@ -95,8 +97,10 @@ const currentSlug = data.slug ?? article.id.replace(/\.(md|mdx)$/, "");
         </div>
         <h1 class="article-title cjk" data-lang="zh" lang="zh">{data.title_zh}</h1>
         <h2 class="article-title-en" data-lang="en" lang="en">{data.title_en}</h2>
-        <p class="article-lede cjk" data-lang="zh" lang="zh">{data.lede_zh}</p>
-        <p class="article-lede-en" data-lang="en" lang="en">{data.lede_en}</p>
+        <div class="article-ledes">
+          <p class="article-lede cjk" data-lang="zh" lang="zh">{data.lede_zh}</p>
+          <p class="article-lede-en" data-lang="en" lang="en">{data.lede_en}</p>
+        </div>
         <div class="article-actions">
           <ReadingTrack
             slug={currentSlug}
@@ -130,19 +134,21 @@ const currentSlug = data.slug ?? article.id.replace(/\.(md|mdx)$/, "");
         </nav>
       )}
 
-      <section class="article-body" data-lang="zh" lang="zh-CN">
-        <div class="prose cjk" set:html={zhHtml}></div>
-      </section>
+      <div class={`article-bodies${isBilingual ? " is-bilingual" : ""}`}>
+        <section class="article-body" data-lang="zh" lang="zh-CN">
+          <div class="prose cjk" set:html={zhHtml}></div>
+        </section>
 
-      <div class="article-flip" aria-hidden="true">
-        <span class="flip-rule"></span>
-        <span class="flip-text">⊙ &nbsp; TURN IT OVER &nbsp; ⊙</span>
-        <span class="flip-rule"></span>
+        <div class="article-flip" aria-hidden="true">
+          <span class="flip-rule"></span>
+          <span class="flip-text">⊙ &nbsp; TURN IT OVER &nbsp; ⊙</span>
+          <span class="flip-rule"></span>
+        </div>
+
+        <section class="article-body" data-lang="en" lang="en">
+          <div class="prose" set:html={enHtml}></div>
+        </section>
       </div>
-
-      <section class="article-body" data-lang="en" lang="en">
-        <div class="prose" set:html={enHtml}></div>
-      </section>
 
       {(newer || older) && (
         <nav class="article-nav" aria-label="Adjacent articles">
@@ -409,6 +415,57 @@ const currentSlug = data.slug ?? article.id.replace(/\.(md|mdx)$/, "");
     letter-spacing: 0.16em;
     color: var(--accent-back);
     white-space: nowrap;
+  }
+
+  /* ─── 双语并置：中/EN 模式下左右分列（宽屏才分，窄屏回落上下叠） ─── */
+  @media (min-width: 1100px) {
+    /* 头部 + 正文区都放宽到 wrap 满宽，左对齐对齐两栏左缘 */
+    :global(html.show-both) .article-head,
+    :global(html.show-both) .article-nav { max-width: none; }
+
+    /* lede 也分列：左中右英 */
+    :global(html.show-both) .article-ledes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+    }
+    :global(html.show-both) .article-lede {
+      padding-right: var(--sp-40);
+      margin-bottom: 0;
+    }
+    :global(html.show-both) .article-lede-en {
+      padding-left: var(--sp-40);
+    }
+
+    /* 正文左右分列 */
+    :global(html.show-both) .article-bodies.is-bilingual {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+    }
+    /* 居中全高 1px 发丝分隔线 */
+    :global(html.show-both) .article-bodies.is-bilingual::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 50%;
+      width: var(--sp-hairline);
+      background: var(--rule);
+    }
+    :global(html.show-both) .article-bodies.is-bilingual .article-body {
+      max-width: none;
+      margin: 0;
+    }
+    :global(html.show-both) .article-bodies.is-bilingual .article-body[data-lang="zh"] {
+      padding-right: var(--sp-40);
+    }
+    :global(html.show-both) .article-bodies.is-bilingual .article-body[data-lang="en"] {
+      padding-left: var(--sp-40);
+    }
+    :global(html.show-both) .article-bodies.is-bilingual .article-flip { display: none; }
+
+    /* 分列后右栏占满，浮动 TOC 无处安放——双语模式下隐藏（单语仍在） */
+    :global(html.show-both) .toc { display: none; }
   }
 
   /* ─── PROSE TYPOGRAPHY ─── */

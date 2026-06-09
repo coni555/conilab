@@ -73,25 +73,27 @@ const currentSlug = data.slug ?? note.id.replace(/\.(md|mdx)$/, "");
         </div>
       </header>
 
-      {zhHtml && (
-        <section class="note-body" data-lang="zh" lang="zh-CN">
-          <div class="prose cjk" set:html={zhHtml}></div>
-        </section>
-      )}
+      <div class={`note-bodies${hasBoth ? " is-bilingual" : ""}`}>
+        {zhHtml && (
+          <section class="note-body" data-lang="zh" lang="zh-CN">
+            <div class="prose cjk" set:html={zhHtml}></div>
+          </section>
+        )}
 
-      {hasBoth && (
-        <div class="note-flip" aria-hidden="true">
-          <span class="flip-rule"></span>
-          <span class="flip-text">⊙ &nbsp; TURN IT OVER &nbsp; ⊙</span>
-          <span class="flip-rule"></span>
-        </div>
-      )}
+        {hasBoth && (
+          <div class="note-flip" aria-hidden="true">
+            <span class="flip-rule"></span>
+            <span class="flip-text">⊙ &nbsp; TURN IT OVER &nbsp; ⊙</span>
+            <span class="flip-rule"></span>
+          </div>
+        )}
 
-      {enHtml && (
-        <section class="note-body" data-lang="en" lang="en">
-          <div class="prose" set:html={enHtml}></div>
-        </section>
-      )}
+        {enHtml && (
+          <section class="note-body" data-lang="en" lang="en">
+            <div class="prose" set:html={enHtml}></div>
+          </section>
+        )}
+      </div>
 
       <footer class="note-foot">
         <a class="back-link" href="/notes/">← Back to notes</a>
@@ -169,6 +171,37 @@ const currentSlug = data.slug ?? note.id.replace(/\.(md|mdx)$/, "");
     letter-spacing: 0.16em;
     color: var(--accent-back);
     white-space: nowrap;
+  }
+
+  /* ─── 双语并置：中/EN 模式下左右分列（宽屏才分，窄屏回落上下叠） ─── */
+  @media (min-width: 1100px) {
+    :global(html.show-both) .note-head,
+    :global(html.show-both) .note-foot { max-width: none; }
+
+    :global(html.show-both) .note-bodies.is-bilingual {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+    }
+    :global(html.show-both) .note-bodies.is-bilingual::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 50%;
+      width: var(--sp-hairline);
+      background: var(--rule);
+    }
+    :global(html.show-both) .note-bodies.is-bilingual .note-body {
+      max-width: none;
+      margin: 0;
+    }
+    :global(html.show-both) .note-bodies.is-bilingual .note-body[data-lang="zh"] {
+      padding-right: var(--sp-40);
+    }
+    :global(html.show-both) .note-bodies.is-bilingual .note-body[data-lang="en"] {
+      padding-left: var(--sp-40);
+    }
+    :global(html.show-both) .note-bodies.is-bilingual .note-flip { display: none; }
   }
 
   /* ─── PROSE ─── */
