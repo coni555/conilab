@@ -92,8 +92,8 @@ const readMin = (chars: number) => Math.max(Math.ceil(chars / 400), 1);
                         {a.data.en_complete && <span class="lang lang-en">EN</span>}
                       </span>
                       <span class="entry-titles">
-                        <span class="entry-title-zh cjk" lang="zh">{a.data.title_zh}</span>
-                        <span class="entry-title-en">{a.data.title_en}</span>
+                        <span class="entry-title-zh cjk" data-lang="zh" lang="zh">{a.data.title_zh}</span>
+                        <span class="entry-title-en" data-lang="en">{a.data.title_en}</span>
                       </span>
                       <span class="entry-tags">
                         {(a.data.tags ?? []).slice(0, 3).join(" · ")}

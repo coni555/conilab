@@ -101,8 +101,10 @@ h1 em, h2 em, h3 em {
  * 文章正文里：<p data-lang="zh">…</p><p data-lang="en">…</p>
  * 默认双显，切换器加根 class 即可单显
  * ───────────────────────────────────────────────────────────── */
-html.show-zh [data-lang="en"] { display: none; }
-html.show-en [data-lang="zh"] { display: none; }
+/* !important：必须压过 Astro scoped 样式（attribute 选择器抬高了特异性，
+ * 如 404 页 `h1 span { display: block }` 会反杀这条全局隐藏规则）*/
+html.show-zh [data-lang="en"] { display: none !important; }
+html.show-en [data-lang="zh"] { display: none !important; }
 /* show-both（默认）什么都不藏 */
 
 /* 文章里英文段视觉降级（当中英共显，英文做"译注"风）*/

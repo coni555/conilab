@@ -9,7 +9,7 @@ const works = [
     title_en: "Orange Book",
     desc_zh: "从零开始用 Claude Code 构建 agent 的实战手册。暗色 A4 长图，可打印。",
     desc_en: "A hands-on handbook for building agents with Claude Code. Dark A4 long-scroll, printable.",
-    href: "/works/orange-book.html",
+    href: "https://cc-use.conilab.cn/",
     tag: "handbook",
     date: "2026",
   },
@@ -33,11 +33,14 @@ const works = [
     <div class="wrap">
       <header class="resources-head">
         <Kicker text="works · 作品" accent />
-        <h1 class="resources-title">
-          <span class="cjk" lang="zh">可以公开的创作结果</span>
+        <h1 class="resources-title cjk" data-lang="zh" lang="zh">
+          可以公开的创作结果
         </h1>
+        <h2 class="resources-title-en" data-lang="en" lang="en">
+          Public artifacts
+        </h2>
         <p class="resources-lede-en" data-lang="en">
-          Public artifacts — things I've made and shipped.
+          Things I've made and shipped.
         </p>
       </header>
 
@@ -50,8 +53,8 @@ const works = [
                 <span class="resource-date">{r.date}</span>
               </div>
               <h2 class="resource-title">
-                <span class="resource-title-zh cjk" lang="zh">{r.title_zh}</span>
-                <span class="resource-title-en">{r.title_en}</span>
+                <span class="resource-title-zh cjk" data-lang="zh" lang="zh">{r.title_zh}</span>
+                <span class="resource-title-en" data-lang="en">{r.title_en}</span>
               </h2>
               <p class="resource-desc cjk" data-lang="zh" lang="zh">{r.desc_zh}</p>
               <p class="resource-desc" data-lang="en">{r.desc_en}</p>
@@ -81,6 +84,15 @@ const works = [
     line-height: var(--lh-snug);
     margin: var(--sp-12) 0 var(--sp-14);
     color: var(--ink);
+  }
+  .resources-title-en {
+    font-family: var(--serif);
+    font-size: var(--fs-3xl);
+    line-height: 1.22;
+    color: var(--accent-back-ink);
+    font-style: italic;
+    font-weight: var(--fw-light);
+    margin: var(--sp-12) 0 var(--sp-14);
   }
   .resources-lede-en {
     font-family: var(--serif);
@@ -158,6 +170,11 @@ const works = [
     font-style: italic;
     font-weight: var(--fw-light);
     color: var(--accent-back-ink);
+  }
+  /* EN 单显时它是唯一标题，升级为主标题字号 */
+  :global(html.show-en) .resource-title-en {
+    font-size: var(--fs-2xl);
+    color: var(--ink);
   }
 
   .resource-desc {

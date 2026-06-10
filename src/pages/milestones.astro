@@ -43,7 +43,8 @@ const milestones: Milestone[] = [
       <header class="ms-head">
         <Kicker text="milestones · 里程碑" accent />
         <h1 class="ms-title">
-          <span class="cjk" lang="zh">一路向上</span>
+          <span class="cjk" data-lang="zh" lang="zh">一路向上</span>
+          <span class="ms-title-en" data-lang="en">Up and to the right</span>
         </h1>
         <p class="ms-lede" data-lang="en">
           Every step counts.
@@ -62,7 +63,7 @@ const milestones: Milestone[] = [
       </ol>
 
       <footer class="ms-foot">
-        <p class="ms-note cjk" lang="zh">
+        <p class="ms-note cjk" data-lang="zh" lang="zh">
           从高中毕业算起，记录每一个让我不一样的瞬间。
         </p>
         <p class="ms-note" data-lang="en">
@@ -91,6 +92,11 @@ const milestones: Milestone[] = [
     color: var(--ink);
     font-weight: var(--fw-medium);
     margin: 0 0 var(--sp-8);
+  }
+  .ms-title-en {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: var(--fw-light);
   }
   .ms-lede {
     font-family: var(--serif);

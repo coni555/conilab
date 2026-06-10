@@ -26,8 +26,8 @@ const sections = [
             {sections.map((s) => (
               <li>
                 <a href={`#${s.id}`}>
-                  <span class="toc-en">{s.label}</span>
-                  <span class="toc-zh cjk" lang="zh">{s.label_zh}</span>
+                  <span class="toc-en" data-lang="en">{s.label}</span>
+                  <span class="toc-zh cjk" data-lang="zh" lang="zh">{s.label_zh}</span>
                 </a>
               </li>
             ))}
@@ -61,8 +61,8 @@ const sections = [
         <section id="who" class="about-sec">
           <h2 class="sec-num">Ⅰ</h2>
           <h3 class="sec-h">
-            <span class="cjk" lang="zh">我是谁</span>
-            <span class="sec-h-en">Who I am</span>
+            <span class="cjk" data-lang="zh" lang="zh">我是谁</span>
+            <span class="sec-h-en" data-lang="en">Who I am</span>
           </h3>
 
           <div class="prose cjk" data-lang="zh" lang="zh">
@@ -93,8 +93,8 @@ const sections = [
         <section id="doing" class="about-sec">
           <h2 class="sec-num">Ⅱ</h2>
           <h3 class="sec-h">
-            <span class="cjk" lang="zh">我在做什么</span>
-            <span class="sec-h-en">What I'm doing</span>
+            <span class="cjk" data-lang="zh" lang="zh">我在做什么</span>
+            <span class="sec-h-en" data-lang="en">What I'm doing</span>
           </h3>
 
           <div class="prose cjk" data-lang="zh" lang="zh">
@@ -125,8 +125,8 @@ const sections = [
         <section id="think" class="about-sec">
           <h2 class="sec-num">Ⅲ</h2>
           <h3 class="sec-h">
-            <span class="cjk" lang="zh">我怎么想的</span>
-            <span class="sec-h-en">How I think</span>
+            <span class="cjk" data-lang="zh" lang="zh">我怎么想的</span>
+            <span class="sec-h-en" data-lang="en">How I think</span>
           </h3>
 
           <div class="prose cjk" data-lang="zh" lang="zh">
@@ -160,8 +160,8 @@ const sections = [
         <section id="site" class="about-sec">
           <h2 class="sec-num">Ⅳ</h2>
           <h3 class="sec-h">
-            <span class="cjk" lang="zh">这个站</span>
-            <span class="sec-h-en">This site</span>
+            <span class="cjk" data-lang="zh" lang="zh">这个站</span>
+            <span class="sec-h-en" data-lang="en">This site</span>
           </h3>
 
           <div class="prose cjk" data-lang="zh" lang="zh">

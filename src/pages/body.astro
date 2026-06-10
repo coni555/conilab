@@ -16,7 +16,8 @@ import CoinGlyph from "../components/CoinGlyph.astro";
       <div class="hero-row">
         <div class="hero-text">
           <h1 class="hero-title">
-            <span class="cjk" lang="zh">把身体当实验来做</span>
+            <span class="cjk" data-lang="zh" lang="zh">把身体当实验来做</span>
+            <span class="hero-title-en" data-lang="en">The body as an experiment</span>
           </h1>
           <p class="hero-lede" data-lang="en">
             Tracking physical growth as a long-running experiment.
@@ -300,16 +301,16 @@ function renderAbilities(data: any) {
     <div class="ab-row">
       <div class="ab-header">
         <span class="ab-name">
-          <span class="ab-name-zh cjk" lang="zh">${ab.ability}</span>
-          <span class="ab-name-en">${ab.en}</span>
+          <span class="ab-name-zh cjk" data-lang="zh" lang="zh">${ab.ability}</span>
+          <span class="ab-name-en" data-lang="en">${ab.en}</span>
         </span>
         <span class="ab-pct">${ab.score}%</span>
       </div>
       <div class="ab-track"><div class="ab-fill" style="width:${ab.score}%"></div></div>
       <div class="ab-meta">
-        <span>最佳 ${fmt(ab.best)}${ab.unit}</span>
+        <span><span data-lang="zh">最佳</span><span data-lang="en">Best</span> ${fmt(ab.best)}${ab.unit}</span>
         <span class="ab-sep">·</span>
-        <span>目标 ${fmt(ab.target)}${ab.unit}</span>
+        <span><span data-lang="zh">目标</span><span data-lang="en">Target</span> ${fmt(ab.target)}${ab.unit}</span>
       </div>
     </div>`).join("");
 }
@@ -515,6 +516,11 @@ loadData();
     line-height: var(--lh-snug);
     margin: var(--sp-14) 0 var(--sp-10);
     color: var(--ink);
+  }
+  .hero-title-en {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: var(--fw-light);
   }
   .hero-lede {
     font-family: var(--serif);

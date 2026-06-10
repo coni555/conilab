@@ -98,13 +98,17 @@ const totalBooks = tiers.reduce((n, t) => n + t.books.length, 0);
       <header class="books-head">
         <Kicker text="books · 读过的书" accent />
         <h1 class="books-title">
-          <span class="cjk" lang="zh">从夯到拉</span>
+          <span class="cjk" data-lang="zh" lang="zh">从夯到拉</span>
+          <span class="books-title-en" data-lang="en">From bangers to duds</span>
         </h1>
         <p class="books-lede" data-lang="en">
           A brutally honest tier list.
         </p>
-        <p class="books-note-top cjk" lang="zh">
+        <p class="books-note-top cjk" data-lang="zh" lang="zh">
           只列出读过且记忆深刻的书，不是全部阅读记录。
+        </p>
+        <p class="books-note-top" data-lang="en">
+          Only the books that left a mark — not a complete reading log.
         </p>
         <p class="books-count">{totalBooks} books ranked</p>
       </header>
@@ -113,7 +117,7 @@ const totalBooks = tiers.reduce((n, t) => n + t.books.length, 0);
         {tiers.map((tier) => (
           <div class={`tier tier--${tier.label_en.toLowerCase()}`}>
             <div class="tier-label">
-              <span class="tier-zh">{tier.label}</span>
+              <span class="tier-zh" data-lang="zh">{tier.label}</span>
               <span class="tier-en">{tier.label_en}</span>
             </div>
             <div class="tier-books">
@@ -130,9 +134,9 @@ const totalBooks = tiers.reduce((n, t) => n + t.books.length, 0);
                       )}
                     </div>
                     <div class="tile-meta">
-                      <span class="tile-title cjk" lang="zh">{book.title}</span>
+                      <span class="tile-title cjk" data-lang={book.title_en ? "zh" : undefined} lang="zh">{book.title}</span>
                       {book.title_en && (
-                        <span class="tile-title-en">{book.title_en}</span>
+                        <span class="tile-title-en" data-lang="en">{book.title_en}</span>
                       )}
                       <span class="tile-author">{book.author}</span>
                     </div>
@@ -151,7 +155,7 @@ const totalBooks = tiers.reduce((n, t) => n + t.books.length, 0);
       </div>
 
       <footer class="books-foot">
-        <p class="books-note cjk" lang="zh">
+        <p class="books-note cjk" data-lang="zh" lang="zh">
           纯主观锐评，不构成推荐。一本书在哪个档取决于它对<em>我</em>的影响，不是它的客观质量。
         </p>
         <p class="books-note" data-lang="en">
@@ -180,6 +184,11 @@ const totalBooks = tiers.reduce((n, t) => n + t.books.length, 0);
     color: var(--ink);
     font-weight: var(--fw-medium);
     margin: 0 0 var(--sp-8);
+  }
+  .books-title-en {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: var(--fw-light);
   }
   .books-lede {
     font-family: var(--serif);

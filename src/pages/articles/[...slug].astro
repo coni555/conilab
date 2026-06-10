@@ -156,8 +156,8 @@ const currentSlug = data.slug ?? article.id.replace(/\.(md|mdx)$/, "");
             <a class="nav-link nav-prev" href={`/articles/${older.slug}/`}>
               <span class="nav-arrow" aria-hidden="true">←</span>
               <span class="nav-label">Older · 上一篇</span>
-              <span class="nav-title-zh cjk" lang="zh">{older.title_zh}</span>
-              <span class="nav-title-en">{older.title_en}</span>
+              <span class="nav-title-zh cjk" data-lang="zh" lang="zh">{older.title_zh}</span>
+              <span class="nav-title-en" data-lang="en">{older.title_en}</span>
             </a>
           ) : <span class="nav-link nav-prev nav-empty" aria-hidden="true"></span>}
 
@@ -165,8 +165,8 @@ const currentSlug = data.slug ?? article.id.replace(/\.(md|mdx)$/, "");
             <a class="nav-link nav-next" href={`/articles/${newer.slug}/`}>
               <span class="nav-label">Newer · 下一篇</span>
               <span class="nav-arrow" aria-hidden="true">→</span>
-              <span class="nav-title-zh cjk" lang="zh">{newer.title_zh}</span>
-              <span class="nav-title-en">{newer.title_en}</span>
+              <span class="nav-title-zh cjk" data-lang="zh" lang="zh">{newer.title_zh}</span>
+              <span class="nav-title-en" data-lang="en">{newer.title_en}</span>
             </a>
           ) : <span class="nav-link nav-next nav-empty" aria-hidden="true"></span>}
         </nav>

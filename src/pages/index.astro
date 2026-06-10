@@ -140,8 +140,8 @@ const colophonEntries = [
               <a class="recent-link" href={`/articles/${slugOf(a)}/`}>
                 <span class="recent-date">{fmtDate(a.data.published_at)}</span>
                 <span class="recent-titles">
-                  <span class="recent-title-zh cjk" lang="zh">{a.data.title_zh}</span>
-                  <span class="recent-title-en">{a.data.title_en}</span>
+                  <span class="recent-title-zh cjk" data-lang="zh" lang="zh">{a.data.title_zh}</span>
+                  <span class="recent-title-en" data-lang="en">{a.data.title_en}</span>
                 </span>
                 <span class="recent-arrow" aria-hidden="true">→</span>
               </a>
@@ -190,10 +190,10 @@ const colophonEntries = [
                 <span class="recent-date">{fmtDate(n.data.published_at)}</span>
                 <span class="recent-titles">
                   {n.data.title_zh && (
-                    <span class="recent-title-zh cjk" lang="zh">{n.data.title_zh}</span>
+                    <span class="recent-title-zh cjk" data-lang={n.data.title_en ? "zh" : undefined} lang="zh">{n.data.title_zh}</span>
                   )}
                   {n.data.title_en && (
-                    <span class="recent-title-en">{n.data.title_en}</span>
+                    <span class="recent-title-en" data-lang={n.data.title_zh ? "en" : undefined}>{n.data.title_en}</span>
                   )}
                 </span>
                 <span class="recent-arrow" aria-hidden="true">→</span>

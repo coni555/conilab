@@ -144,8 +144,8 @@ import Base from "../layouts/Base.astro";
                 ${progress ? `<span class="entry-dot">·</span>${progress}` : ""}
                 ${visits ? `<span class="entry-dot">·</span>${visits}` : ""}
               </div>
-              ${zh ? `<div class="entry-title-zh cjk" lang="zh">${zh}</div>` : ""}
-              ${en ? `<div class="entry-title-en" lang="en">${en}</div>` : ""}
+              ${zh ? `<div class="entry-title-zh cjk" ${en ? 'data-lang="zh"' : ""} lang="zh">${zh}</div>` : ""}
+              ${en ? `<div class="entry-title-en" ${zh ? 'data-lang="en"' : ""} lang="en">${en}</div>` : ""}
             </a>
             <button type="button" class="entry-remove" data-mode="${mode}" data-slug="${escapeHtml(slug)}" aria-label="Remove">×</button>
           </li>

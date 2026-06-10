@@ -61,10 +61,10 @@ const slugOf = (n: (typeof notes)[number]) =>
                 <span class="entry-date">{fmtDate(n.data.published_at)}</span>
                 <span class="entry-titles">
                   {n.data.title_zh && (
-                    <span class="entry-title-zh cjk" lang="zh">{n.data.title_zh}</span>
+                    <span class="entry-title-zh cjk" data-lang={n.data.title_en ? "zh" : undefined} lang="zh">{n.data.title_zh}</span>
                   )}
                   {n.data.title_en && (
-                    <span class="entry-title-en">{n.data.title_en}</span>
+                    <span class="entry-title-en" data-lang={n.data.title_zh ? "en" : undefined}>{n.data.title_en}</span>
                   )}
                 </span>
                 <span class="entry-tags">
