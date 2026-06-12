@@ -18,13 +18,15 @@ const description =
         <Kicker text="Join · 加入" accent />
 
         <div class="join-pitch">
-          <h1 class="join-title cjk" lang="zh" data-lang="zh">
-            下一篇<em>落地</em>时<br />
-            通知你<em>两面</em>。
-          </h1>
-          <h1 class="join-title" data-lang="en">
-            When the next piece <em>lands</em>,<br />
-            we'll send you <em>both sides</em>.
+          <h1 class="join-titles">
+            <span class="join-title cjk" lang="zh" data-lang="zh">
+              下一篇<em>落地</em>时<br />
+              通知你<em>两面</em>。
+            </span>
+            <span class="join-title" data-lang="en">
+              When the next piece <em>lands</em>,<br />
+              we'll send you <em>both sides</em>.
+            </span>
           </h1>
         </div>
 
@@ -63,22 +65,14 @@ const description =
               placeholder="you@example.com"
               spellcheck="false"
               autocapitalize="off"
+              aria-describedby="email-error"
             />
           </label>
 
-          <label class="field field--optional">
-            <span class="field-label">
-              <span data-lang="zh">名字 <em class="optional-tag">· 选填</em></span>
-              <span data-lang="en">Name <em class="optional-tag">· optional</em></span>
-            </span>
-            <input
-              type="text"
-              name="name"
-              autocomplete="given-name"
-              placeholder="@coni"
-              maxlength="40"
-            />
-          </label>
+          <p class="field-error" id="email-error" role="alert" aria-live="polite" hidden>
+            <span data-lang="zh">请输入有效的邮箱地址。</span>
+            <span data-lang="en">Please enter a valid email address.</span>
+          </p>
 
           <button type="submit" class="join-btn">
             <span class="btn-glyph" aria-hidden="true">
@@ -156,15 +150,6 @@ const description =
           <dt>Exit</dt>
           <dd><span data-lang="zh">每封邮件底部都有退订</span><span data-lang="en">unsubscribe link at the bottom of every email</span></dd>
         </dl>
-
-        <p class="join-already">
-          <span data-lang="zh">已经订阅了？</span>
-          <span data-lang="en">Already on the list?</span>
-          <a href="/join" class="signin-link">
-            <span data-lang="zh">用同一邮箱再走一次 magic link →</span>
-            <span data-lang="en">Use the same email above →</span>
-          </a>
-        </p>
       </footer>
     </div>
   </section>
@@ -178,6 +163,7 @@ const description =
   const back = document.querySelector<HTMLButtonElement>(".success-back");
   const emailInput = form?.querySelector<HTMLInputElement>('input[name="email"]');
   const errorEl = document.getElementById("form-error");
+  const emailErrorEl = document.getElementById("email-error");
   const oauthBtns = document.querySelectorAll<HTMLButtonElement>(".oauth-btn");
 
   const setState = (state: "idle" | "loading" | "success" | "error") => {
@@ -200,6 +186,14 @@ const description =
     showError("Sign-in failed. Please try again.");
   }
 
+  // 用户重新输入时清掉校验错误
+  emailInput?.addEventListener("input", () => {
+    if (emailInput.getAttribute("aria-invalid") === "true") {
+      emailInput.removeAttribute("aria-invalid");
+      if (emailErrorEl) emailErrorEl.hidden = true;
+    }
+  });
+
   // Magic link form submit
   form?.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -208,10 +202,12 @@ const description =
     const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     if (!ok) {
       emailInput.setAttribute("aria-invalid", "true");
+      if (emailErrorEl) emailErrorEl.hidden = false;
       emailInput.focus();
       return;
     }
     emailInput.removeAttribute("aria-invalid");
+    if (emailErrorEl) emailErrorEl.hidden = true;
     if (errorEl) errorEl.hidden = true;
     setState("loading");
 
@@ -250,6 +246,8 @@ const description =
   back?.addEventListener("click", () => {
     setState("idle");
     if (errorEl) errorEl.hidden = true;
+    if (emailErrorEl) emailErrorEl.hidden = true;
+    emailInput?.removeAttribute("aria-invalid");
     emailInput?.focus();
     // Clean URL params
     window.history.replaceState({}, "", "/join");
@@ -278,7 +276,16 @@ const description =
     display: grid;
     gap: var(--sp-12);
   }
+  /* 单个 h1 包两个 span（zh / en）：show-en 模式下也有真正的 h1 */
+  .join-titles {
+    display: grid;
+    gap: var(--sp-12);
+    margin: 0;
+    font-weight: var(--fw-normal);
+    letter-spacing: normal;
+  }
   .join-title {
+    display: block;
     font-family: var(--serif);
     font-weight: var(--fw-normal);
     font-size: clamp(var(--fs-7xl), 5vw, var(--fs-hero));
@@ -400,14 +407,6 @@ const description =
     align-items: baseline;
     gap: var(--sp-6);
   }
-  .optional-tag {
-    font-style: italic;
-    color: var(--accent-back);
-    font-weight: var(--fw-light);
-    text-transform: lowercase;
-    letter-spacing: 0;
-    font-family: var(--serif);
-  }
   .field input {
     appearance: none;
     background: var(--paper);
@@ -434,6 +433,17 @@ const description =
     border-color: var(--err-ink);
     box-shadow: 0 0 0 3px color-mix(in oklch, var(--err-ink) 14%, transparent);
   }
+
+  /* 邮箱校验失败的可见提示（mono 小字 + err 色，跟随双语体系）*/
+  .field-error {
+    font-family: var(--mono);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.04em;
+    color: var(--err-ink);
+    margin: calc(-1 * var(--sp-8)) 0 0;
+    padding-left: var(--sp-2);
+  }
+  .field-error[hidden] { display: none; }
 
   .join-btn {
     display: inline-flex;
@@ -602,25 +612,6 @@ const description =
     color: var(--ink-2);
     font-family: var(--sans);
     font-size: var(--fs-md);
-  }
-
-  .join-already {
-    text-align: center;
-    font-family: var(--sans);
-    font-size: var(--fs-md);
-    color: var(--ink-3);
-    margin: 0;
-    padding-top: var(--sp-10);
-  }
-  .signin-link {
-    color: var(--accent-front-ink);
-    border-bottom: var(--sp-hairline) solid color-mix(in oklch, var(--accent-front) 50%, var(--rule));
-    margin-left: var(--sp-6);
-    transition: color var(--dur-quick), border-color var(--dur-quick);
-  }
-  .signin-link:hover {
-    color: var(--accent-front);
-    border-bottom-color: var(--accent-front);
   }
 
   /* ─── RESPONSIVE ─── */

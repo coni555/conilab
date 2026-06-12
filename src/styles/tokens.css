@@ -21,7 +21,7 @@
 
   --ink:          oklch(0.200 0.003 250);   /* 主字色 */
   --ink-2:        oklch(0.380 0.003 250);   /* 次字色（lede / dt 等）*/
-  --ink-3:        oklch(0.580 0.003 250);   /* 灰字（kicker / breadcrumb 等）*/
+  --ink-3:        oklch(0.50 0.003 250);    /* 灰字（kicker / breadcrumb）—— 压到 WCAG AA */
 
   /* 双色制（硬币双面 / 中英 / 阅读·写作）
    * front: 蓝 — 正面，主用（lede / em / chapter-bar / kicker accent）
@@ -180,7 +180,7 @@ html.dark {
 
   --ink:          oklch(0.940 0.003 250);   /* 主字色，留 6% 余地不刺眼 */
   --ink-2:        oklch(0.760 0.003 250);   /* 次字色 */
-  --ink-3:        oklch(0.560 0.003 250);   /* 灰字（kicker / breadcrumb）*/
+  --ink-3:        oklch(0.66 0.003 250);    /* 灰字（kicker / breadcrumb）—— 提亮到 WCAG AA */
 
   /* 强调色：dark mode 提 L 值，chroma 微降避免过饱和 */
   --accent-front:     oklch(0.74 0.13 240); /* 正面：浅蓝（原 0.42 → 0.74）*/

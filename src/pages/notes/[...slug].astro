@@ -28,18 +28,32 @@ const { data, body } = note;
 const langZhMarker = /<!--\s*LANG:ZH\s*-->/g;
 const langEnMarker = /<!--\s*LANG:EN\s*-->/;
 const stripped = (body ?? "").replace(langZhMarker, "");
-const parts = stripped.split(langEnMarker).map((s) => s.trim());
-const zhRaw = parts[0] ?? "";
-const enRaw = parts[1] ?? "";
+// 第一个 marker 之前是中文，之后（含重复 marker）全部归英文——避免重复 marker 静默丢内容
+const parts = stripped.split(langEnMarker);
+const zhRaw = (parts[0] ?? "").trim();
+const enRaw = parts.slice(1).join("\n\n").trim();
 
 const zhHtml = zhRaw ? (marked.parse(zhRaw, { async: false }) as string) : "";
 const enHtml = enRaw ? (marked.parse(enRaw, { async: false }) as string) : "";
 const hasBoth = !!zhHtml && !!enHtml;
+// 纯中文 note（英文待补）：默认 show-en 把 zh 段藏掉 → 整页无正文。去掉 zh data-lang 兜底。
+const zhOnly = enRaw.length === 0;
 
 const dateStr = new Date(data.published_at).toISOString().slice(0, 10);
 const title = data.title_zh ?? data.title_en ?? "Note";
 const titleEn = data.title_en ?? "";
-const description = data.title_en ?? data.title_zh ?? "";
+// description 从 zh 正文派生摘要（strip md/html，取前 ~120 字），回落标题
+const plainZh = zhRaw
+  .replace(/<!--[\s\S]*?-->/g, "")
+  .replace(/!?\[([^\]]*)\]\([^)]*\)/g, "$1") // 图片/链接 → 文字
+  .replace(/<[^>]+>/g, "")
+  .replace(/[#>*_`~\-]+/g, "")
+  .replace(/\s+/g, " ")
+  .trim();
+const description =
+  plainZh.length > 0
+    ? plainZh.slice(0, 120) + (plainZh.length > 120 ? "…" : "")
+    : (data.title_en ?? data.title_zh ?? "");
 const currentSlug = data.slug ?? note.id.replace(/\.(md|mdx)$/, "");
 ---
 
@@ -57,12 +71,14 @@ const currentSlug = data.slug ?? note.id.replace(/\.(md|mdx)$/, "");
             <span class="tags">{(data.tags ?? []).join(" · ")}</span>
           )}
         </div>
-        {data.title_zh && (
-          <h1 class="note-title cjk" data-lang="zh" lang="zh">{data.title_zh}</h1>
-        )}
-        {titleEn && (
-          <h2 class="note-title-en" data-lang="en" lang="en">{titleEn}</h2>
-        )}
+        <h1 class="note-titles">
+          {data.title_zh && (
+            <span class="note-title cjk" lang="zh" {...(zhOnly ? {} : { "data-lang": "zh" })}>{data.title_zh}</span>
+          )}
+          {titleEn && (
+            <span class="note-title-en" lang="en" data-lang="en">{titleEn}</span>
+          )}
+        </h1>
         <div class="note-actions">
           <ReadingTrack
             slug={currentSlug}
@@ -75,7 +91,7 @@ const currentSlug = data.slug ?? note.id.replace(/\.(md|mdx)$/, "");
 
       <div class={`note-bodies${hasBoth ? " is-bilingual" : ""}`}>
         {zhHtml && (
-          <section class="note-body" data-lang="zh" lang="zh-CN">
+          <section class="note-body" lang="zh-CN" {...(zhOnly ? {} : { "data-lang": "zh" })}>
             <div class="prose cjk" set:html={zhHtml}></div>
           </section>
         )}
@@ -130,8 +146,15 @@ const currentSlug = data.slug ?? note.id.replace(/\.(md|mdx)$/, "");
     gap: var(--sp-10);
     flex-wrap: wrap;
   }
-  .note-meta .tags { color: var(--accent-back); }
+  .note-meta .tags { color: var(--accent-back-ink); }
+  /* 单个 h1 包两个 span：show-en 模式下也始终有 h1 */
+  .note-titles {
+    margin: 0;
+    font-weight: var(--fw-normal);
+    letter-spacing: normal;
+  }
   .note-title {
+    display: block;
     font-family: var(--cjk-serif);
     font-size: clamp(var(--fs-4xl), 3.5vw, 42px);
     line-height: 1.15;
@@ -141,6 +164,7 @@ const currentSlug = data.slug ?? note.id.replace(/\.(md|mdx)$/, "");
     letter-spacing: -0.01em;
   }
   .note-title-en {
+    display: block;
     font-family: var(--serif);
     font-size: var(--fs-2xl);
     line-height: 1.25;
@@ -150,6 +174,8 @@ const currentSlug = data.slug ?? note.id.replace(/\.(md|mdx)$/, "");
     margin: 0;
     letter-spacing: -0.01em;
   }
+  /* zhOnly 且无 en 标题时，最后的 zh span 不该留底部 margin */
+  .note-title:last-child { margin-bottom: 0; }
 
   .note-body { max-width: 64ch; margin: 0 auto; }
 

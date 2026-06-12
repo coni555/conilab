@@ -42,7 +42,14 @@ const { data, body } = article;
 const langZhMarker = /<!--\s*LANG:ZH\s*-->/g;
 const langEnMarker = /<!--\s*LANG:EN\s*-->/;
 const stripped = (body ?? "").replace(langZhMarker, "");
-const [zhRaw = "", enRaw = ""] = stripped.split(langEnMarker).map((s) => s.trim());
+// 第一个 marker 之前是中文，之后（含重复 marker）全部归英文——避免重复 marker 静默丢内容
+const parts = stripped.split(langEnMarker);
+const zhRaw = (parts[0] ?? "").trim();
+const enRaw = parts.slice(1).join("\n\n").trim();
+
+// 纯中文文章（英文待补）：默认 show-en 模式会把 data-lang="zh" 的正文整段藏掉，
+// 访客只看到标题没有正文。zhOnly 时去掉 zh 段的 data-lang，让任何语言模式都显示。
+const zhOnly = enRaw.length === 0;
 
 const zhHtmlRaw = marked.parse(zhRaw, { async: false }) as string;
 const enHtmlRaw = marked.parse(enRaw, { async: false }) as string;
@@ -95,11 +102,13 @@ const currentSlug = data.slug ?? article.id.replace(/\.(md|mdx)$/, "");
           <span class="dot">·</span>
           <span class="rt">~{readMinutes} min</span>
         </div>
-        <h1 class="article-title cjk" data-lang="zh" lang="zh">{data.title_zh}</h1>
-        <h2 class="article-title-en" data-lang="en" lang="en">{data.title_en}</h2>
+        <h1 class="article-titles">
+          <span class="article-title cjk" lang="zh" {...(zhOnly ? {} : { "data-lang": "zh" })}>{data.title_zh}</span>
+          <span class="article-title-en" lang="en" data-lang="en">{data.title_en}</span>
+        </h1>
         <div class="article-ledes">
-          <p class="article-lede cjk" data-lang="zh" lang="zh">{data.lede_zh}</p>
-          <p class="article-lede-en" data-lang="en" lang="en">{data.lede_en}</p>
+          <p class="article-lede cjk" lang="zh" {...(zhOnly ? {} : { "data-lang": "zh" })}>{data.lede_zh}</p>
+          {!zhOnly && <p class="article-lede-en" data-lang="en" lang="en">{data.lede_en}</p>}
         </div>
         <div class="article-actions">
           <ReadingTrack
@@ -135,19 +144,23 @@ const currentSlug = data.slug ?? article.id.replace(/\.(md|mdx)$/, "");
       )}
 
       <div class={`article-bodies${isBilingual ? " is-bilingual" : ""}`}>
-        <section class="article-body" data-lang="zh" lang="zh-CN">
+        <section class="article-body" lang="zh-CN" {...(zhOnly ? {} : { "data-lang": "zh" })}>
           <div class="prose cjk" set:html={zhHtml}></div>
         </section>
 
-        <div class="article-flip" aria-hidden="true">
-          <span class="flip-rule"></span>
-          <span class="flip-text">⊙ &nbsp; TURN IT OVER &nbsp; ⊙</span>
-          <span class="flip-rule"></span>
-        </div>
+        {!zhOnly && (
+          <div class="article-flip" aria-hidden="true">
+            <span class="flip-rule"></span>
+            <span class="flip-text">⊙ &nbsp; TURN IT OVER &nbsp; ⊙</span>
+            <span class="flip-rule"></span>
+          </div>
+        )}
 
-        <section class="article-body" data-lang="en" lang="en">
-          <div class="prose" set:html={enHtml}></div>
-        </section>
+        {!zhOnly && (
+          <section class="article-body" data-lang="en" lang="en">
+            <div class="prose" set:html={enHtml}></div>
+          </section>
+        )}
       </div>
 
       {(newer || older) && (
@@ -312,7 +325,7 @@ const currentSlug = data.slug ?? article.id.replace(/\.(md|mdx)$/, "");
       padding: var(--sp-8) 0 var(--sp-8) var(--sp-14);
       font-family: var(--mono);
       font-size: 11px;
-      color: var(--accent-back);
+      color: var(--accent-back-ink);
       letter-spacing: 0.14em;
       list-style: none;
     }
@@ -348,7 +361,7 @@ const currentSlug = data.slug ?? article.id.replace(/\.(md|mdx)$/, "");
     gap: var(--sp-10);
     flex-wrap: wrap;
   }
-  .article-meta .tags { color: var(--accent-back); }
+  .article-meta .tags { color: var(--accent-back-ink); }
 
   .article-actions {
     margin-top: var(--sp-22);
@@ -356,7 +369,15 @@ const currentSlug = data.slug ?? article.id.replace(/\.(md|mdx)$/, "");
     gap: var(--sp-10);
   }
 
+  /* 单个 h1 包两个 span：show-en 模式下也始终有 h1（语义/SEO/a11y）；
+     span 用 display:block 保持原本 h1+h2 的上下堆叠视觉 */
+  .article-titles {
+    margin: 0 0 var(--sp-22);
+    font-weight: var(--fw-normal);
+    letter-spacing: normal;
+  }
   .article-title {
+    display: block;
     font-family: var(--cjk-serif);
     font-size: clamp(var(--fs-6xl), 4.4vw, 56px);
     line-height: 1.08;
@@ -367,13 +388,14 @@ const currentSlug = data.slug ?? article.id.replace(/\.(md|mdx)$/, "");
     font-variation-settings: "opsz" 56;
   }
   .article-title-en {
+    display: block;
     font-family: var(--serif);
     font-size: var(--fs-3xl);
     line-height: 1.22;
     color: var(--accent-back-ink);
     font-style: italic;
     font-weight: var(--fw-light);
-    margin: 0 0 var(--sp-22);
+    margin: 0;
     letter-spacing: -0.01em;
   }
   .article-lede {
