@@ -2,6 +2,7 @@
 import Base from "../layouts/Base.astro";
 import Kicker from "../components/Kicker.astro";
 import Pullquote from "../components/Pullquote.astro";
+import CoinGlyph from "../components/CoinGlyph.astro";
 
 // Sticky 目录
 const sections = [
@@ -55,6 +56,17 @@ const sections = [
           <p class="about-lede-en" data-lang="en" lang="en">
             Own yourself. Be responsible for your <em>product</em>.
           </p>
+
+          <div class="credo" aria-label="Credo">
+            <p class="credo-line credo-doing">
+              <CoinGlyph variant="ring" size="0.95em" />
+              <span>thinking · writing · exploring · creating · acting</span>
+            </p>
+            <p class="credo-line credo-being">
+              <CoinGlyph variant="dot" size="0.95em" />
+              <span>be curious · be reliable · be passion</span>
+            </p>
+          </div>
         </header>
 
         <!-- Ⅰ -->
@@ -308,6 +320,27 @@ const sections = [
     margin: 0;
     font-weight: var(--fw-light);
   }
+
+  /* ─── CREDO ─── 硬币双面：doing（向外）/ being（向内）*/
+  .credo {
+    margin-top: var(--sp-22);
+    padding-top: var(--sp-18);
+    border-top: var(--sp-hairline) solid var(--rule);
+    display: grid;
+    gap: var(--sp-8);
+  }
+  .credo-line {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--sp-10);
+  }
+  .credo-doing { color: var(--accent-front); }
+  .credo-being { color: var(--accent-back-ink); }
 
   /* ─── SECTION ─── */
   .about-sec {
