@@ -308,7 +308,7 @@ import Base from "../layouts/Base.astro";
   .clear-btn:hover { color: var(--accent-back); }
 
   /* 条目由 JS innerHTML 注入，节点不带 Astro scoped 属性——
-   * 必须走 .entry-list :global(...)（同 body.astro 的 .ability-bars 模式）*/
+   * 必须走 .entry-list :global(...)（JS 动态注入节点不带 Astro scoped 属性）*/
   .entry-list { list-style: none; padding: 0; margin: 0; }
   .entry-list :global(.entry) {
     display: grid;
@@ -388,4 +388,3 @@ import Base from "../layouts/Base.astro";
     letter-spacing: 0.12em;
   }
 </style>
-</Base>

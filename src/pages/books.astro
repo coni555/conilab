@@ -255,53 +255,28 @@ const totalBooks = tiers.reduce((n, t) => n + t.books.length, 0);
   }
 
   .tier--sss .tier-label {
-    background: oklch(0.92 0.08 85);
-    color: oklch(0.35 0.14 75);
+    background: var(--tier-sss-bg);
+    color: var(--tier-sss-ink);
   }
   .tier--s .tier-label {
-    background: oklch(0.95 0.04 30);
-    color: oklch(0.40 0.16 25);
+    background: var(--tier-s-bg);
+    color: var(--tier-s-ink);
   }
   .tier--a .tier-label {
-    background: oklch(0.95 0.04 65);
-    color: oklch(0.40 0.12 55);
+    background: var(--tier-a-bg);
+    color: var(--tier-a-ink);
   }
   .tier--b .tier-label {
-    background: oklch(0.95 0.03 140);
-    color: oklch(0.38 0.10 140);
+    background: var(--tier-b-bg);
+    color: var(--tier-b-ink);
   }
   .tier--c .tier-label {
-    background: oklch(0.95 0.01 250);
+    background: var(--tier-c-bg);
     color: var(--ink-3);
   }
   .tier--d .tier-label {
-    background: oklch(0.93 0.02 280);
-    color: oklch(0.42 0.10 280);
-  }
-
-  :global(html.dark) .tier--sss .tier-label {
-    background: oklch(0.22 0.08 85);
-    color: oklch(0.82 0.12 75);
-  }
-  :global(html.dark) .tier--s .tier-label {
-    background: oklch(0.25 0.06 30);
-    color: oklch(0.78 0.14 25);
-  }
-  :global(html.dark) .tier--a .tier-label {
-    background: oklch(0.25 0.05 65);
-    color: oklch(0.78 0.11 55);
-  }
-  :global(html.dark) .tier--b .tier-label {
-    background: oklch(0.25 0.04 140);
-    color: oklch(0.75 0.09 140);
-  }
-  :global(html.dark) .tier--c .tier-label {
-    background: oklch(0.22 0.01 250);
-    color: var(--ink-3);
-  }
-  :global(html.dark) .tier--d .tier-label {
-    background: oklch(0.22 0.03 280);
-    color: oklch(0.70 0.08 280);
+    background: var(--tier-d-bg);
+    color: var(--tier-d-ink);
   }
 
   /* ── BOOK TILES ── */
@@ -358,7 +333,7 @@ const totalBooks = tiers.reduce((n, t) => n + t.books.length, 0);
   }
   .tile-fallback span {
     font-family: var(--cjk-serif);
-    font-size: 36px;
+    font-size: var(--fs-7xl);
     font-weight: var(--fw-medium);
     color: var(--ink-3);
     opacity: 0.45;
@@ -385,7 +360,7 @@ const totalBooks = tiers.reduce((n, t) => n + t.books.length, 0);
   }
   .tile-title-en {
     font-family: var(--serif);
-    font-size: 10px;
+    font-size: var(--fs-2xs);
     font-style: italic;
     font-weight: var(--fw-light);
     color: var(--ink-3);
@@ -397,7 +372,7 @@ const totalBooks = tiers.reduce((n, t) => n + t.books.length, 0);
   }
   .tile-author {
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: var(--fs-2xs);
     letter-spacing: 0.06em;
     color: var(--ink-3);
     margin-top: 1px;
@@ -439,7 +414,7 @@ const totalBooks = tiers.reduce((n, t) => n + t.books.length, 0);
   .tile-year {
     display: block;
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: var(--fs-2xs);
     letter-spacing: 0.12em;
     color: var(--ink-3);
     margin-top: var(--sp-4);
@@ -501,7 +476,7 @@ const totalBooks = tiers.reduce((n, t) => n + t.books.length, 0);
       width: 80px;
       height: 112px;
     }
-    .tile-title { font-size: 11px; }
+    .tile-title { font-size: var(--fs-xs); }
     .tile-review-popup {
       width: 170px;
     }

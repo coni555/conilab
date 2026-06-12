@@ -1,6 +1,7 @@
 import rss from "@astrojs/rss";
 import { getCollection } from "astro:content";
 import type { APIContext } from "astro";
+import { slugOf } from "../../lib/content";
 
 export async function GET(context: APIContext) {
   const all = await getCollection("articles");
@@ -19,7 +20,7 @@ export async function GET(context: APIContext) {
     site: context.site!,
     customData: `<language>zh-CN</language>`,
     items: articles.map((a) => {
-      const slug = a.data.slug ?? a.id.replace(/\.(md|mdx)$/, "");
+      const slug = slugOf(a);
       const description = `${a.data.lede_zh}\n\n— —\n\n${a.data.lede_en}`;
       return {
         title: `${a.data.title_zh} / ${a.data.title_en}`,

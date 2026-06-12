@@ -36,26 +36,10 @@
   --accent-deep:      var(--accent-front);
   --accent-deep-ink:  var(--accent-front-ink);
 
-  --moss:         oklch(0.480 0.06  140);   /* 备用 olive 绿（书脊/状态）*/
-  --indigo:       oklch(0.420 0.09  260);   /* 备用 indigo（书脊/状态）*/
-
   /* 状态色 */
-  --info-ink:     var(--accent-deep-ink);
-  --info-bg:      color-mix(in oklch, var(--accent-deep) 8%, var(--paper));
-  --info-rule:    color-mix(in oklch, var(--accent-deep) 30%, var(--rule));
   --warn-ink:     oklch(0.46 0.12 75);
-  --warn-bg:      oklch(0.97 0.02 75);
-  --ok-ink:       oklch(0.42 0.10 155);
-  --ok-bg:        oklch(0.97 0.02 155);
   --err-ink:      oklch(0.46 0.14 25);
   --err-bg:       oklch(0.97 0.02 25);
-
-  /* 阴影（极克制；多数组件不用阴影靠 hairline）*/
-  --shadow-hair:  color-mix(in oklch, var(--ink) 4%, transparent);
-  --shadow-soft:  color-mix(in oklch, var(--ink) 6%, transparent);
-  --shadow-mid:   color-mix(in oklch, var(--ink) 8%, transparent);
-  --shadow-pop:   color-mix(in oklch, var(--ink) 12%, transparent);
-  --shadow-veil:  color-mix(in oklch, var(--ink) 40%, transparent);
 
   /* ──────────────────────────────────────────────────────
    * 字体栈
@@ -87,15 +71,10 @@
    * CJK 排印（按层级差异化字距 + 中文 em 用 dotted 下划线）
    * ────────────────────────────────────────────────────── */
   --cjk-track-body:     0.03em;
-  --cjk-track-display:  0.01em;
-  --cjk-track-eyebrow:  0.08em;
-  --cjk-gap:            0.15em;
   --cjk-em-color:       oklch(0.42 0.14 240);  /* = accent-front 蓝；全站 CJK em dotted 下划线统一蓝 */
   --cjk-em-line:        dotted;
   --cjk-em-thickness:   1.5px;
   --cjk-em-offset:      0.33em;
-  --track-tag:          0.06em;
-  --opacity-disabled:   0.55;
 
   /* ──────────────────────────────────────────────────────
    * 布局 / 断点
@@ -103,10 +82,6 @@
   --gutter:         36px;
   --gutter-narrow:  20px;
   --maxw:           1240px;
-  --bp-sm:          640px;
-  --bp-md:          720px;
-  --bp-lg:          900px;
-  --bp-xl:          1100px;
 
   /* ──────────────────────────────────────────────────────
    * 字号阶（极细密 26 档，奢侈品级排印精度，全部抄 lixiaolai）
@@ -116,8 +91,7 @@
   --fs-17: 17px;   --fs-xl: 18px;   --fs-19: 19px;   --fs-2xl: 20px;
   --fs-21: 21px;   --fs-3xl: 22px;  --fs-4xl: 24px;  --fs-26: 26px;
   --fs-5xl: 28px;  --fs-30: 30px;   --fs-6xl: 32px;  --fs-7xl: 36px;
-  --fs-8xl: 38px;  --fs-9xl: 40px;  --fs-44: 44px;   --fs-10xl: 48px;
-  --fs-52: 52px;   --fs-hero: 64px;
+  --fs-9xl: 40px;  --fs-hero: 64px;
 
   /* 字重 */
   --fw-light: 300; --fw-normal: 400; --fw-medium: 500;
@@ -154,8 +128,21 @@
   --dur-quick:  0.15s;
   --dur-normal: 0.20s;
 
-  /* z-index 阶 */
-  --z-popover: 10;
+  /* ──────────────────────────────────────────────────────
+   * 书评 tier 标签色（books.astro）
+   * ────────────────────────────────────────────────────── */
+  --tier-sss-bg:  oklch(0.92 0.08 85);
+  --tier-sss-ink: oklch(0.35 0.14 75);
+  --tier-s-bg:    oklch(0.95 0.04 30);
+  --tier-s-ink:   oklch(0.40 0.16 25);
+  --tier-a-bg:    oklch(0.95 0.04 65);
+  --tier-a-ink:   oklch(0.40 0.12 55);
+  --tier-b-bg:    oklch(0.95 0.03 140);
+  --tier-b-ink:   oklch(0.38 0.10 140);
+  --tier-c-bg:    oklch(0.95 0.01 250);
+  /* --tier-c-ink 用 var(--ink-3) */
+  --tier-d-bg:    oklch(0.93 0.02 280);
+  --tier-d-ink:   oklch(0.42 0.10 280);
 
   /* 主题切换平滑过渡（仅作用于颜色） */
   color-scheme: light;
@@ -188,25 +175,23 @@ html.dark {
   --accent-back:      oklch(0.78 0.10  60); /* 反面：浅铜（原 0.55 → 0.78）*/
   --accent-back-ink:  oklch(0.86 0.09  60);
 
-  --moss:         oklch(0.700 0.06  140);
-  --indigo:       oklch(0.680 0.09  260);
-
-  /* 状态色面板（dark 上要重做 bg，不能直接 color-mix paper）*/
-  --info-bg:      color-mix(in oklch, var(--accent-deep) 14%, var(--paper));
-  --info-rule:    color-mix(in oklch, var(--accent-deep) 40%, var(--rule));
+  /* 状态色（dark 变体）*/
   --warn-ink:     oklch(0.82 0.12 75);
-  --warn-bg:      oklch(0.26 0.05 75);
-  --ok-ink:       oklch(0.78 0.10 155);
-  --ok-bg:        oklch(0.24 0.04 155);
   --err-ink:      oklch(0.78 0.13 25);
   --err-bg:       oklch(0.26 0.05 25);
 
-  /* 阴影：dark 下走 ink 反向（ink 已是浅色）会过亮，改用透明黑 */
-  --shadow-hair:  oklch(0 0 0 / 0.30);
-  --shadow-soft:  oklch(0 0 0 / 0.40);
-  --shadow-mid:   oklch(0 0 0 / 0.50);
-  --shadow-pop:   oklch(0 0 0 / 0.60);
-  --shadow-veil:  oklch(0 0 0 / 0.70);
+  /* tier 标签色 dark 变体 */
+  --tier-sss-bg:  oklch(0.22 0.08 85);
+  --tier-sss-ink: oklch(0.82 0.12 75);
+  --tier-s-bg:    oklch(0.25 0.06 30);
+  --tier-s-ink:   oklch(0.78 0.14 25);
+  --tier-a-bg:    oklch(0.25 0.05 65);
+  --tier-a-ink:   oklch(0.78 0.11 55);
+  --tier-b-bg:    oklch(0.25 0.04 140);
+  --tier-b-ink:   oklch(0.75 0.09 140);
+  --tier-c-bg:    oklch(0.22 0.01 250);
+  --tier-d-bg:    oklch(0.22 0.03 280);
+  --tier-d-ink:   oklch(0.70 0.08 280);
 }
 
 /* 主题切换时的颜色平滑过渡（仅 color/bg/border，避免 transition: all 性能黑洞）*/

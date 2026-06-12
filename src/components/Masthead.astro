@@ -114,21 +114,50 @@ const moreIsActive = moreNav.some((it) => pathname.startsWith(it.href));
 </header>
 
 <script>
+  // ── Live date refresh（构建时日期作为 SSR 回落，客户端用同格式更新）
+  (() => {
+    const handleEl = document.querySelector<HTMLElement>(".handle");
+    if (!handleEl) return;
+    const now = new Date();
+    const d = String(now.getDate()).padStart(2, "0");
+    const m = String(now.getMonth() + 1).padStart(2, "0");
+    const y = now.getFullYear();
+    handleEl.textContent = `@coni — ${d}.${m}.${y}`;
+  })();
+
   // ── More dropdown
   const moreTrigger = document.querySelector<HTMLButtonElement>(".more-trigger");
   const moreDropdown = document.querySelector<HTMLUListElement>(".more-dropdown");
+  const navMore = document.querySelector<HTMLLIElement>(".nav-more");
   if (moreTrigger && moreDropdown) {
+    const closeDropdown = () => {
+      moreTrigger.setAttribute("aria-expanded", "false");
+      moreDropdown.classList.remove("is-open");
+    };
     moreTrigger.addEventListener("click", (e) => {
       e.stopPropagation();
       const open = moreTrigger.getAttribute("aria-expanded") === "true";
       moreTrigger.setAttribute("aria-expanded", String(!open));
       moreDropdown.classList.toggle("is-open", !open);
     });
-    document.addEventListener("click", () => {
-      moreTrigger.setAttribute("aria-expanded", "false");
-      moreDropdown.classList.remove("is-open");
-    });
+    document.addEventListener("click", closeDropdown);
     moreDropdown.addEventListener("click", (e) => e.stopPropagation());
+    // Escape 关闭
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        closeDropdown();
+        moreTrigger.focus();
+      }
+    });
+    // 焦点移出菜单区域时关闭
+    if (navMore) {
+      navMore.addEventListener("focusout", (e) => {
+        const related = (e as FocusEvent).relatedTarget as Node | null;
+        if (!related || !navMore.contains(related)) {
+          closeDropdown();
+        }
+      });
+    }
   }
 
   // ── Lang switcher

@@ -3,6 +3,7 @@ import Base from "../../layouts/Base.astro";
 import ReadingTrack from "../../components/ReadingTrack.astro";
 import { getCollection } from "astro:content";
 import { marked } from "marked";
+import { slugOf } from "../../lib/content";
 
 export async function getStaticPaths() {
   const all = await getCollection("articles");
@@ -13,8 +14,7 @@ export async function getStaticPaths() {
         new Date(b.data.published_at).getTime() -
         new Date(a.data.published_at).getTime(),
     );
-  const slugOf = (a: (typeof articles)[number]) =>
-    a.data.slug ?? a.id.replace(/\.(md|mdx)$/, "");
+  // slugOf imported from ../../lib/content
 
   return articles.map((a, i) => {
     const slug = slugOf(a);
@@ -51,6 +51,13 @@ const enRaw = parts.slice(1).join("\n\n").trim();
 // 访客只看到标题没有正文。zhOnly 时去掉 zh 段的 data-lang，让任何语言模式都显示。
 const zhOnly = enRaw.length === 0;
 
+// 幻觉防御：en_complete 声称完整但 body 里没有英文段——构建期 warn
+if (data.en_complete && enRaw.length === 0) {
+  console.warn(
+    `[conilab] Article "${data.title_zh}" has en_complete=true but no English body found. Check the <!-- LANG:EN --> marker.`
+  );
+}
+
 const zhHtmlRaw = marked.parse(zhRaw, { async: false }) as string;
 const enHtmlRaw = marked.parse(enRaw, { async: false }) as string;
 
@@ -81,13 +88,24 @@ const readMinutes = Math.max(Math.ceil(zhCharCount / 400), 1);
 
 const dateStr = new Date(data.published_at).toISOString().slice(0, 10);
 const tagsStr = (data.tags ?? []).join(" · ");
-const currentSlug = data.slug ?? article.id.replace(/\.(md|mdx)$/, "");
+const currentSlug = slugOf(article);
 ---
 
 <Base
   title={`${data.title_zh} / ${data.title_en} — conilab`}
   description={data.lede_en}
+  ogType="article"
+  publishedTime={new Date(data.published_at).toISOString()}
 >
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": data.title_zh,
+    "alternativeHeadline": data.title_en,
+    "datePublished": new Date(data.published_at).toISOString(),
+    "inLanguage": ["zh-CN", "en"],
+    "author": { "@type": "Person", "name": "coni" },
+  })} />
   <div class="reading-progress" aria-hidden="true"><div class="reading-progress-bar"></div></div>
 
   <article class="article">
@@ -290,7 +308,7 @@ const currentSlug = data.slug ?? article.id.replace(/\.(md|mdx)$/, "");
     .toc-inner::-webkit-scrollbar { display: none; }
     .toc-label {
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: var(--fs-xs);
       letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--ink-3);
@@ -309,7 +327,7 @@ const currentSlug = data.slug ?? article.id.replace(/\.(md|mdx)$/, "");
       display: block;
       padding: var(--sp-4) 0 var(--sp-4) var(--sp-14);
       font-family: var(--sans);
-      font-size: 12px;
+      font-size: var(--fs-sm);
       line-height: 1.4;
       color: var(--ink-3);
       border-left: 2px solid transparent;
@@ -324,7 +342,7 @@ const currentSlug = data.slug ?? article.id.replace(/\.(md|mdx)$/, "");
     .toc-divider {
       padding: var(--sp-8) 0 var(--sp-8) var(--sp-14);
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: var(--fs-xs);
       color: var(--accent-back-ink);
       letter-spacing: 0.14em;
       list-style: none;

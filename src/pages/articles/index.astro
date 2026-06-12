@@ -3,6 +3,7 @@ import Base from "../../layouts/Base.astro";
 import { getCollection } from "astro:content";
 import { marked } from "marked";
 import Kicker from "../../components/Kicker.astro";
+import { slugOf, fmtDate } from "../../lib/content";
 
 const all = await getCollection("articles");
 const articles = all
@@ -23,14 +24,7 @@ for (const a of articles) {
 }
 const years = [...byYear.keys()].sort((a, b) => Number(b) - Number(a));
 
-const fmtDate = (d: Date | string) => {
-  const dt = new Date(d);
-  const m = String(dt.getMonth() + 1).padStart(2, "0");
-  const day = String(dt.getDate()).padStart(2, "0");
-  return `${dt.getFullYear()}.${m}.${day}`;
-};
-const slugOf = (a: (typeof articles)[number]) =>
-  a.data.slug ?? a.id.replace(/\.(md|mdx)$/, "");
+// slugOf and fmtDate imported from ../../lib/content
 
 // Word count helper — strip markdown→HTML→tags, count all visible chars (matches detail page logic)
 const countZhChars = (body: string) => {
@@ -328,7 +322,7 @@ const readMin = (chars: number) => Math.max(Math.ceil(chars / 400), 1);
     display: block;
     margin-top: var(--sp-4);
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: var(--fs-xs);
     letter-spacing: 0.08em;
     color: var(--ink-3);
     opacity: 0.7;

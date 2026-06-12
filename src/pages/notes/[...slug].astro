@@ -3,6 +3,7 @@ import Base from "../../layouts/Base.astro";
 import ReadingTrack from "../../components/ReadingTrack.astro";
 import { getCollection } from "astro:content";
 import { marked } from "marked";
+import { slugOf } from "../../lib/content";
 
 export async function getStaticPaths() {
   const all = await getCollection("notes");
@@ -13,8 +14,7 @@ export async function getStaticPaths() {
         new Date(b.data.published_at).getTime() -
         new Date(a.data.published_at).getTime(),
     );
-  const slugOf = (n: (typeof notes)[number]) =>
-    n.data.slug ?? n.id.replace(/\.(md|mdx)$/, "");
+  // slugOf imported from ../../lib/content
 
   return notes.map((n) => ({
     params: { slug: slugOf(n) },
@@ -54,7 +54,7 @@ const description =
   plainZh.length > 0
     ? plainZh.slice(0, 120) + (plainZh.length > 120 ? "…" : "")
     : (data.title_en ?? data.title_zh ?? "");
-const currentSlug = data.slug ?? note.id.replace(/\.(md|mdx)$/, "");
+const currentSlug = slugOf(note);
 ---
 
 <Base
