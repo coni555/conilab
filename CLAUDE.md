@@ -75,17 +75,18 @@ content.config.ts  # Astro content collections schema
 - 城市地图 SVG 在 colophon-card（已替换为左右双枚同心圆 中/en motif）
 - 章节大标题旁的整段 italic 副标 `<em>a commonplace book...</em>` 这种 lixiaolai 文学化口吻——保留 italic 强调，但句式要换成 conilab voice
 
-## 不暴露身份
+## 不暴露身份（2026-06-12 放宽）
+
+> 用户决策：网络上没什么不暴露的，只守住最核心的个人隐私。
 
 文案中**绝对不出现**：
 - 真实姓名（张干）
-- 出生年份 / 出生地
-- 在校状态 / 学校
-- 公众号品牌（夜识AI）
-- 微信号
-- 城市具体名（绍兴 / 杭州 / 浙江）
+- 微信号 / 手机号 / 证件类精确身份信息
+- 精确住址
 
-允许出现：网名 `@coni` / `coni` / `硬币`、域名 `conilab.cn`、GitHub 用户名 `coni555`、邮箱（如果将来加联系方式）
+**已放宽，允许出现**：在校状态/学校阶段、出生年代际、城市、公众号品牌与文章名、社群履历（浪前/老友记等）。
+
+允许出现（一直如此）：网名 `@coni` / `coni` / `硬币`、域名 `conilab.cn`、GitHub 用户名 `coni555`、邮箱（如果将来加联系方式）
 
 ## 会话卫生（防 image dimension limit）
 

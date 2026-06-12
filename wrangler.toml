@@ -1,8 +1,3 @@
 name = "conilab-blog"
 compatibility_date = "2026-05-07"
 pages_build_output_dir = "dist"
-
-[[d1_databases]]
-binding = "DB"
-database_name = "body-tracker"
-database_id = "e3a3fd9d-225f-4875-bd0d-e0e993525aff"
