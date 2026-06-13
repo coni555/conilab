@@ -111,6 +111,7 @@ const totalBooks = tiers.reduce((n, t) => n + t.books.length, 0);
           Only the books that left a mark — not a complete reading log.
         </p>
         <p class="books-count">{totalBooks} books ranked</p>
+        <span class="zh-only-badge" aria-hidden="true">中文 · ZH ONLY</span>
       </header>
 
       <div class="tier-list">
@@ -123,7 +124,12 @@ const totalBooks = tiers.reduce((n, t) => n + t.books.length, 0);
             <div class="tier-books">
               {tier.books.length > 0 ? (
                 tier.books.map((book) => (
-                  <div class="book-tile">
+                  <div
+                    class="book-tile"
+                    tabindex="0"
+                    role="button"
+                    aria-label={`${book.title} — 锐评 / review`}
+                  >
                     <div class="tile-cover-wrap">
                       {book.cover ? (
                         <img class="tile-cover" src={book.cover} alt={book.title} loading="lazy" />
@@ -165,6 +171,50 @@ const totalBooks = tiers.reduce((n, t) => n + t.books.length, 0);
     </div>
   </section>
 </Base>
+
+<script>
+  // ── Book review popup: keyboard + touch reachable (mouse hover handled by CSS)
+  const tiles = document.querySelectorAll<HTMLElement>(".book-tile");
+  const closeAll = (except?: HTMLElement) => {
+    tiles.forEach((t) => {
+      if (t !== except) t.classList.remove("is-open");
+    });
+  };
+  tiles.forEach((tile) => {
+    tile.addEventListener("click", () => {
+      const willOpen = !tile.classList.contains("is-open");
+      closeAll(tile);
+      tile.classList.toggle("is-open", willOpen);
+    });
+    tile.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
+        e.preventDefault(); // stop Space from scrolling the page
+        const willOpen = !tile.classList.contains("is-open");
+        closeAll(tile);
+        tile.classList.toggle("is-open", willOpen);
+      } else if (e.key === "Escape") {
+        if (tile.classList.contains("is-open")) {
+          tile.classList.remove("is-open");
+          tile.focus();
+        }
+      }
+    });
+  });
+  // Click outside any tile closes the open one
+  document.addEventListener("click", (e) => {
+    const target = e.target as Node | null;
+    if (!target || !(target as Element).closest?.(".book-tile")) closeAll();
+  });
+  // Global Escape: close any open tile and return focus to it
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    const open = document.querySelector<HTMLElement>(".book-tile.is-open");
+    if (open) {
+      open.classList.remove("is-open");
+      open.focus();
+    }
+  });
+</script>
 
 <style>
   .books {
@@ -212,6 +262,24 @@ const totalBooks = tiers.reduce((n, t) => n + t.books.length, 0);
     text-transform: uppercase;
     color: var(--ink-3);
     margin: 0;
+  }
+
+  /* ── ZH-only badge (visible only in EN-only mode) ── */
+  .zh-only-badge {
+    display: none;
+    align-items: center;
+    margin-top: var(--sp-12);
+    padding: var(--sp-3) var(--sp-10);
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-back-ink);
+    border: var(--sp-hairline) solid color-mix(in oklch, var(--accent-back) 50%, var(--rule));
+    border-radius: var(--rad-pill);
+  }
+  :global(html.show-en) .zh-only-badge {
+    display: inline-flex;
   }
 
   /* ── TIER LIST ── */
@@ -295,7 +363,11 @@ const totalBooks = tiers.reduce((n, t) => n + t.books.length, 0);
     display: flex;
     flex-direction: column;
     gap: var(--sp-6);
-    cursor: default;
+    cursor: pointer;
+  }
+  .book-tile:focus-visible {
+    outline: var(--sp-2) solid var(--accent-front);
+    outline-offset: var(--sp-4);
   }
 
   /* ── Cover ── */
@@ -306,7 +378,9 @@ const totalBooks = tiers.reduce((n, t) => n + t.books.length, 0);
     border: var(--sp-hairline) solid var(--rule-soft);
     transition: border-color 0.15s, box-shadow 0.15s;
   }
-  .book-tile:hover .tile-cover-wrap {
+  .book-tile:hover .tile-cover-wrap,
+  .book-tile:focus-visible .tile-cover-wrap,
+  .book-tile.is-open .tile-cover-wrap {
     border-color: var(--accent-front);
     box-shadow: 0 2px 12px color-mix(in oklch, var(--accent-front) 15%, transparent);
   }
@@ -398,7 +472,9 @@ const totalBooks = tiers.reduce((n, t) => n + t.books.length, 0);
     pointer-events: none;
     transition: opacity 0.15s, visibility 0.15s, transform 0.15s;
   }
-  .book-tile:hover .tile-review-popup {
+  .book-tile:hover .tile-review-popup,
+  .book-tile:focus-visible .tile-review-popup,
+  .book-tile.is-open .tile-review-popup {
     opacity: 1;
     visibility: visible;
     transform: translateX(-50%) translateY(8px);

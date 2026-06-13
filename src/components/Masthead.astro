@@ -88,9 +88,9 @@ const moreIsActive = moreNav.some((it) => pathname.startsWith(it.href));
 
     <div class="utility">
       <div class="lang-switcher" role="group" aria-label="Language">
-        <button data-lang="both" class="lang-btn">中 / EN</button>
+        <button data-lang="both" class="lang-btn is-active" aria-pressed="true">中 / EN</button>
         <button data-lang="zh"   class="lang-btn">中</button>
-        <button data-lang="en"   class="lang-btn is-active" aria-pressed="true">EN</button>
+        <button data-lang="en"   class="lang-btn">EN</button>
       </div>
 
       <button
@@ -180,9 +180,9 @@ const moreIsActive = moreNav.some((it) => pathname.startsWith(it.href));
   );
   try {
     const saved = localStorage.getItem("conilab-lang");
-    apply(saved || "en");
+    apply(saved || "both");
   } catch {
-    apply("en");
+    apply("both");
   }
 
   // ── Theme toggle

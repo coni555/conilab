@@ -50,6 +50,7 @@ const milestones: Milestone[] = [
           Every step counts.
         </p>
         <p class="ms-count">{milestones.length} milestones logged</p>
+        <span class="zh-only-badge" aria-hidden="true">中文 · ZH ONLY</span>
       </header>
 
       <ol class="timeline">
@@ -113,6 +114,24 @@ const milestones: Milestone[] = [
     text-transform: uppercase;
     color: var(--ink-3);
     margin: 0;
+  }
+
+  /* ── ZH-only badge (visible only in EN-only mode) ── */
+  .zh-only-badge {
+    display: none;
+    align-items: center;
+    margin-top: var(--sp-12);
+    padding: var(--sp-3) var(--sp-10);
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-back-ink);
+    border: var(--sp-hairline) solid color-mix(in oklch, var(--accent-back) 50%, var(--rule));
+    border-radius: var(--rad-pill);
+  }
+  :global(html.show-en) .zh-only-badge {
+    display: inline-flex;
   }
 
   /* ── TIMELINE ── */
