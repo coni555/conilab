@@ -566,7 +566,9 @@ const currentSlug = slugOf(article);
   .prose :global(a) {
     color: var(--accent-front-ink);
     border-bottom: var(--sp-hairline) solid var(--accent-front);
+    font-weight: var(--fw-semibold);
   }
+  .prose :global(a:hover) { border-bottom-color: var(--accent-front-ink); }
   .prose :global(blockquote) {
     border-left: 2px solid var(--accent-back);
     padding-left: var(--sp-18);

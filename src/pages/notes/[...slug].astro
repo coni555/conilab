@@ -242,6 +242,14 @@ const currentSlug = slugOf(note);
   .prose :global(p) { margin: 0 0 var(--sp-18); }
   .prose :global(strong) { color: var(--ink); font-weight: var(--fw-medium); }
 
+  /* 藏 URL 的行内链接：加粗 + 强调色 + 发丝下划线，明确"可点" */
+  .prose :global(a) {
+    color: var(--accent-front-ink);
+    border-bottom: var(--sp-hairline) solid var(--accent-front);
+    font-weight: var(--fw-semibold);
+  }
+  .prose :global(a:hover) { border-bottom-color: var(--accent-front-ink); }
+
   .prose :global(em) {
     font-style: italic;
     color: var(--accent-back-ink);
@@ -264,6 +272,40 @@ const currentSlug = slugOf(note);
     font-style: italic;
     margin: var(--sp-22) 0;
   }
+
+  /* ─── 截图配图：克制图框 + mono 图注 ─── */
+  .prose :global(figure) { margin: var(--sp-32) auto; }
+  .prose :global(figure img) {
+    border: var(--sp-hairline) solid var(--rule);
+  }
+  .prose :global(figure.shot) { text-align: center; }
+  .prose :global(figure.shot img) {
+    display: inline-block;
+    max-height: 82vh;
+    width: auto;
+    max-width: 100%;
+  }
+  .prose :global(figcaption) {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.08em;
+    color: var(--ink-3);
+    margin-top: var(--sp-10);
+    text-align: center;
+  }
+  /* 手机竖屏截图三联：等高横排，窄屏自动换行堆叠 */
+  .prose :global(figure.phones) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--sp-12);
+  }
+  .prose :global(figure.phones img) {
+    height: clamp(280px, 42vh, 460px);
+    width: auto;
+    max-width: 100%;
+  }
+  .prose :global(figure.phones figcaption) { flex-basis: 100%; }
 
   /* ─── FOOTER ─── */
   .note-foot {

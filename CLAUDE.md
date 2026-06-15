@@ -13,6 +13,7 @@
 5. **强调用 italic light + accent-deep**，禁止用 bold + 强调色（反 lixiaolai 已建立的招式）。
 6. **§ 段落符、mono uppercase 0.08~0.14em tracking、italic 单字强调** 是这套设计的"基因签名"——保留，不要在某次微调里失手抹掉。
 7. **CJK em ≠ italic**：中文段的 `<em>` 用 dotted 下划线（CSS 已声明），不用 italic。
+8. **正文行内链接（`.prose a`）= 加粗 + 深蓝 + 下划线**：`font-weight: var(--fw-semibold)`(600) + `color: var(--accent-front-ink)` + 1px `var(--accent-front)` 下划线，hover 时下划线转深。用户定的固定规则（2026-06-15）；articles / notes 两个 prose 渲染层都已套用，新增渲染层也照此。**与不变量 5 不冲突**——5 管*文字强调*（禁 bold+色），8 管*链接*这一独立的可点击 affordance；二者作用对象不同。**仅作用于正文 `.prose a`**，masthead / nav / footer 等 chrome 链接不动。
 
 ## 项目结构
 
