@@ -1,3 +1,16 @@
 name = "conilab-blog"
 compatibility_date = "2026-05-07"
 pages_build_output_dir = "dist"
+
+# ─── D1：newsletter 订阅者库 ───
+# 建库  wrangler d1 create conilab-subscribers   → 把输出里的 database_id 填到下面
+# 建表  wrangler d1 execute conilab-subscribers --remote --file migrations/0001_subscribers.sql
+[[d1_databases]]
+binding = "DB"
+database_name = "conilab-subscribers"
+database_id = "c3004376-059d-4ff1-812b-8c02615afe02"
+
+# ─── 还需在 CF Pages → Settings → Variables and Secrets 里配（勿写进本文件）───
+#   PUBLIC_TURNSTILE_SITEKEY  (Variable) Turnstile 前端 sitekey，构建期注入 /join 表单
+#   TURNSTILE_SECRET          (Secret)   Turnstile 后端密钥；线上没配 → 订阅一律拒绝（fail-closed）
+# 上面两个配好即可上线（现状无发信商 = 单次确认）。phase 2 群发 newsletter 时再接 SES/Brevo/MailerSend。

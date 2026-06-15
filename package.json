@@ -17,12 +17,12 @@
     "@fontsource/inter": "^5.2.8",
     "@fontsource/jetbrains-mono": "^5.2.8",
     "@fontsource/source-serif-4": "^5.2.9",
-    "@supabase/supabase-js": "^2.105.3",
     "astro": "^6.1.9",
     "marked": "^18.0.2"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.8",
+    "@cloudflare/workers-types": "^4.20260615.1",
     "typescript": "^6.0.3"
   }
 }

@@ -1,0 +1,8 @@
+# 复制为 .dev.vars（已 gitignore）。`wrangler pages dev` 会读取它作为 Functions 的 secret。
+#
+# Turnstile 测试密钥（Cloudflare 官方「永远通过」的 dummy secret）——仅本地用。
+# 线上请在 CF Pages → Settings → Variables and Secrets 配真实 TURNSTILE_SECRET。
+TURNSTILE_SECRET=1x0000000000000000000000000000000AA
+#
+# 现状无发信商（Resend 弃用）→ subscribe 走单次确认，本地无需额外配置。
+# phase 2 接了 SES/Brevo/MailerSend 后，在这里加 MAIL_PROVIDER 及其密钥做本地联调。
