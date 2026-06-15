@@ -98,3 +98,94 @@ draft: false
 我只需要跟着做就是。
 
 祝大家六月快乐～
+
+<!-- LANG:EN -->
+
+Lately I've grown more and more certain of one thing: **content has to be useful to you first, before it can be useful to anyone else.**
+
+If you won't even act on what you write, won't even use what you build — why on earth would you expect anyone else to?
+
+After reading [this essay](https://paulgraham.com/earn.html), and thinking back to something Li Xiaolai wrote about paid knowledge back in 2017,
+
+<figure class="shot">
+  <img src="/resources/useful-first-1-lixiaolai.png" alt="Screenshot of Li Xiaolai's 2017 essay on paid knowledge" loading="lazy" />
+  <figcaption>Li Xiaolai · on paid knowledge, 2017</figcaption>
+</figure>
+
+plus a few lines from Li Jigang that crossed my feed on X — the feeling only got stronger.
+
+<figure class="shot">
+  <img src="/resources/useful-first-2-lijigang.png" alt="Li Jigang's post on X: nothing that doesn't move you will move anyone else" loading="lazy" />
+  <figcaption>Li Jigang @lijigang · X</figcaption>
+</figure>
+
+And then FreeGrid's promotion suddenly took off — almost no traffic a few days ago, then out of nowhere it popped. All of it stacking up made me even surer: a lot of what I used to believe about making content was simply off.
+
+<figure class="shot">
+  <img src="/resources/useful-first-3-freegrid-data.jpg" alt="Backend stats of my public-account article about FreeGrid" loading="lazy" />
+  <figcaption>Backend stats for my article on FreeGrid</figcaption>
+</figure>
+
+<figure class="shots phones">
+  <img src="/resources/useful-first-4-xhs-likes.jpg" alt="Xiaohongshu: likes and saves" loading="lazy" />
+  <img src="/resources/useful-first-5-xhs-comments.jpg" alt="Xiaohongshu: comments and mentions" loading="lazy" />
+  <img src="/resources/useful-first-6-xhs-follows.jpg" alt="Xiaohongshu: new followers" loading="lazy" />
+  <figcaption>Xiaohongshu backend: likes, comments, and new followers during the spike</figcaption>
+</figure>
+
+**FreeGrid is a tool I've used myself ever since I built it.**
+
+I know my own excitement doesn't guarantee anyone else's. But it at least hands me a ticket in: I really do use it, I really do benefit from it. That's the only thing that keeps me from bluffing when I recommend it.
+
+Looking back at my public-account days — I did use my own methods, but some of them I never kept up, never really practiced. Later I pivoted to image-and-text posts, mostly because they pulled more traffic, and fell straight into the trap of making content for the traffic's sake. If you don't even believe your own content, why would the platform hand you reach?
+
+I've been reading Li Xiaolai's new book, *The Half-Second*. One thing I can't help admiring: right at the start he says the first draft was written long ago, but he held off publishing it — afraid his smoking habit might come back, which would make the book's whole method worthless.
+
+**He only writes about what he's actually done, only teaches what he's actually verified. That, I think, is why so much of his thinking still holds up ten years on.**
+
+***So here's a rule about making content that I believe in more and more:***
+
+***If you want to create something useful to your readers, first create something useful to yourself.***
+
+I used to think it was a numbers game — a hundred posts, surely one would blow up. But if even you don't find it useful, why would the platform push it?
+
+Choosing this way, my output will inevitably slow down, and it'll inevitably hurt more —
+
+because every time, you have to weigh whether what you're publishing is truly useful to the reader, whether you're spending their attention well.
+
+But that's exactly what pulls you toward a deeper level of skill.
+
+I don't know whether FreeGrid's spike was a fluke. But it did carry me to a deeper layer of thinking.
+
+There's one more line I've always kept close:
+
+**Be a reliable person.**
+
+I remember it came from [an article by Kazik](https://mp.weixin.qq.com/s/uQLvoAer3WkFJYp9Oh0Lzw), where he called this one of the most important qualities in the age of AI. **It stuck with me hard the moment I read it — to the point that it slowly became a kind of identity narrative for me.**
+
+<figure class="shot">
+  <img src="/resources/useful-first-7-kazike.png" alt="Screenshot of Kazik's article on being reliable in the age of AI, citing the market for lemons" loading="lazy" />
+  <figcaption>Kazik on “being a reliable person”</figcaption>
+</figure>
+
+And here, again, I can't help marveling at the power of identity narrative: the moment you claim it, you really do turn into that kind of person.
+
+Every time I hand something off with AI, I go back and check it once more — make sure there's nothing wrong with what it produced, make sure the result is accurate, and only then send it. Every time I finish something, a voice goes off in my head:
+
+“Be a reliable person.”
+
+It serves me well. It really does.
+
+Cognition really is the most powerful thing there is — but only if you truly believe it and truly live it. It's not that I own as much cognition as I've read; I own only as much as I've practiced.
+
+What you haven't done, you don't actually know.
+
+Finally, a real thank-you to everyone willing to read a piece of mine all the way through.
+
+Honestly, I've been guilty of the same thing: skimming a few lines of something a friend wrote without ever really finishing it. So I know all the better that having a long piece read to the end is itself a rare kind of trust.
+
+“When you meet someone worthy, think of becoming their equal; when you meet someone unworthy, turn inward and examine yourself.” The ancients said it plainly enough.
+
+I just have to follow.
+
+Wishing everyone a happy June.
