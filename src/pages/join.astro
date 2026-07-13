@@ -45,7 +45,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY ?? "0x4AAAAAAD
       </header>
 
       <!-- ============================================================
-           Form card — magic link (primary)
+           Form card — email subscribe
            ============================================================ -->
       <div class="join-card" data-state="idle">
         <p class="form-error" id="form-error" hidden role="alert"></p>
@@ -84,14 +84,14 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY ?? "0x4AAAAAAD
             <span class="btn-glyph" aria-hidden="true">
               <CoinGlyph variant="dot" size="1.05em" />
             </span>
-            <span data-lang="zh">寄出 Magic Link</span>
-            <span data-lang="en">Send the magic link</span>
+            <span data-lang="zh">订阅</span>
+            <span data-lang="en">Subscribe</span>
             <span class="btn-arrow" aria-hidden="true">→</span>
           </button>
 
           <p class="form-meta">
-            <span data-lang="zh">没有密码。一次一信，点击链接即登入。</span>
-            <span data-lang="en">No password. Click the link in your inbox to sign in.</span>
+            <span data-lang="zh">留个邮箱就好，没有密码，没有账号。</span>
+            <span data-lang="en">Just an email — no password, no account.</span>
           </p>
         </form>
 
@@ -144,7 +144,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY ?? "0x4AAAAAAD
       <footer class="join-foot">
         <dl class="join-meta">
           <dt>Cadence</dt>
-          <dd><span data-lang="zh">约两周一篇</span><span data-lang="en">~1 piece / fortnight</span></dd>
+          <dd><span data-lang="zh">不定期，只发写完整的</span><span data-lang="en">no schedule — only finished pieces</span></dd>
 
           <dt>Privacy</dt>
           <dd><span data-lang="zh">不追踪、不卖、不广告</span><span data-lang="en">no tracking, no selling, no ads</span></dd>
