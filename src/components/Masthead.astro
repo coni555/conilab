@@ -207,6 +207,42 @@ const moreIsActive = moreNav.some((it) => pathname.startsWith(it.href));
       syncTheme();
     });
   } catch {}
+
+  // ── Auto-hide masthead on scroll-down（仅窄屏）：滚动阅读时把头部收起，
+  //    上滑立即露出。桌面（>720px）保持常驻不变。
+  (() => {
+    const masthead = document.querySelector<HTMLElement>(".masthead");
+    if (!masthead) return;
+    const narrow = window.matchMedia("(max-width: 720px)");
+    let lastY = window.scrollY;
+    let ticking = false;
+    const update = () => {
+      const y = window.scrollY;
+      const goingDown = y > lastY;
+      const past = y > masthead.offsetHeight + 40;
+      if (narrow.matches && goingDown && past) {
+        masthead.classList.add("is-hidden");
+      } else if (!goingDown || !narrow.matches) {
+        masthead.classList.remove("is-hidden");
+      }
+      lastY = y;
+      ticking = false;
+    };
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (!ticking) {
+          requestAnimationFrame(update);
+          ticking = true;
+        }
+      },
+      { passive: true },
+    );
+    // 转到桌面尺寸时确保头部恢复显示
+    narrow.addEventListener("change", () => {
+      if (!narrow.matches) masthead.classList.remove("is-hidden");
+    });
+  })();
 </script>
 
 <style>
@@ -219,6 +255,15 @@ const moreIsActive = moreNav.some((it) => pathname.startsWith(it.href));
     -webkit-backdrop-filter: blur(var(--sp-10));
     backdrop-filter: blur(var(--sp-10));
     z-index: 10;
+    transition:
+      transform var(--dur-normal) ease,
+      background-color var(--dur-normal) ease,
+      border-color var(--dur-normal) ease;
+  }
+  /* 向下滚动收起、向上露出（仅 ≤720px 由脚本触发）——把常驻头部让给正文 */
+  .masthead.is-hidden { transform: translateY(-100%); }
+  @media (prefers-reduced-motion: reduce) {
+    .masthead { transition: none; }
   }
   .masthead-row {
     display: flex;
@@ -380,28 +425,31 @@ const moreIsActive = moreNav.some((it) => pathname.startsWith(it.href));
     align-items: center;
     gap: var(--sp-10);
   }
+  /* 单一 segmented 控件（三档 both/zh/en 内联分隔，替代三枚独立胶囊）*/
   .lang-switcher {
-    display: flex;
-    gap: var(--sp-4);
+    display: inline-flex;
     font-family: var(--mono);
     font-size: var(--fs-2xs);
     letter-spacing: 0.1em;
+    border: var(--sp-hairline) solid var(--rule);
+    border-radius: var(--rad-pill);
+    overflow: hidden;
   }
   .lang-btn {
-    border: var(--sp-hairline) solid var(--rule);
+    border: none;
+    border-left: var(--sp-hairline) solid var(--rule);
     background: transparent;
     color: var(--ink-3);
     padding: var(--sp-4) var(--sp-10);
-    border-radius: var(--rad-pill);
     cursor: pointer;
     text-transform: uppercase;
-    transition: color var(--dur-quick), background-color var(--dur-quick), border-color var(--dur-quick);
+    transition: color var(--dur-quick), background-color var(--dur-quick);
   }
-  .lang-btn:hover { border-color: var(--ink-3); color: var(--ink); }
+  .lang-btn:first-child { border-left: none; }
+  .lang-btn:hover { color: var(--ink); }
   .lang-btn.is-active {
     background: var(--ink);
     color: var(--paper);
-    border-color: var(--ink);
   }
 
   .theme-toggle {
