@@ -584,6 +584,52 @@ const currentSlug = slugOf(article);
     border-radius: 3px;
   }
 
+  /* ─── 正文配图（与 notes/[...slug].astro 同源）─── */
+  .prose :global(figure) { margin: var(--sp-32) 0; }
+  .prose :global(figure.shot) { text-align: center; }
+  .prose :global(figure.shot img) {
+    display: inline-block;
+    max-height: 82vh;
+    width: auto;
+    max-width: 100%;
+  }
+  .prose :global(figcaption) {
+    font-family: var(--mono);
+    font-size: var(--fs-2xs);
+    letter-spacing: 0.08em;
+    color: var(--ink-3);
+    margin-top: var(--sp-10);
+    text-align: center;
+  }
+  /* 竖构图截图多联：等高横排，窄屏自动换行堆叠 */
+  .prose :global(figure.phones) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--sp-12);
+  }
+  .prose :global(figure.phones img) {
+    height: clamp(280px, 42vh, 460px);
+    width: auto;
+    max-width: 100%;
+  }
+  .prose :global(figure.phones figcaption) { flex-basis: 100%; }
+
+  /* 横构图成对并排：按宽度均分（.phones 的等高逻辑会把横图撑爆列宽） */
+  .prose :global(figure.pair) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-12);
+  }
+  .prose :global(figure.pair img) {
+    flex: 1 1 240px;
+    min-width: 0;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+  }
+  .prose :global(figure.pair figcaption) { flex-basis: 100%; }
+
   /* ─── PREV / NEXT NAV ─── */
   .article-nav {
     margin: var(--sp-96) auto 0;
