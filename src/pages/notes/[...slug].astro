@@ -307,6 +307,33 @@ const currentSlug = slugOf(note);
   }
   .prose :global(figure.phones figcaption) { flex-basis: 100%; }
 
+  /* ─── 游记组图：同一叙事节点中的照片并列展示 ─── */
+  .prose :global(figure.gallery) {
+    display: grid;
+    gap: var(--sp-12);
+  }
+  .prose :global(figure.gallery-two) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .prose :global(figure.gallery-three) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .prose :global(figure.gallery img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    aspect-ratio: 4 / 3;
+  }
+  .prose :global(figure.gallery figcaption) {
+    grid-column: 1 / -1;
+  }
+  @media (max-width: 720px) {
+    .prose :global(figure.gallery-two),
+    .prose :global(figure.gallery-three) {
+      grid-template-columns: 1fr;
+    }
+  }
+
   /* ─── FOOTER ─── */
   .note-foot {
     max-width: 64ch;
