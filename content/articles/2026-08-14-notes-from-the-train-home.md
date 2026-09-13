@@ -26,7 +26,7 @@ word_count_zh: 5158
 从每天早起、坐公交、上班，到下班回家，生活好像逐渐被固定进了一套循环里。直到今天准备离开杭州回家一趟，坐在高铁上回头看这一个多月，于是想动手写点东西，权当作这段时间的感受。
 
 <figure class="shot">
-  <img src="/resources/train-notes-1-west-lake-sunset.jpg" alt="傍晚的西湖，橙色晚霞落在远山和湖面上" loading="lazy" />
+  <img width="1400" height="1050" src="/resources/train-notes-1-west-lake-sunset.jpg" alt="傍晚的西湖，橙色晚霞落在远山和湖面上" loading="lazy" />
 </figure>
 
 ---
@@ -42,7 +42,7 @@ word_count_zh: 5158
 其实作为实习生，上班本身倒没有想象中那么累。有任务的时候会忙一些，没任务的时候也挺轻松。自己主要负责的项目一直在往前推，过程中难免遇到困难、卡点，但一点点把问题解决掉之后，那种成就感还是蛮爽的。
 
 <figure class="shot">
-  <img src="/resources/train-notes-2-office-desk.jpg" alt="办公室的工位，合着的笔记本电脑，背景是同事堆满东西的桌子" loading="lazy" />
+  <img width="787" height="1400" src="/resources/train-notes-2-office-desk.jpg" alt="办公室的工位，合着的笔记本电脑，背景是同事堆满东西的桌子" loading="lazy" />
 </figure>
 
 但职场最耗人的，其实是那种无形的“场域”。
@@ -82,7 +82,7 @@ word_count_zh: 5158
 当然，目前遇到的公司前辈们都很 nice，这点确实很幸运哈哈哈。
 
 <figure class="shot">
-  <img src="/resources/train-notes-3-desk-figures.jpg" alt="办公桌上摆着的几个盲盒公仔，旁边放着一包零食" loading="lazy" />
+  <img width="1400" height="1050" src="/resources/train-notes-3-desk-figures.jpg" alt="办公桌上摆着的几个盲盒公仔，旁边放着一包零食" loading="lazy" />
 </figure>
 
 还有一个我觉得挺有意思的变化：**上班真的很锻炼口头表达能力。**
@@ -138,7 +138,7 @@ word_count_zh: 5158
 上午去浙江省图书馆坐坐，顺便蹭点免费热水；下午再找一家星巴克，打开 MacBook，一坐就是一下午。
 
 <figure class="shot">
-  <img src="/resources/train-notes-4-starbucks.jpg" alt="星巴克的木桌上摊着 MacBook，旁边一杯冰金桂拿铁" loading="lazy" />
+  <img width="1400" height="1050" src="/resources/train-notes-4-starbucks.jpg" alt="星巴克的木桌上摊着 MacBook，旁边一杯冰金桂拿铁" loading="lazy" />
 </figure>
 
 这里强烈推荐黄龙世纪广场的星巴克，人相对少，氛围很好，座位也舒服，旁边还有麦当劳，晚上从星巴克出来，直接顺路解决晚饭。
@@ -152,7 +152,7 @@ word_count_zh: 5158
 7月底第一次出发去上海，实际上这样一个人出行还是有点紧张的，但是到了上海后，按照自己的规划走，突然感觉也没什么嘛。
 
 <figure class="shot">
-  <img src="/resources/train-notes-5-arknights-fes.jpg" alt="明日方舟 2026 嘉年华的主视觉打卡板，气球和花艺围着 HYPERGRYPH 立体字" loading="lazy" />
+  <img width="1400" height="1050" src="/resources/train-notes-5-arknights-fes.jpg" alt="明日方舟 2026 嘉年华的主视觉打卡板，气球和花艺围着 HYPERGRYPH 立体字" loading="lazy" />
 </figure>
 
 很多时候紧张只是因为“从来没经历过”。第一次遇到，大脑没有预案，所以会慌；真正经历过一次以后，它知道大概会发生什么、遇到问题该怎么处理，下一次自然就淡定多了。
@@ -182,7 +182,7 @@ word_count_zh: 5158
 你走在人群里，看着街道两边的建筑、店铺和来来往往的人，会慢慢感受到这座城市的气质。
 
 <figure class="shot">
-  <img src="/resources/train-notes-6-nanjing-road.jpg" alt="夜晚的南京路步行街，人流、店铺招牌和巨大的曲面 LED 屏" loading="lazy" />
+  <img width="1400" height="1050" src="/resources/train-notes-6-nanjing-road.jpg" alt="夜晚的南京路步行街，人流、店铺招牌和巨大的曲面 LED 屏" loading="lazy" />
 </figure>
 
 上海给我的感觉和杭州非常不一样。
@@ -198,7 +198,7 @@ word_count_zh: 5158
 **我突然意识到，原来世界还可以这么大。**
 
 <figure class="shot">
-  <img src="/resources/train-notes-7-the-bund.jpg" alt="外滩夜景，东方明珠和陆家嘴的天际线倒映在黄浦江上" loading="lazy" />
+  <img width="1400" height="1050" src="/resources/train-notes-7-the-bund.jpg" alt="外滩夜景，东方明珠和陆家嘴的天际线倒映在黄浦江上" loading="lazy" />
 </figure>
 
 可能有人看到这里会觉得有点夸张。
@@ -292,8 +292,8 @@ word_count_zh: 5158
 可真正在线下见到真人，坐在一起吃饭、聊天，那种感觉还是完全不一样。
 
 <figure class="pair">
-  <img src="/resources/train-notes-8-dinner-one.jpg" alt="和朋友吃饭：清蒸鱼、荷叶包、白灼虾摆了一桌" loading="lazy" />
-  <img src="/resources/train-notes-9-dinner-two.jpg" alt="另一顿饭：砂锅扒肘子和一大盘凉拌菜" loading="lazy" />
+  <img width="1400" height="1050" src="/resources/train-notes-8-dinner-one.jpg" alt="和朋友吃饭：清蒸鱼、荷叶包、白灼虾摆了一桌" loading="lazy" />
+  <img width="1400" height="1050" src="/resources/train-notes-9-dinner-two.jpg" alt="另一顿饭：砂锅扒肘子和一大盘凉拌菜" loading="lazy" />
 </figure>
 
 这种体验，至少现在的 AI 给不了我。
@@ -313,7 +313,7 @@ AI 可以陪我聊很多东西，可以帮我写代码、做项目、梳理思�
 其实这次回家，更多还是因为想家了。虽然平时可以打视频电话，但隔着屏幕，终究代替不了真实见面的感觉。偶尔短暂地回家，陪陪父母，其实还是很开心的。
 
 <figure class="shot">
-  <img src="/resources/train-notes-10-home-table.jpg" alt="家里的饭桌，黄鱼、茄子炒辣椒、凉拌黄瓜和一碗玉米羹" loading="lazy" />
+  <img width="1400" height="1050" src="/resources/train-notes-10-home-table.jpg" alt="家里的饭桌，黄鱼、茄子炒辣椒、凉拌黄瓜和一碗玉米羹" loading="lazy" />
 </figure>
 
 不过再想想，上班下班的两点一线，和待在家里重复的日子，好像也没有太大区别。
@@ -347,7 +347,7 @@ It has been a long time since I wrote anything.
 Wake up early, take the bus, go to work, come home. Life had quietly settled into a loop. It was only today, packing up to leave Hangzhou for a short trip home, sitting on the train and looking back on the past month, that I felt like writing something down—call it a record of how this stretch of time actually felt.
 
 <figure class="shot">
-  <img src="/resources/train-notes-1-west-lake-sunset.jpg" alt="West Lake at dusk, orange light spilling across the far hills and the water" loading="lazy" />
+  <img width="1400" height="1050" src="/resources/train-notes-1-west-lake-sunset.jpg" alt="West Lake at dusk, orange light spilling across the far hills and the water" loading="lazy" />
 </figure>
 
 ---
@@ -363,7 +363,7 @@ Only after you have actually stepped into a workplace do you understand what a l
 Honestly, as an intern, the work itself is less exhausting than I imagined. Busy when there are tasks, quite relaxed when there are none. The project I am responsible for keeps moving forward, and while there are inevitably obstacles along the way, working through them one at a time feels genuinely good.
 
 <figure class="shot">
-  <img src="/resources/train-notes-2-office-desk.jpg" alt="My desk at the office, laptop closed, a colleague's cluttered desk behind it" loading="lazy" />
+  <img width="787" height="1400" src="/resources/train-notes-2-office-desk.jpg" alt="My desk at the office, laptop closed, a colleague's cluttered desk behind it" loading="lazy" />
 </figure>
 
 What actually wears you down is the invisible "field" of an office.
@@ -403,7 +403,7 @@ So I think one of the real values of an internship is that it puts you in front 
 Though I have been lucky—everyone senior to me here has been genuinely kind.
 
 <figure class="shot">
-  <img src="/resources/train-notes-3-desk-figures.jpg" alt="A few blind-box figurines on an office desk, a snack packet beside them" loading="lazy" />
+  <img width="1400" height="1050" src="/resources/train-notes-3-desk-figures.jpg" alt="A few blind-box figurines on an office desk, a snack packet beside them" loading="lazy" />
 </figure>
 
 One more change I find interesting: **working is excellent training for speaking clearly.**
@@ -459,7 +459,7 @@ My favorite way to open a weekend in Hangzhou right now:
 Spend the morning at the Zhejiang Provincial Library, taking advantage of the free hot water. Then find a Starbucks in the afternoon, open the MacBook, and stay for hours.
 
 <figure class="shot">
-  <img src="/resources/train-notes-4-starbucks.jpg" alt="A MacBook open on a wooden Starbucks table, an iced osmanthus latte beside it" loading="lazy" />
+  <img width="1400" height="1050" src="/resources/train-notes-4-starbucks.jpg" alt="A MacBook open on a wooden Starbucks table, an iced osmanthus latte beside it" loading="lazy" />
 </figure>
 
 I especially recommend the Starbucks at Huanglong Century Plaza—fewer people, good atmosphere, comfortable seats, and a McDonald's next door, so dinner is handled on the way out.
@@ -473,7 +473,7 @@ Put those together and the weekend is about as good as it gets.
 I went to Shanghai for the first time at the end of July. Traveling alone did make me a little nervous, but once I arrived and simply followed the plan I had made, it turned out to be nothing at all.
 
 <figure class="shot">
-  <img src="/resources/train-notes-5-arknights-fes.jpg" alt="The main photo wall at the 2026 Arknights carnival, balloons and flowers around the HYPERGRYPH letters" loading="lazy" />
+  <img width="1400" height="1050" src="/resources/train-notes-5-arknights-fes.jpg" alt="The main photo wall at the 2026 Arknights carnival, balloons and flowers around the HYPERGRYPH letters" loading="lazy" />
 </figure>
 
 A lot of nervousness is just the absence of precedent. The first time, your brain has no plan, so it panics. Once you have been through it, it knows roughly what happens and how to handle problems, and the next time you are calm.
@@ -503,7 +503,7 @@ The first time I walked down Nanjing Road, I felt this very clearly.
 You walk through the crowd, looking at the buildings and shops on either side and the people going past, and slowly you start to pick up the character of the city.
 
 <figure class="shot">
-  <img src="/resources/train-notes-6-nanjing-road.jpg" alt="Nanjing Road at night: crowds, shopfronts, and an enormous curved LED screen" loading="lazy" />
+  <img width="1400" height="1050" src="/resources/train-notes-6-nanjing-road.jpg" alt="Nanjing Road at night: crowds, shopfronts, and an enormous curved LED screen" loading="lazy" />
 </figure>
 
 Shanghai feels very different from Hangzhou.
@@ -519,7 +519,7 @@ Roughly, it was this—
 **It suddenly hit me that the world could be this large.**
 
 <figure class="shot">
-  <img src="/resources/train-notes-7-the-bund.jpg" alt="The Bund at night, the Oriental Pearl Tower and the Lujiazui skyline reflected in the Huangpu River" loading="lazy" />
+  <img width="1400" height="1050" src="/resources/train-notes-7-the-bund.jpg" alt="The Bund at night, the Oriental Pearl Tower and the Lujiazui skyline reflected in the Huangpu River" loading="lazy" />
 </figure>
 
 Some readers may find that overblown.
@@ -613,8 +613,8 @@ Chatting through a screen, I already felt close to them.
 But actually meeting them in person—sitting down together, eating, talking—was not remotely the same.
 
 <figure class="pair">
-  <img src="/resources/train-notes-8-dinner-one.jpg" alt="Dinner with friends: steamed fish, lotus-leaf buns, and poached shrimp" loading="lazy" />
-  <img src="/resources/train-notes-9-dinner-two.jpg" alt="Another dinner: braised pork knuckle in a clay pot and a large cold dish" loading="lazy" />
+  <img width="1400" height="1050" src="/resources/train-notes-8-dinner-one.jpg" alt="Dinner with friends: steamed fish, lotus-leaf buns, and poached shrimp" loading="lazy" />
+  <img width="1400" height="1050" src="/resources/train-notes-9-dinner-two.jpg" alt="Another dinner: braised pork knuckle in a clay pot and a large cold dish" loading="lazy" />
 </figure>
 
 That is something AI cannot give me, at least not now.
@@ -634,7 +634,7 @@ Sitting at my desk at home, I felt something surface: the sense that I could alr
 The real reason I came back, though, was that I missed home. Video calls are fine, but a screen cannot replace being in the same room. Coming home briefly now and then, spending time with my parents, does make me happy.
 
 <figure class="shot">
-  <img src="/resources/train-notes-10-home-table.jpg" alt="The table at home: yellow croaker, aubergine with peppers, cold cucumber, and a bowl of corn soup" loading="lazy" />
+  <img width="1400" height="1050" src="/resources/train-notes-10-home-table.jpg" alt="The table at home: yellow croaker, aubergine with peppers, cold cucumber, and a bowl of corn soup" loading="lazy" />
 </figure>
 
 But thinking about it further, commuting between home and the office is not so different from repeating the same days at home.

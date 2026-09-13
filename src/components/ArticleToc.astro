@@ -1,0 +1,224 @@
+---
+interface Item { id: string; text: string; level: number }
+interface Props { zh: Item[]; en: Item[]; zhOnly: boolean }
+const { zh, en, zhOnly } = Astro.props;
+const titleWithoutNumber = (text: string) => text.replace(/^\d{1,2}\s*[｜|]\s*/, "");
+const groups = [
+  { lang: "zh", label: "中文", items: zh },
+  { lang: "en", label: "EN", items: en },
+].filter((group) => group.items.length);
+---
+
+<div data-article-toc>
+  <nav class="toc-rail" aria-label="章节导航 / Chapter navigation">
+    {groups.map((group) => (
+      <div class="toc-group" data-toc-lang={group.lang} {...(zhOnly ? {} : { "data-lang": group.lang })}>
+        <span class="toc-group-label">{group.label}</span>
+        <ol>
+          {group.items.map((h) => (
+            <li>
+              <a class:list={["toc-tick", { "is-subheading": h.level === 3 }]}
+                href={`#${h.id}`} data-toc-target={h.id} aria-label={h.text}>
+                <span class="tick-line" aria-hidden="true"></span>
+              </a>
+            </li>
+          ))}
+        </ol>
+        <span class="toc-count" aria-hidden="true">01 / {String(group.items.length).padStart(2, "0")}</span>
+      </div>
+    ))}
+  </nav>
+  <span class="toc-tooltip" hidden aria-hidden="true"></span>
+
+  <button class="toc-bookmark" type="button" aria-haspopup="dialog" aria-controls="article-toc-dialog"
+    aria-expanded="false" aria-label="打开目录 / Open contents" hidden>
+    <span class="bookmark-count"></span>
+    <span class="bookmark-title"></span>
+    <span class="bookmark-chevron" aria-hidden="true">⌃</span>
+  </button>
+
+  <dialog id="article-toc-dialog" aria-labelledby="toc-dialog-title">
+    <header class="toc-dialog-head">
+      <h2 id="toc-dialog-title"><span data-lang="zh">本文目录</span><span data-lang="en">Contents</span></h2>
+      <button class="toc-close" type="button" aria-label="关闭目录 / Close contents">×</button>
+    </header>
+    <nav class="toc-dialog-list" aria-label="文章目录 / Table of contents">
+      {groups.map((group) => (
+        <div data-toc-list-lang={group.lang} {...(zhOnly ? {} : { "data-lang": group.lang })}>
+          <p class="toc-list-label">{group.label}</p>
+          <ol>
+            {group.items.map((h, i) => (
+              <li>
+                <a class:list={["toc-entry", { "is-subheading": h.level === 3 }]}
+                  href={`#${h.id}`} data-toc-target={h.id}>
+                  <span class="toc-number">{String(i + 1).padStart(2, "0")}</span>
+                  <span>{titleWithoutNumber(h.text)}</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </div>
+      ))}
+    </nav>
+  </dialog>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-article-toc]");
+  if (root) {
+    const rail = root.querySelector<HTMLElement>(".toc-rail")!;
+    const tooltip = root.querySelector<HTMLElement>(".toc-tooltip")!;
+    const bookmark = root.querySelector<HTMLButtonElement>(".toc-bookmark")!;
+    const dialog = root.querySelector<HTMLDialogElement>("dialog")!;
+    const masthead = document.querySelector<HTMLElement>(".masthead");
+    const groups = Array.from(root.querySelectorAll<HTMLElement>("[data-toc-lang]")).map((element) => ({
+      element,
+      lang: element.dataset.tocLang!,
+      items: Array.from(element.querySelectorAll<HTMLAnchorElement>(".toc-tick")).map((link) => ({
+        link, heading: document.getElementById(link.dataset.tocTarget!)!,
+      })).filter((item) => item.heading),
+    }));
+    const links = Array.from(root.querySelectorAll<HTMLAnchorElement>("[data-toc-target]"));
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const desktop = window.matchMedia("(min-width: 1200px)");
+    let frame = 0;
+    let currentId = "";
+    let headerHeight = 0;
+    const pad = (n: number) => String(n).padStart(2, "0");
+    const update = () => {
+      frame = 0;
+      headerHeight = masthead?.getBoundingClientRect().height ?? 0;
+      document.documentElement.style.setProperty("--article-masthead-height", `${headerHeight}px`);
+      const gap = parseFloat(getComputedStyle(bookmark).getPropertyValue("--sp-24")) || 24;
+      const cutoff = headerHeight + gap + 2;
+      const candidates: { id: string; text: string; count: string; lang: string; top: number }[] = [];
+      const activeIds = new Set<string>();
+      for (const group of groups) {
+        if (!group.element.getClientRects().length && getComputedStyle(group.element).display === "none") continue;
+        const items = group.items.filter((item) => item.heading.getClientRects().length);
+        if (!items.length) continue;
+        let active = 0;
+        items.forEach((item, index) => {
+          if (item.heading.getBoundingClientRect().top <= cutoff) active = index;
+        });
+        const item = items[active];
+        activeIds.add(item.heading.id);
+        const count = `${pad(active + 1)} / ${pad(items.length)}`;
+        group.element.querySelector(".toc-count")!.textContent = count;
+        candidates.push({ id: item.heading.id, text: item.heading.textContent ?? "", count, lang: group.lang, top: item.heading.getBoundingClientRect().top });
+      }
+      links.forEach((link) => {
+        if (activeIds.has(link.dataset.tocTarget!)) link.setAttribute("aria-current", "location");
+        else link.removeAttribute("aria-current");
+      });
+      const reached = candidates.filter((c) => c.top <= cutoff).sort((a, b) => b.top - a.top);
+      const current = reached[0] ?? candidates[0];
+      if (current) {
+        currentId = current.id;
+        const label = current.lang === "zh" ? "本文目录" : "Contents";
+        bookmark.querySelector(".bookmark-count")!.textContent = `${candidates.length > 1 ? (current.lang === "zh" ? "中 " : "EN ") : ""}${current.count}`;
+        bookmark.querySelector(".bookmark-title")!.textContent = current.text.replace(/^\d{1,2}\s*[｜|]\s*/, "");
+        bookmark.setAttribute("aria-label", `${label}: ${current.text}`);
+      }
+    };
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
+    const close = () => { if (dialog.open) dialog.close(); };
+    bookmark.hidden = false;
+    bookmark.addEventListener("click", () => {
+      update();
+      dialog.showModal();
+      bookmark.setAttribute("aria-expanded", "true");
+      const active = dialog.querySelector<HTMLAnchorElement>(`[data-toc-target="${currentId}"]`);
+      active?.focus({ preventScroll: true });
+      active?.scrollIntoView({ block: "nearest" });
+    });
+    dialog.querySelector(".toc-close")!.addEventListener("click", close);
+    dialog.addEventListener("close", () => bookmark.setAttribute("aria-expanded", "false"));
+    dialog.addEventListener("click", (event) => {
+      if (event.target !== dialog) return;
+      const r = dialog.getBoundingClientRect();
+      if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) close();
+    });
+    links.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
+        const heading = document.getElementById(link.dataset.tocTarget!);
+        if (!heading) return;
+        event.preventDefault();
+        close();
+        tooltip.hidden = true;
+        update();
+        heading.tabIndex = -1;
+        heading.focus({ preventScroll: true });
+        heading.scrollIntoView({ behavior: reduced.matches ? "instant" : "smooth", block: "start" });
+        history.replaceState(null, "", `#${heading.id}`);
+      });
+    });
+    rail.querySelectorAll<HTMLAnchorElement>(".toc-tick").forEach((link) => {
+      const show = () => {
+        const r = link.getBoundingClientRect();
+        tooltip.textContent = document.getElementById(link.dataset.tocTarget!)?.textContent ?? link.ariaLabel;
+        tooltip.hidden = false;
+        const gap = parseFloat(getComputedStyle(tooltip).getPropertyValue("--sp-12")) || 12;
+        tooltip.style.left = `${r.right + gap}px`;
+        tooltip.style.top = `${Math.max(headerHeight + gap, Math.min(innerHeight - tooltip.offsetHeight - gap, r.top + (r.height - tooltip.offsetHeight) / 2))}px`;
+      };
+      link.addEventListener("pointerenter", show);
+      link.addEventListener("focus", show);
+      link.addEventListener("pointerleave", () => { tooltip.hidden = true; });
+      link.addEventListener("blur", () => { tooltip.hidden = true; });
+    });
+    window.addEventListener("scroll", schedule, { passive: true });
+    rail.addEventListener("scroll", () => { tooltip.hidden = true; }, { passive: true });
+    window.addEventListener("resize", () => { tooltip.hidden = true; if (desktop.matches) close(); schedule(); });
+    window.addEventListener("hashchange", schedule);
+    new MutationObserver(() => { close(); tooltip.hidden = true; schedule(); }).observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    const resize = new ResizeObserver(schedule);
+    if (masthead) resize.observe(masthead);
+    const article = document.querySelector("article.article");
+    if (article) resize.observe(article);
+    document.fonts.ready.then(schedule);
+    update();
+  }
+</script>
+
+<style>
+  .toc-rail { display: none; }
+  .toc-group-label, .toc-count { display: block; text-align: center; font-family: var(--mono); font-size: var(--fs-9); color: var(--ink-3); }
+  .toc-group-label { margin-bottom: var(--sp-10); }
+  .toc-count { margin-top: var(--sp-10); }
+  .toc-group + .toc-group { margin-top: var(--sp-24); }
+  ol { list-style: none; padding: 0; margin: 0; }
+  .toc-tick { display: flex; width: var(--sp-48); height: var(--sp-28); align-items: center; justify-content: center; }
+  .tick-line { width: var(--sp-20); height: var(--sp-2); background: var(--rule); transition: width 180ms ease, background 180ms ease; }
+  li:nth-child(3n) .tick-line { width: var(--sp-28); }
+  .is-subheading .tick-line { width: var(--sp-12); }
+  .toc-tick:hover .tick-line { background: var(--accent-back); }
+  .toc-tick[aria-current] .tick-line { width: var(--sp-36); height: var(--sp-3); background: var(--accent-front); }
+  .toc-tooltip { position: fixed; z-index: 45; max-width: min(32ch, calc(100vw - var(--sp-96))); padding: var(--sp-8) var(--sp-12); border: var(--sp-hairline) solid var(--rule); background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: var(--fs-sm); line-height: var(--lh-normal); pointer-events: none; }
+  .toc-bookmark { position: fixed; z-index: 30; left: var(--sp-20); bottom: calc(var(--sp-24) + env(safe-area-inset-bottom)); max-width: calc(100vw - var(--sp-120)); min-height: var(--sp-48); display: flex; align-items: center; gap: var(--sp-10); padding: var(--sp-12) var(--sp-16); border: var(--sp-hairline) solid var(--rule); border-radius: var(--sp-28); background: var(--paper); color: var(--ink); cursor: pointer; }
+  .toc-bookmark[hidden], .toc-tooltip[hidden] { display: none; }
+  .bookmark-count { font-family: var(--mono); font-size: var(--fs-2xs); color: var(--accent-front-ink); white-space: nowrap; }
+  .bookmark-title { font-family: var(--sans); font-size: var(--fs-sm); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bookmark-chevron { color: var(--ink-3); }
+  button:focus-visible, a:focus-visible { outline: var(--sp-2) solid var(--accent-front); outline-offset: var(--sp-4); }
+  dialog { position: fixed; inset: auto var(--sp-16) calc(var(--sp-64) + var(--sp-24) + env(safe-area-inset-bottom)); margin: 0 auto; width: calc(100% - var(--sp-32)); max-width: 52ch; max-height: calc(100dvh - var(--article-masthead-height, var(--sp-80)) - var(--sp-120)); padding: var(--sp-20); border: var(--sp-hairline) solid var(--rule); background: var(--paper); color: var(--ink); }
+  dialog[open] { display: flex; flex-direction: column; }
+  dialog::backdrop { background: color-mix(in oklch, var(--ink) 18%, transparent); }
+  .toc-dialog-head { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-12); margin-bottom: var(--sp-12); flex-shrink: 0; }
+  .toc-dialog-head h2 { display: flex; gap: var(--sp-12); font-family: var(--sans); font-size: var(--fs-md); font-weight: var(--fw-medium); color: var(--accent-front-ink); }
+  .toc-close { width: var(--sp-44); height: var(--sp-44); border: 0; padding: 0; font-size: var(--fs-4xl); background: none; color: var(--ink-3); cursor: pointer; }
+  .toc-dialog-list { overflow-y: auto; overscroll-behavior: contain; min-height: 0; }
+  .toc-list-label { font-family: var(--mono); font-size: var(--fs-2xs); color: var(--ink-3); margin: var(--sp-12) 0 var(--sp-8); }
+  .toc-entry { display: grid; grid-template-columns: var(--sp-22) 1fr; gap: var(--sp-10); padding: var(--sp-12); border-left: var(--sp-hairline) solid var(--rule); font-family: var(--sans); font-size: var(--fs-base); line-height: var(--lh-normal); color: var(--ink-2); }
+  .toc-entry.is-subheading { padding-left: var(--sp-22); }
+  .toc-entry[aria-current] { color: var(--accent-front-ink); background: var(--paper-2); border-left-color: var(--accent-front); }
+  .toc-entry:hover { color: var(--accent-front-ink); }
+  .toc-number { font-family: var(--mono); font-size: var(--fs-2xs); }
+  :global(html:has(#article-toc-dialog[open])) { overflow: hidden; }
+  @media (min-width: 1200px) {
+    .toc-rail { display: block; position: fixed; left: max(var(--sp-12), calc((100vw - var(--maxw)) / 2 - var(--sp-60))); top: calc(50% + var(--article-masthead-height, var(--sp-64)) / 2); transform: translateY(-50%); max-height: calc(100dvh - var(--article-masthead-height, var(--sp-80)) - var(--sp-64)); overflow-y: auto; scrollbar-width: thin; z-index: 30; }
+    .toc-bookmark { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { .tick-line { transition: none; } }
+</style>

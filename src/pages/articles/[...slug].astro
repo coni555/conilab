@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import ReadingTrack from "../../components/ReadingTrack.astro";
 import ArticleMusic from "../../components/ArticleMusic.astro";
+import ArticleToc from "../../components/ArticleToc.astro";
 import { getCollection } from "astro:content";
 import { marked } from "marked";
 import { slugOf } from "../../lib/content";
@@ -152,28 +153,7 @@ const currentSlug = slugOf(article);
         </div>
       )}
 
-      {hasToc && (
-        <nav class="toc" aria-label="Table of contents">
-          <div class="toc-inner">
-            <span class="toc-label">Contents</span>
-            <ol class="toc-list">
-              {zhToc.map((h) => (
-                <li class={`toc-item toc-h${h.level}`} data-lang="zh">
-                  <a href={`#${h.id}`} class="toc-link" data-target={h.id}>{h.text}</a>
-                </li>
-              ))}
-              {enToc.length > 0 && (
-                <li class="toc-divider" aria-hidden="true">⊙</li>
-              )}
-              {enToc.map((h) => (
-                <li class={`toc-item toc-h${h.level}`} data-lang="en">
-                  <a href={`#${h.id}`} class="toc-link" data-target={h.id}>{h.text}</a>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </nav>
-      )}
+      {hasToc && <ArticleToc zh={zhToc} en={enToc} zhOnly={zhOnly} />}
 
       <div class={`article-bodies${isBilingual ? " is-bilingual" : ""}`}>
         <section class="article-body" lang="zh-CN" {...(zhOnly ? {} : { "data-lang": "zh" })}>
@@ -237,46 +217,6 @@ const currentSlug = slugOf(article);
       window.addEventListener("resize", update);
     })();
 
-    (() => {
-      const links = document.querySelectorAll<HTMLAnchorElement>(".toc-link");
-      if (!links.length) return;
-
-      const ids = Array.from(links).map((a) => a.dataset.target!);
-      const headings = ids
-        .map((id) => document.getElementById(id))
-        .filter(Boolean) as HTMLElement[];
-      if (!headings.length) return;
-
-      let active = "";
-      const mark = (id: string) => {
-        if (id === active) return;
-        active = id;
-        links.forEach((a) =>
-          a.classList.toggle("is-active", a.dataset.target === id),
-        );
-      };
-
-      const onScroll = () => {
-        const offset = 100;
-        let current = headings[0]?.id ?? "";
-        for (const h of headings) {
-          if (h.getBoundingClientRect().top < offset) current = h.id;
-          else break;
-        }
-        mark(current);
-      };
-      onScroll();
-      window.addEventListener("scroll", onScroll, { passive: true });
-
-      links.forEach((a) =>
-        a.addEventListener("click", (e) => {
-          e.preventDefault();
-          const el = document.getElementById(a.dataset.target!);
-          el?.scrollIntoView({ behavior: "smooth", block: "start" });
-          history.replaceState(null, "", `#${a.dataset.target}`);
-        }),
-      );
-    })();
   </script>
 </Base>
 
@@ -302,78 +242,18 @@ const currentSlug = slugOf(article);
 
   .article { padding: var(--sp-44) 0 var(--sp-96); position: relative; }
 
-  /* ── TABLE OF CONTENTS ── */
-  .toc { display: none; }
-  @media (min-width: 1200px) {
-    .toc {
-      display: block;
-      position: absolute;
-      left: calc(50% + 35ch);
-      top: 0;
-      width: 190px;
-    }
-    .toc-inner {
-      position: sticky;
-      top: 80px;
-      max-height: calc(100vh - 120px);
-      overflow-y: auto;
-      scrollbar-width: none;
-    }
-    .toc-inner::-webkit-scrollbar { display: none; }
-    .toc-label {
-      font-family: var(--mono);
-      font-size: var(--fs-xs);
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--ink-3);
-      display: block;
-      margin-bottom: var(--sp-12);
-    }
-    .toc-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      border-left: var(--sp-hairline) solid var(--rule);
-    }
-    .toc-item { margin: 0; }
-    .toc-h3 { padding-left: var(--sp-12); }
-    .toc-link {
-      display: block;
-      padding: var(--sp-4) 0 var(--sp-4) var(--sp-14);
-      font-family: var(--sans);
-      font-size: var(--fs-sm);
-      line-height: 1.4;
-      color: var(--ink-3);
-      border-left: 2px solid transparent;
-      margin-left: -1px;
-      transition: color 0.15s, border-color 0.15s;
-    }
-    .toc-link:hover { color: var(--ink); }
-    .toc-link.is-active {
-      color: var(--accent-front-ink);
-      border-left-color: var(--accent-front);
-    }
-    .toc-divider {
-      padding: var(--sp-8) 0 var(--sp-8) var(--sp-14);
-      font-family: var(--mono);
-      font-size: var(--fs-xs);
-      color: var(--accent-back-ink);
-      letter-spacing: 0.14em;
-      list-style: none;
-    }
-  }
-
-  /* 单语模式下隐藏翻面分隔 + 对应 TOC 条目 */
+  /* 单语模式下隐藏翻面分隔 */
   :global(html.show-zh) .article-flip,
   :global(html.show-en) .article-flip { display: none; }
-  :global(html.show-zh) .toc-item[data-lang="en"],
-  :global(html.show-zh) .toc-divider,
-  :global(html.show-en) .toc-item[data-lang="zh"],
-  :global(html.show-en) .toc-divider { display: none; }
+
+  /* 双语分栏也为左侧刻度保留留白。 */
+  @media (min-width: 1200px) {
+    :global(html.show-both) .article > .wrap { padding-left: var(--sp-96); }
+  }
 
   /* heading 跳转偏移（补偿 sticky masthead） */
   .prose :global(h2[id]),
-  .prose :global(h3[id]) { scroll-margin-top: 80px; }
+  .prose :global(h3[id]) { scroll-margin-top: calc(var(--article-masthead-height, var(--sp-80)) + var(--sp-24)); }
 
   /* ─── HEAD ─── */
   .article-head {
@@ -521,8 +401,6 @@ const currentSlug = slugOf(article);
     }
     :global(html.show-both) .article-bodies.is-bilingual .article-flip { display: none; }
 
-    /* 分列后右栏占满，浮动 TOC 无处安放——双语模式下隐藏（单语仍在） */
-    :global(html.show-both) .toc { display: none; }
   }
 
   /* ─── PROSE TYPOGRAPHY ─── */
