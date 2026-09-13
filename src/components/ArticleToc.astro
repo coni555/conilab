@@ -90,7 +90,9 @@ const groups = [
       headerHeight = masthead?.getBoundingClientRect().height ?? 0;
       document.documentElement.style.setProperty("--article-masthead-height", `${headerHeight}px`);
       const gap = parseFloat(getComputedStyle(bookmark).getPropertyValue("--sp-24")) || 24;
-      const cutoff = headerHeight + gap + 2;
+      // Allow a small tolerance for font swaps and fractional scroll positions.
+      const tolerance = parseFloat(getComputedStyle(bookmark).getPropertyValue("--sp-8")) || 8;
+      const cutoff = headerHeight + gap + tolerance;
       const candidates: { id: string; text: string; count: string; lang: string; top: number }[] = [];
       const activeIds = new Set<string>();
       for (const group of groups) {
