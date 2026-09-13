@@ -94,6 +94,7 @@ const currentSlug = slugOf(article);
 <Base
   title={`${data.title_zh} / ${data.title_en} — conilab`}
   description={data.lede_en}
+  image={data.cover}
   ogType="article"
   publishedTime={new Date(data.published_at).toISOString()}
 >
@@ -137,6 +138,29 @@ const currentSlug = slugOf(article);
           />
         </div>
       </header>
+
+      {(data.cover || data.bgm) && (
+        <div class="article-media">
+          {data.cover && (
+            <img class="article-cover" src={data.cover}
+              alt={data.cover_alt ?? data.title_zh}
+              width={data.cover_width} height={data.cover_height}
+              fetchpriority="high" decoding="async" />
+          )}
+          {data.bgm && (
+            <div class="article-music">
+              <p id="article-music-label" class="music-label">
+                <span data-lang="zh">伴读音乐</span>
+                <span data-lang="en">Music for reading</span>
+                <span>{data.bgm.title} · {data.bgm.artist}</span>
+              </p>
+              <audio controls loop preload="none" aria-labelledby="article-music-label" src={data.bgm.src}>
+                <a href={data.bgm.src}>{data.bgm.title}</a>
+              </audio>
+            </div>
+          )}
+        </div>
+      )}
 
       {hasToc && (
         <nav class="toc" aria-label="Table of contents">
@@ -435,6 +459,20 @@ const currentSlug = slugOf(article);
   }
 
   /* ─── BODY ─── */
+  .article-media { max-width: 64ch; margin: 0 auto var(--sp-44); }
+  .article-cover { display: block; width: 100%; height: auto; }
+  .article-music { margin-top: var(--sp-22); }
+  .music-label {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-10);
+    margin: 0 0 var(--sp-12);
+    font-family: var(--sans);
+    font-size: var(--fs-sm);
+    color: var(--ink-3);
+  }
+  .article-music audio { display: block; width: 100%; }
+  :global(html.dark) .article-music audio { color-scheme: dark; }
   .article-body { max-width: 64ch; margin: 0 auto; }
 
   .article-flip {
@@ -461,6 +499,7 @@ const currentSlug = slugOf(article);
   @media (min-width: 1100px) {
     /* 头部 + 正文区都放宽到 wrap 满宽，左对齐对齐两栏左缘 */
     :global(html.show-both) .article-head,
+    :global(html.show-both) .article-media,
     :global(html.show-both) .article-nav { max-width: none; }
 
     /* lede 也分列：左中右英 */

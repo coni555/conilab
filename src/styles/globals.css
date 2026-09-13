@@ -105,8 +105,8 @@ h1 em, h2 em, h3 em {
  * ───────────────────────────────────────────────────────────── */
 /* !important：必须压过 Astro scoped 样式（attribute 选择器抬高了特异性，
  * 如 404 页 `h1 span { display: block }` 会反杀这条全局隐藏规则）*/
-html.show-zh [data-lang="en"] { display: none !important; }
-html.show-en [data-lang="zh"] { display: none !important; }
+html.show-zh [data-lang="en"]:not(.lang-btn) { display: none !important; }
+html.show-en [data-lang="zh"]:not(.lang-btn) { display: none !important; }
 /* show-both（默认）什么都不藏 */
 
 /* 文章里英文段视觉降级（当中英共显，英文做"译注"风）*/

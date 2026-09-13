@@ -23,6 +23,14 @@ const articles = defineCollection({
     updated_at: z.coerce.date().optional(),
     tags: z.array(z.string()).default([]),
     cover: z.string().optional(),
+    cover_alt: z.string().optional(),
+    cover_width: z.number().int().positive().optional(),
+    cover_height: z.number().int().positive().optional(),
+    bgm: z.object({
+      src: z.string(),
+      title: z.string(),
+      artist: z.string(),
+    }).optional(),
     /** 中文字符数；CI 校验 ≥ 3000 */
     word_count_zh: z.number().int().nonnegative().optional(),
     /** 是否英文已成稿；草稿期允许只有中文 */
