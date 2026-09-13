@@ -31,7 +31,7 @@ draft: false
 趁着刚结束实习，记忆还热乎，想把这段经历好好梳理一下。
 
 
-### 01｜初入职场，先认识了一个词：对齐
+## 01｜初入职场，先认识了一个词：对齐
 
 前期断断续续的出勤，让我逐渐了解了部门的大致工作模式，也慢慢认识了身边的职场前辈。
 
@@ -57,7 +57,7 @@ draft: false
 圈起来，很重要，要考。
 
 
-### 02｜靠着 AI，获得了一些额外的机会
+## 02｜靠着 AI，获得了一些额外的机会
 
 再往后，因为自己对 AI 比较熟悉，加上和部门总监的一次小对话，我了解到了 FDE 这个职业。后续的项目也更多地围绕 AI 展开。
 
@@ -79,7 +79,7 @@ draft: false
 那段时间最深的感受是：AI 发展迅猛，传统企业确实需要借助它进行转型，未来企业的 AI 化几乎不可避免。
 
 
-### 03｜项目卡住之后，才发现埋头苦干解决不了任何问题
+## 03｜项目卡住之后，才发现埋头苦干解决不了任何问题
 
 我接手的一个项目：标签组合 AI 内容自动化生产。
 
@@ -115,7 +115,7 @@ draft: false
 
 这也是大学里很少有机会充分练习，进入职场后却会频繁用到的能力。
 
-### 04｜想把事情做好，先学会把话问明白和说清楚
+## 04｜想把事情做好，先学会把话问明白和说清楚
 
 顺着项目推进的经历，也想聊聊我对 FDE 的理解。
 
@@ -164,7 +164,7 @@ draft: false
 这些要求都围绕工作本身，我也能理解其中对逻辑和依据的重视。这样的经历，确实推着我去更认真地思考，也提醒我：很多问题，不能只停留在“我感觉”
 
 
-### 05｜做得不够好的地方，更值得认真复盘
+## 05｜做得不够好的地方，更值得认真复盘
 
 两个月里，我做了不少事情，也留下了一些做得不够好的地方。
 
@@ -194,7 +194,7 @@ draft: false
 有情绪很正常，但工作上的判断，需要拿出理性依据。
 
 
-### 06｜跨部门协作和那些看似琐碎的职场经验
+## 06｜跨部门协作和那些看似琐碎的职场经验
 
 跨部门协作，也很值得单独说一说。
 
@@ -218,7 +218,7 @@ draft: false
 大学不教，但职场都默认要明白的规范。
 
 
-### 07｜很幸运，遇到了一群认真又温暖的人
+## 07｜很幸运，遇到了一群认真又温暖的人
 
 最后，还是想认真感谢一下运营中心的大家。
 
@@ -273,7 +273,7 @@ Looking back, these two months feel a little unreal. A lot happened, and I grew 
 
 Now that the internship has just ended, I want to write about it while the memories are still fresh.
 
-### 01 | My First Workplace Lesson: Getting on the Same Page
+## 01 | My First Workplace Lesson: Getting on the Same Page
 
 Those early, occasional days at the office helped me get a sense of how the department worked and get to know the more experienced people around me.
 
@@ -293,7 +293,7 @@ I didn’t yet know that this process had a name I would hear again and again th
 
 Circle that one. It’s important. It’ll be on the test.
 
-### 02 | Knowing AI Opened a Few More Doors
+## 02 | Knowing AI Opened a Few More Doors
 
 Later, my familiarity with AI and a brief conversation with the department director introduced me to the role of a forward-deployed engineer, or FDE. More of my projects began to revolve around AI after that.
 
@@ -309,7 +309,7 @@ Before my two friends joined, the director would ask me first whenever something
 
 My strongest impression from that period was that AI is advancing fast, traditional companies have a real need to transform with its help, and AI becoming part of business seems almost inevitable.
 
-### 03 | When a Project Stalled, Working Away on My Own Didn’t Solve It
+## 03 | When a Project Stalled, Working Away on My Own Didn’t Solve It
 
 One of my projects was to automate AI content production based on combinations of tags.
 
@@ -337,7 +337,7 @@ Getting on the same page early really can save a lot of wasted effort.
 
 It’s a skill you rarely get to practice properly at university, yet need all the time at work.
 
-### 04 | To Do the Work Well, Learn to Ask Clearly and Explain Clearly
+## 04 | To Do the Work Well, Learn to Ask Clearly and Explain Clearly
 
 Those projects also shaped how I think about the FDE role.
 
@@ -373,7 +373,7 @@ After a few rounds of questions, something I’d thought was “more or less sor
 
 Those expectations were about the work itself, and I understood the emphasis on reasoning and evidence. The experience pushed me to think more carefully and reminded me that “I feel like…” often isn’t enough.
 
-### 05 | The Things I Didn’t Handle Well Deserve a Closer Look
+## 05 | The Things I Didn’t Handle Well Deserve a Closer Look
 
 I did quite a few things over these two months. There were also things I didn’t handle well.
 
@@ -395,7 +395,7 @@ Simply saying “it can’t be done” does little to help others understand the
 
 Having feelings is normal. Judgments about work still need a rational basis.
 
-### 06 | Working Across Departments, and the Small Things You Learn on the Job
+## 06 | Working Across Departments, and the Small Things You Learn on the Job
 
 Working with other departments deserves a mention of its own.
 
@@ -413,7 +413,7 @@ Taken individually, they’re all fairly small things. But over two months, they
 
 The conventions university doesn’t teach, but workplaces expect you to know.
 
-### 07 | I Was Lucky to Meet People Who Were Both Serious and Kind
+## 07 | I Was Lucky to Meet People Who Were Both Serious and Kind
 
 Finally, I want to properly thank everyone in the operations center.
 

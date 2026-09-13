@@ -1,6 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import ReadingTrack from "../../components/ReadingTrack.astro";
+import ArticleMusic from "../../components/ArticleMusic.astro";
 import { getCollection } from "astro:content";
 import { marked } from "marked";
 import { slugOf } from "../../lib/content";
@@ -147,18 +148,7 @@ const currentSlug = slugOf(article);
               width={data.cover_width} height={data.cover_height}
               fetchpriority="high" decoding="async" />
           )}
-          {data.bgm && (
-            <div class="article-music">
-              <p id="article-music-label" class="music-label">
-                <span data-lang="zh">伴读音乐</span>
-                <span data-lang="en">Music for reading</span>
-                <span>{data.bgm.title} · {data.bgm.artist}</span>
-              </p>
-              <audio controls loop preload="none" aria-labelledby="article-music-label" src={data.bgm.src}>
-                <a href={data.bgm.src}>{data.bgm.title}</a>
-              </audio>
-            </div>
-          )}
+          {data.bgm && <ArticleMusic {...data.bgm} />}
         </div>
       )}
 
@@ -461,18 +451,6 @@ const currentSlug = slugOf(article);
   /* ─── BODY ─── */
   .article-media { max-width: 64ch; margin: 0 auto var(--sp-44); }
   .article-cover { display: block; width: 100%; height: auto; }
-  .article-music { margin-top: var(--sp-22); }
-  .music-label {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--sp-10);
-    margin: 0 0 var(--sp-12);
-    font-family: var(--sans);
-    font-size: var(--fs-sm);
-    color: var(--ink-3);
-  }
-  .article-music audio { display: block; width: 100%; }
-  :global(html.dark) .article-music audio { color-scheme: dark; }
   .article-body { max-width: 64ch; margin: 0 auto; }
 
   .article-flip {
@@ -563,13 +541,14 @@ const currentSlug = slugOf(article);
     color: var(--ink);
     font-weight: var(--fw-medium);
     letter-spacing: -0.01em;
-    line-height: 1.18;
+    line-height: var(--lh-condensed);
+    text-wrap: balance;
   }
   .prose.cjk :global(h2) {
     font-family: var(--cjk-serif);
     color: var(--accent-front-ink);
   }
-  .prose :global(h2:first-of-type) { margin-top: 0; }
+  .prose :global(h2:first-child) { margin-top: 0; }
 
   .prose :global(p) { margin: 0 0 var(--sp-18); }
   .prose :global(strong) { color: var(--ink); font-weight: var(--fw-medium); }

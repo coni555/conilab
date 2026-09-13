@@ -1,0 +1,132 @@
+---
+interface Props { src: string; title: string; artist: string }
+const { src, title, artist } = Astro.props;
+---
+
+<div class="article-music" data-article-music>
+  <button class="music-toggle" type="button" hidden
+    aria-label={`播放音乐 / Play music: ${title} · ${artist}`}
+    aria-pressed="false" aria-describedby="music-track">
+    <svg class="music-note" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M9 17V6l11-3v11M9 9l11-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      <ellipse cx="6" cy="17.5" rx="3" ry="2.5" fill="currentColor" />
+      <ellipse cx="17" cy="14.5" rx="3" ry="2.5" fill="currentColor" />
+    </svg>
+  </button>
+  <span class="music-track" id="music-track">{title} · {artist}</span>
+  <span class="music-error" role="status" hidden>
+    <span data-lang="zh">播放失败，点击重试</span>
+    <span data-lang="en">Couldn’t play. Tap to retry.</span>
+  </span>
+  <audio controls loop preload="none" src={src} aria-label={`${title} · ${artist}`}>
+    <a href={src}>{title}</a>
+  </audio>
+</div>
+
+<script>
+  const music = document.querySelector<HTMLElement>("[data-article-music]");
+  const audio = music?.querySelector("audio");
+  const button = music?.querySelector<HTMLButtonElement>("button");
+  const error = music?.querySelector<HTMLElement>(".music-error");
+  if (music && audio && button && error) {
+    const track = music.querySelector(".music-track")?.textContent ?? "";
+    music.classList.add("is-ready");
+    button.hidden = false;
+    audio.volume = 0.35;
+    const sync = () => {
+      const playing = !audio.paused && !audio.ended;
+      music.classList.toggle("is-playing", playing);
+      button.setAttribute("aria-pressed", String(playing));
+      button.setAttribute("aria-label", `${playing ? "暂停音乐 / Pause music" : "播放音乐 / Play music"}: ${track}`);
+    };
+    audio.addEventListener("playing", () => { error.hidden = true; sync(); });
+    audio.addEventListener("pause", sync);
+    audio.addEventListener("ended", sync);
+    audio.addEventListener("error", () => {
+      audio.pause();
+      error.hidden = false;
+      sync();
+    });
+    let pending = false;
+    button.addEventListener("click", async () => {
+      if (pending) return;
+      error.hidden = true;
+      if (!audio.paused) { audio.pause(); return; }
+      pending = true;
+      button.setAttribute("aria-busy", "true");
+      try {
+        if (audio.error) audio.load();
+        await audio.play();
+      } catch {
+        error.hidden = false;
+        sync();
+      } finally {
+        pending = false;
+        button.removeAttribute("aria-busy");
+      }
+    });
+  }
+</script>
+
+<style>
+  .article-music { margin-top: var(--sp-22); }
+  .article-music audio { width: 100%; }
+  .article-music.is-ready {
+    position: fixed;
+    right: max(var(--sp-24), env(safe-area-inset-right));
+    bottom: calc(var(--sp-24) + env(safe-area-inset-bottom));
+    z-index: 30;
+    margin: 0;
+  }
+  .is-ready audio { display: none; }
+  .music-toggle {
+    width: var(--sp-48);
+    height: var(--sp-48);
+    padding: var(--sp-12);
+    display: grid;
+    place-items: center;
+    border: var(--sp-hairline) solid var(--rule);
+    border-radius: 50%;
+    background: var(--paper);
+    color: var(--ink-3);
+    cursor: pointer;
+    transition: color 180ms ease, border-color 180ms ease;
+  }
+  .music-toggle[hidden] { display: none; }
+  .music-toggle:hover, .is-playing .music-toggle {
+    color: var(--accent-back-ink);
+    border-color: var(--accent-back);
+  }
+  .music-toggle:focus-visible {
+    outline: var(--sp-2) solid var(--accent-front);
+    outline-offset: var(--sp-4);
+  }
+  .music-note { width: 100%; height: 100%; animation: music-turn 8s linear infinite paused; }
+  .is-playing .music-note { animation-play-state: running; }
+  .music-track, .music-error {
+    font-family: var(--sans);
+    font-size: var(--fs-sm);
+    line-height: var(--lh-normal);
+    color: var(--ink-2);
+  }
+  .is-ready .music-track, .music-error {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + var(--sp-12));
+    width: max-content;
+    max-width: calc(100vw - var(--sp-48));
+    padding: var(--sp-8) var(--sp-12);
+    background: var(--paper);
+    border: var(--sp-hairline) solid var(--rule);
+  }
+  .is-ready .music-track { visibility: hidden; pointer-events: none; }
+  .is-ready:has(.music-error[hidden]) .music-toggle:focus-visible + .music-track { visibility: visible; }
+  @media (hover: hover) and (pointer: fine) {
+    .is-ready:has(.music-error[hidden]):hover .music-track { visibility: visible; }
+  }
+  @keyframes music-turn { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) {
+    .music-note { animation: none; }
+    .music-toggle { transition: none; }
+  }
+</style>
