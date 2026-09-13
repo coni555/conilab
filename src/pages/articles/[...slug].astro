@@ -551,7 +551,8 @@ const currentSlug = slugOf(article);
   .prose :global(h2:first-child) { margin-top: 0; }
 
   .prose :global(p) { margin: 0 0 var(--sp-18); }
-  .prose :global(strong) { color: var(--ink); font-weight: var(--fw-medium); }
+  .prose :global(strong) { color: var(--ink); font-weight: var(--fw-bold); }
+  .prose.cjk :global(strong) { font-family: var(--cjk-sans); }
 
   .prose :global(em) {
     font-style: italic;

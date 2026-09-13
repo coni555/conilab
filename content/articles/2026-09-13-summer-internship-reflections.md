@@ -49,10 +49,10 @@ draft: false
 
 真正推进后才发现，事情没有那么简单。
 
-业务人员想要什么样的内容，哪些表达可以用，生成的结果为什么不符合预期，这些都需要一次又一次地沟通、确认和调整。
+业务人员想要什么样的内容，哪些表达可以用，生成的结果为什么不符合预期，**这些都需要一次又一次地沟通、确认和调整。**
 
 
-当时的我还不知道，这个过程有一个会在后续实习中反复出现的名字：对齐。
+当时的我还不知道，这个过程有一个会在后续实习中反复出现的名字：**对齐**。
 
 圈起来，很重要，要考。
 
@@ -70,10 +70,10 @@ draft: false
 剩下的一个名额，我也推荐给了同样懂 AI 的另一位好友。两人都顺利通过面试，公司因此多了我们三位 AI 实习生。
 
 
-说实话，我觉得自己确实吃到了 AI 的红利。懂 AI、会用 AI，让我多了一些展示能力和争取机会的空间。而当这些能力能够在具体工作中发挥作用，让别人看到实际价值时，信任也就慢慢建立起来了。
+说实话，我觉得自己确实吃到了 AI 的红利。懂 AI、会用 AI，让我多了一些展示能力和争取机会的空间。而当这些能力能够在具体工作中发挥作用，**让别人看到实际价值时，信任也就慢慢建立起来了。**
 
 
-在两位朋友入职之前，凡是和 AI 相关的事，部门总监都会先问我能不能用 AI 实现。我凭着自己当时浅薄的理解，大致估算可行性。实际推进项目时也发现，有些事情 AI 目前确实做不到或者做的不好，边界依然存在（也可能是我修行还不够，算是个黑盒吧hh）。
+在两位朋友入职之前，凡是和 AI 相关的事，部门总监都会先问我能不能用 AI 实现。我凭着自己当时浅薄的理解，大致估算可行性。实际推进项目时也发现，**有些事情 AI 目前确实做不到或者做的不好，边界依然存在**（也可能是我修行还不够，算是个黑盒吧hh）。
 
 
 那段时间最深的感受是：AI 发展迅猛，传统企业确实需要借助它进行转型，未来企业的 AI 化几乎不可避免。
@@ -98,7 +98,7 @@ draft: false
 也是在这个过程中，我逐渐意识到，自己对 AI 能力的判断还不够成熟。有些最初觉得可以实现的东西，真正往下做才发现，当时的方案支撑不了。可能有技术上的限制，也可能是自己的理解和能力还没到位。
 
 
-这两个月让我看到了 AI 在真实业务里的提效空间，也看到了落地的难度。一个想法听起来很有用，距离它能够真正被业务人员使用，中间还隔着许多需要解决的问题。
+这两个月让我看到了 AI 在真实业务里的提效空间，也看到了落地的难度。一个想法听起来很有用，**距离它能够真正被业务人员使用，中间还隔着许多需要解决的问题。**
 
 
 其中很重要的一课，就是：项目卡住时，要及时把问题拿出来沟通。
@@ -186,7 +186,7 @@ draft: false
 这段小插曲还让我学到了另外一点：当你判断一件事做不了时，需要把判断依据讲清楚。
 
 
-**能够明确地说清楚限制和所需条件，本身也是一种推进。至少，大家终于知道问题在哪里，可以一起讨论接下来怎么办。**
+**能够明确地说清楚限制和所需条件，本身也是一种推进**。至少，大家终于知道问题在哪里，可以一起讨论接下来怎么办。
 
 
 一句“做不了”，很难帮助别人理解问题，更难推动后续决策，只是情绪上的甩锅。
@@ -287,9 +287,9 @@ Before taking it on, I thought it would be pretty straightforward. Write clear g
 
 Once I actually started, it proved more complicated.
 
-What kind of content did the business team want? Which phrases were acceptable? Why did the generated copy fall short of expectations? Each of these questions took repeated conversations, checks, and revisions.
+What kind of content did the business team want? Which phrases were acceptable? Why did the generated copy fall short of expectations? **Each of these questions took repeated conversations, checks, and revisions.**
 
-I didn’t yet know that this process had a name I would hear again and again throughout the internship: alignment.
+I didn’t yet know that this process had a name I would hear again and again throughout the internship: **alignment**.
 
 Circle that one. It’s important. It’ll be on the test.
 
@@ -303,9 +303,9 @@ The director was also looking to hire two AI interns, so I shared the recruitmen
 
 For the remaining opening, I recommended another friend who also knew AI. Both passed their interviews, bringing the company’s AI intern count to three of us.
 
-I really do feel that I’ve benefited from the opportunities AI has created. Knowing it and being able to use it gave me more chances to show what I could do. As those skills proved useful in actual work and people saw the value for themselves, their trust in me gradually grew.
+I really do feel that I’ve benefited from the opportunities AI has created. Knowing it and being able to use it gave me more chances to show what I could do. **As those skills proved useful in actual work and people saw the value for themselves, their trust in me gradually grew.**
 
-Before my two friends joined, the director would ask me first whenever something involved AI: could we use it to do this? Based on my fairly limited understanding at the time, I would make a rough assessment. Working through the projects showed me that some things are still beyond AI, or that it doesn’t do them well enough. Those limits are there, though perhaps I still have more to learn. Some of it remains a black box to me, haha.
+Before my two friends joined, the director would ask me first whenever something involved AI: could we use it to do this? Based on my fairly limited understanding at the time, I would make a rough assessment. Working through the projects showed me that **some things are still beyond AI, or that it doesn’t do them well enough. Those limits are there**, though perhaps I still have more to learn. Some of it remains a black box to me, haha.
 
 My strongest impression from that period was that AI is advancing fast, traditional companies have a real need to transform with its help, and AI becoming part of business seems almost inevitable.
 
@@ -323,7 +323,7 @@ It makes sense. New projects come with plenty of unknowns, and there will always
 
 During this process, I also began to recognize how much I still had to learn about judging AI’s capabilities. Some things I’d initially thought were possible turned out to be beyond what my proposed approach could deliver. Sometimes there were technical limitations; sometimes my own understanding or skills weren’t there yet.
 
-These two months showed me both how much time AI could save in real business work and how hard it could be to put into practice. An idea can sound useful while still having a long list of unresolved problems before the people doing the work can actually use it.
+These two months showed me both how much time AI could save in real business work and how hard it could be to put into practice. An idea can sound useful while **still having a long list of unresolved problems before the people doing the work can actually use it.**
 
 One particularly valuable lesson was to raise problems promptly when a project gets stuck.
 
@@ -389,7 +389,7 @@ Reading more really does help. Please stop asking whether books still matter in 
 
 That episode taught me something else, too. When you decide something can’t be done, you need to explain the reasoning behind that judgment.
 
-**Being able to state the limitations and the conditions you need is itself a way of moving forward. At least everyone can finally see where the problem is and discuss what to do next.**
+**Being able to state the limitations and the conditions you need is itself a way of moving forward.** At least everyone can finally see where the problem is and discuss what to do next.
 
 Simply saying “it can’t be done” does little to help others understand the problem or make the next decision. It’s just an emotional way of passing the buck.
 
