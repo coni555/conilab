@@ -95,7 +95,7 @@ const currentSlug = slugOf(article);
 
 <Base
   title={`${data.title_zh} / ${data.title_en} — conilab`}
-  description={data.lede_en}
+  description={zhOnly ? data.lede_zh : data.lede_en}
   image={data.cover}
   ogType="article"
   publishedTime={new Date(data.published_at).toISOString()}
@@ -106,12 +106,12 @@ const currentSlug = slugOf(article);
     "headline": data.title_zh,
     "alternativeHeadline": data.title_en,
     "datePublished": new Date(data.published_at).toISOString(),
-    "inLanguage": ["zh-CN", "en"],
+    "inLanguage": zhOnly ? ["zh-CN"] : ["zh-CN", "en"],
     "author": { "@type": "Person", "name": "coni" },
   })} />
   <div class="reading-progress" aria-hidden="true"><div class="reading-progress-bar"></div></div>
 
-  <article class="article">
+  <article class={`article${isBilingual ? " is-bilingual" : ""}`}>
     <div class="wrap">
       <header class="article-head">
         <div class="article-meta">
@@ -125,7 +125,7 @@ const currentSlug = slugOf(article);
         </div>
         <h1 class="article-titles">
           <span class="article-title cjk" lang="zh" {...(zhOnly ? {} : { "data-lang": "zh" })}>{data.title_zh}</span>
-          <span class="article-title-en" lang="en" data-lang="en">{data.title_en}</span>
+          {!zhOnly && <span class="article-title-en" lang="en" data-lang="en">{data.title_en}</span>}
         </h1>
         <div class="article-ledes">
           <p class="article-lede cjk" lang="zh" {...(zhOnly ? {} : { "data-lang": "zh" })}>{data.lede_zh}</p>
@@ -356,21 +356,21 @@ const currentSlug = slugOf(article);
   /* ─── 双语并置：中/EN 模式下左右分列（宽屏才分，窄屏回落上下叠） ─── */
   @media (min-width: 1100px) {
     /* 头部 + 正文区都放宽到 wrap 满宽，左对齐对齐两栏左缘 */
-    :global(html.show-both) .article-head,
-    :global(html.show-both) .article-media,
-    :global(html.show-both) .article-nav { max-width: none; }
+    :global(html.show-both) .article.is-bilingual .article-head,
+    :global(html.show-both) .article.is-bilingual .article-media,
+    :global(html.show-both) .article.is-bilingual .article-nav { max-width: none; }
 
     /* lede 也分列：左中右英 */
-    :global(html.show-both) .article-ledes {
+    :global(html.show-both) .article.is-bilingual .article-ledes {
       display: grid;
       grid-template-columns: 1fr 1fr;
       align-items: start;
     }
-    :global(html.show-both) .article-lede {
+    :global(html.show-both) .article.is-bilingual .article-lede {
       padding-right: var(--sp-40);
       margin-bottom: 0;
     }
-    :global(html.show-both) .article-lede-en {
+    :global(html.show-both) .article.is-bilingual .article-lede-en {
       padding-left: var(--sp-40);
     }
 
@@ -488,6 +488,7 @@ const currentSlug = slugOf(article);
     display: inline-block;
     max-height: 82vh;
     width: auto;
+    height: auto;
     max-width: 100%;
   }
   .prose :global(figcaption) {
